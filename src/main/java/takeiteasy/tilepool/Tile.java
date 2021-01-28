@@ -2,6 +2,10 @@ package takeiteasy.tilepool;
 
 public class Tile {
 
+    public static final Integer[] topValues={1,5,9};
+    public static final Integer[] leftValues={2,6,7};
+    public static final Integer[] rightValues={3,4,8};
+
     Integer top;
     Integer left;
     Integer right;
