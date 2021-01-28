@@ -1,4 +1,4 @@
-package TilePool;
+package takeiteasy.tilepool;
 
 public interface ITilePool {
 
