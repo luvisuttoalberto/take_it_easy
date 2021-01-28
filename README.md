@@ -4,8 +4,12 @@ This is the exam project submission for the *Software Developement Methods AY 20
 It consists in an implementation of the original board game *"Take it Easy"* by *Peter Burley* for sole educational purposes, no copyright infringment is intended.  
 The authors of this project are **Alberto Luvisutto**, **Nicolas Plasencia**, **Michele Rispoli** and **Azad Sadr**.
 
-# Overview
-The game consists in placing hexagonal tiles on a board with 19 hexagonal slots. There are 27 possible tiles, as these are the possible ways of picking a value for the vertical row (1,5,9), one for the bottom left row (2,6,7) and one for the bottom right row (3,4,8). Each player has its own board and, at each turn, all the players place the same randomly picked tile on it. The game ends once all the 19 tiles have been placed, at which point players' scorers are computed basing on the rows with matching values in their board: a row of tiles *all* presenting the same matching value for a particular direction grants $  ext{\#tiles}   imes   ext{value}$ points to that player (e.g. a verticl row of 5 tiles all presenting a 9 in the top position is worth $5  imes 9 = 45$ points; it would have been worth *none* instead if any two of those tiles presented a different values in the top position). The player with the highest total score wins the match.
+# Game rules
+The game consists in placing hexagonal tiles on a board with 19 hexagonal slots.  
+There are 27 possible tiles, as 27 are the possible ways of picking a value for the vertical row (1,5,9), one for the bottom left row (2,6,7) and one for the bottom right row (3,4,8).  
+Each player has its own board and, at each turn, all the players place the same randomly picked tile on it. When all the players have placed the tile, a new one is randomly picked and the process repeats.  
+The game ends once all the 19 tiles have been placed, at which point players' scores are computed basing on the rows with matching values in their board: a row of tiles *all* presenting the same matching value for a particular direction grants $\text{\#tiles}\times\text{value}$ points to that player (e.g. a verticl row of 5 tiles all presenting a 9 in the top position is worth $5\times 9 = 45$ points; it would have been worth *none* instead if any two of those tiles presented a different values in the top position).  
+The player with the highest total score wins the match.
 
 # Implementation Details
 WIP  
@@ -53,11 +57,11 @@ Classes
     - `public get_left`
     - `public get_right`
 - `class HexCoordinates`
-  - Fields
-    - `private x`
-    - `private y`
-    - `private z`
-  - Methods
+  - Fields:
+    - `private Integer x`
+    - `private Integer y`
+    - `private Integer z`
+  - Methods:
     - ... ctor and getters
 - `class Board`
   - Fields:
@@ -73,7 +77,7 @@ Classes
     - `WAITING_PLAYERS`
     - `LEFT`
 - `class Player`
-  -Fields:
+  - Fields:
     - `private String name`
     - `private PlayerStatus current_status` // what is he doing in this moment: placing the tile, ready for a new round, finished game
     - `private IBoard object` (basically, the player acts on its own board)
