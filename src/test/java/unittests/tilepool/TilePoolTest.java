@@ -7,7 +7,7 @@ import takeiteasy.tilepool.*;
 public class TilePoolTest {
 
     @Test
-    public void tileGetters() throws Exception{
+    public void testTileGetters() throws Exception{
         Tile t = new Tile(1,2,3);
         assertEquals(t.getTop(),1);
         assertEquals(t.getLeft(),2);
@@ -15,7 +15,7 @@ public class TilePoolTest {
     }
 
     @Test
-    public void tileOutBoundTest() throws Exception{
+    public void testTileOutBound() throws Exception{
         try{
             TilePool pool = new TilePool();
             Tile t = pool.getTile(28);
@@ -26,7 +26,7 @@ public class TilePoolTest {
     }
 
     @Test
-    public void tileInBoundTest() throws Exception{
+    public void testTileInBound() throws Exception{
         try{
             TilePool pool = new TilePool();
             for(int i = 0; i < 19; ++i){
@@ -39,7 +39,7 @@ public class TilePoolTest {
     }
 
     @Test
-    public void generationWithSeedTest() throws Exception{
+    public void testGenerationWithSeed() throws Exception{
 
         long seed = 1;
         TilePool tilePool1 = new TilePool(seed);
@@ -52,5 +52,20 @@ public class TilePoolTest {
         assertEquals(t1.getLeft(),t2.getLeft());
         assertEquals(t1.getRight(),t2.getRight());
     }
+
+    @Test
+    public void testAllDifferentTilesInATilePool() throws Exception{
+        TilePool pool = new TilePool(1);
+        for(int i = 0; i < 18; ++i){
+            for(int j = i+1; j < 19; ++j){
+                Tile t1 = pool.getTile(i);
+                Tile t2 = pool.getTile(j);
+
+                assertFalse(t1.getTop().equals(t2.getTop()) && t1.getLeft().equals(t2.getLeft()) && t1.getRight().equals(t2.getRight()));
+            }
+        }
+    }
+
+
 
 }

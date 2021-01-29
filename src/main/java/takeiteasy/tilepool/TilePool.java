@@ -26,10 +26,10 @@ public class TilePool implements ITilePool {
         Tile[] tileSet = createFullTileSet();
         for(int i = 0; i < 19; ++i){
             int index = rand.nextInt(27-i);
-            for(int j = index; j < tileSet.length - 1; ++j){
+            this.extractedTiles[i] = tileSet[index];
+            for(int j = index; j < tileSet.length - 1; ++j) {
                 tileSet[j] = tileSet[j + 1];
             }
-            this.extractedTiles[i] = tileSet[index];        // should this be extractedTiles[i] ???
         }
     }
 
@@ -41,7 +41,7 @@ public class TilePool implements ITilePool {
     public TilePool(long seed){
         this.extractedTiles = new Tile[19];
         this.seed = seed;
-        reset(this.seed); // this.seed or seed? Is it the same?
+        reset(this.seed);
     }
 
     public TilePool() {
