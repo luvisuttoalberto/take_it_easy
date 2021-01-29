@@ -27,7 +27,15 @@ public class TilePoolTest {
 
     @Test
     public void tileInBoundTest() throws Exception{
-        
+        try{
+            TilePool pool = new TilePool();
+            for(int i = 0; i < 19; ++i){
+                Tile t = pool.getTile(i);
+            }
+        }
+        catch (Exception E){
+            fail("Should not have thrown any exception");
+        }
     }
 
     @Test
