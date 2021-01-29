@@ -80,7 +80,7 @@ Classes
 - `class Player`
   - Fields:
     - `private String name`
-    - `private PlayerStatus current_status` // what is he doing in this moment: placing the tile, ready for a new round, finished game
+    - `private PlayerStatus current_status` // what is he doing in this moment: placing the tile, ready for a new round; finished game
     - `private IBoard object` (basically, the player acts on its own board)
   - Methods:
     - `public place_tile(newtile)` transitions status from "placing" to "waiting"
