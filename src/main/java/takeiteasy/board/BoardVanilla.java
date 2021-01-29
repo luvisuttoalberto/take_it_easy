@@ -9,8 +9,9 @@ public class BoardVanilla implements IBoard {
     }
 
     @Override
-    public Tile getTile(HexCoordinates coordinates) {
-        return null;
+    public Tile getTile(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
+        throw new OutOfBoardCoordinatesException();
+        //return null;
     }
 
     @Override
