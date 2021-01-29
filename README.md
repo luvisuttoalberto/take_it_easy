@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/luvisuttoalberto/take_it_easy.svg?branch=main)](https://travis-ci.com/luvisuttoalberto/take_it_easy)
 # About this project
 
 This is the exam project submission for the *Software Developement Methods AY 2020/21* course, offered by *University of Trieste*, Italy.  
