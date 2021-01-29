@@ -13,8 +13,10 @@ public class TilePool implements ITilePool {
     }
 
     @Override
-    public Tile getTile(Integer index) {
-        // throws exception if out of index
+    public Tile getTile(Integer index) throws Exception{
+        if(index > 19 || index < 0){
+            throw new ArrayIndexOutOfBoundsException();
+        }
         return this.extractedTiles[index];
     }
 

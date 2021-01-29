@@ -15,14 +15,19 @@ public class TilePoolTest {
     }
 
     @Test
-    public void tileInBoundTest() throws Exception{
-        TilePool pool = new TilePool();
+    public void tileOutBoundTest() throws Exception{
+        try{
+            TilePool pool = new TilePool();
+            Tile t = pool.getTile(28);
+        }
+        catch (ArrayIndexOutOfBoundsException E){
 
+        }
     }
 
     @Test
-    public void tileOutBoundTest() throws Exception{
-
+    public void tileInBoundTest() throws Exception{
+        
     }
 
     @Test
