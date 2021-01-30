@@ -24,12 +24,10 @@ public class TilePool implements ITilePool {
 
     @Override
     public void reset(long seed) {
-        Random rand = new Random(seed);
         Tile[] tileset = createFullTileSet();
+        Random rand = new Random(seed);
         Collections.shuffle(Arrays.asList(tileset), rand);
-        for(int i = 0; i < this.extractedTiles.length; ++i){
-            this.extractedTiles[i] = tileset[i];
-        }
+        System.arraycopy(tileset, 0, extractedTiles, 0, this.extractedTiles.length);
     }
 
     private static long generateSeed(){
