@@ -6,8 +6,14 @@ import java.util.Random;
 
 public class TilePool implements ITilePool {
 
-    private Tile[] extractedTiles;
+    private final Tile[] extractedTiles;
     public long seed;
+    private final int size;
+
+    @Override
+    public int getSize() {
+        return size;
+    }
 
     @Override
     public long getSeed(){
@@ -15,8 +21,8 @@ public class TilePool implements ITilePool {
     }
 
     @Override
-    public Tile getTile(Integer index) throws Exception{
-        if(index > 19 || index < 0){
+    public Tile getTile(Integer index) throws ArrayIndexOutOfBoundsException{
+        if(index > size || index < 0){
             throw new ArrayIndexOutOfBoundsException();
         }
         return extractedTiles[index];
@@ -35,14 +41,15 @@ public class TilePool implements ITilePool {
         return rand.nextLong();
     }
 
-    public TilePool(long seed){
-        this.extractedTiles = new Tile[19];
+    public TilePool(int size, long seed){
+        this.size = size;
+        this.extractedTiles = new Tile[size];
         this.seed = seed;
         reset(this.seed);
     }
 
-    public TilePool() {
-        this(generateSeed());
+    public TilePool(int size) {
+        this(size, generateSeed());
     }
 
     private Tile[] createFullTileSet() {
