@@ -11,7 +11,7 @@ public class TilePool implements ITilePool {
 
     @Override
     public long getSeed(){
-        return this.seed;
+        return seed;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class TilePool implements ITilePool {
         if(index > 19 || index < 0){
             throw new ArrayIndexOutOfBoundsException();
         }
-        return this.extractedTiles[index];
+        return extractedTiles[index];
     }
 
     @Override
@@ -27,7 +27,7 @@ public class TilePool implements ITilePool {
         Tile[] tileset = createFullTileSet();
         Random rand = new Random(seed);
         Collections.shuffle(Arrays.asList(tileset), rand);
-        System.arraycopy(tileset, 0, extractedTiles, 0, this.extractedTiles.length);
+        System.arraycopy(tileset, 0, extractedTiles, 0, extractedTiles.length);
     }
 
     private static long generateSeed(){
@@ -47,7 +47,7 @@ public class TilePool implements ITilePool {
 
     private Tile[] createFullTileSet() {
         Tile[] tileSet = new Tile[27];
-        for (int i=0; i<27; ++i) {
+        for (int i = 0; i < tileSet.length; ++i) {
             tileSet[i] = new Tile(Tile.topValues[i/9],
                                   Tile.leftValues[(i/3)%3],
                                   Tile.rightValues[i%3]);

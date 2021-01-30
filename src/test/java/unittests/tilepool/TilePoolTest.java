@@ -61,7 +61,9 @@ public class TilePoolTest {
                 Tile t1 = pool.getTile(i);
                 Tile t2 = pool.getTile(j);
 
-                assertFalse(t1.getTop().equals(t2.getTop()) && t1.getLeft().equals(t2.getLeft()) && t1.getRight().equals(t2.getRight()));
+                assertFalse(t1.getTop().equals(t2.getTop())
+                                    && t1.getLeft().equals(t2.getLeft())
+                                    && t1.getRight().equals(t2.getRight()));
             }
         }
     }
