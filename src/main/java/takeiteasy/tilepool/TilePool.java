@@ -1,5 +1,7 @@
 package takeiteasy.tilepool;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class TilePool implements ITilePool {
@@ -23,13 +25,10 @@ public class TilePool implements ITilePool {
     @Override
     public void reset(long seed) {
         Random rand = new Random(seed);
-        Tile[] tileSet = createFullTileSet();
-        for(int i = 0; i < 19; ++i){
-            int index = rand.nextInt(27-i);
-            this.extractedTiles[i] = tileSet[index];
-            for(int j = index; j < tileSet.length - 1; ++j) {
-                tileSet[j] = tileSet[j + 1];
-            }
+        Tile[] tileset = createFullTileSet();
+        Collections.shuffle(Arrays.asList(tileset), rand);
+        for(int i = 0; i < this.extractedTiles.length; ++i){
+            this.extractedTiles[i] = tileset[i];
         }
     }
 
