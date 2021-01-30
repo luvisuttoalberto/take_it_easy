@@ -1,5 +1,7 @@
 package takeiteasy.tilepool;
 
+import java.util.Objects;
+
 public class Tile {
 
     public static final Integer[] topValues={1,5,9};
@@ -27,5 +29,18 @@ public class Tile {
         this.top = top;
         this.left = left;
         this.right = right;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tile tile = (Tile) o;
+        return top.equals(tile.top) && left.equals(tile.left) && right.equals(tile.right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(top, left, right);
     }
 }

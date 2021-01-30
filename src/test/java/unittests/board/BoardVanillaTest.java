@@ -8,7 +8,7 @@ import takeiteasy.tilepool.Tile;
 
 public class BoardVanillaTest {
     @Test
-    public void getTileInvalidCoordinates() throws BadHexCoordinatesException {
+    public void getTileOutOfBoardCoordinates() throws BadHexCoordinatesException {
         BoardVanilla b = new BoardVanilla();
         HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
         try {
@@ -26,7 +26,7 @@ public class BoardVanillaTest {
     }
 
     @Test
-    public void placeTileValidTileAndGetItBack() throws BadHexCoordinatesException, OutOfBoardCoordinatesException {
+    public void placeTileValidTileAndGetItBack() throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
         BoardVanilla b = new BoardVanilla();
         HexCoordinates coords = new HexCoordinates(0, 0, 0);
         Tile tile = new Tile(1,2,3);
@@ -35,7 +35,7 @@ public class BoardVanillaTest {
     }
 
     @Test
-    public void placeTileAtOutOfRangeCoordinates() throws BadHexCoordinatesException {
+    public void placeTileAtOutOfRangeCoordinates() throws BadHexCoordinatesException, CoordinatesOccupidedException {
         BoardVanilla b = new BoardVanilla();
         HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
         Tile tile = new Tile(1,2,3);
@@ -47,7 +47,7 @@ public class BoardVanillaTest {
     }
 
     @Test
-    public void placeTileAtOccupiedPosition() throws BadHexCoordinatesException {
+    public void placeTileAtOccupiedPosition() throws BadHexCoordinatesException, OutOfBoardCoordinatesException {
         BoardVanilla b = new BoardVanilla();
         HexCoordinates coords = new HexCoordinates(0, 0, 0);
         Tile tile = new Tile(1,2,3);
