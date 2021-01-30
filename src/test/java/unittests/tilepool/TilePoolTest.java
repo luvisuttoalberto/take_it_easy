@@ -4,15 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import takeiteasy.tilepool.*;
 
-public class TilePoolTest {
+import java.util.Random;
 
-    @Test
-    public void testTileGetters() throws Exception{
-        Tile t = new Tile(1,2,3);
-        assertEquals(t.getTop(),1);
-        assertEquals(t.getLeft(),2);
-        assertEquals(t.getRight(),3);
-    }
+public class TilePoolTest {
 
     @Test
     public void testTileOutBound() throws Exception{
@@ -45,10 +39,11 @@ public class TilePoolTest {
         int size = 19;
         TilePool tilePool1 = new TilePool(size, seed);
         TilePool tilePool2 = new TilePool(size, seed);
-        
-        // TODO: pick a random index
-        Tile t1 = tilePool1.getTile(0);
-        Tile t2 = tilePool2.getTile(0);
+
+        Random rand = new Random();
+        int index = rand.nextInt(size);
+        Tile t1 = tilePool1.getTile(index);
+        Tile t2 = tilePool2.getTile(index);
 
         assertTrue(t1.getTop().equals(t2.getTop())
                             && t1.getLeft().equals(t2.getLeft())
@@ -57,11 +52,9 @@ public class TilePoolTest {
 
     @Test
     public void testAllDifferentTilesInATilePool() throws Exception{
-        int size = 19;
-        long seed = 1;
-        TilePool pool = new TilePool(size, seed);
-        for(int i = 0; i < 18; ++i){
-            for(int j = i+1; j < 19; ++j){
+        TilePool pool = new TilePool(19, 1);
+        for(int i = 0; i < pool.getSize() - 1; ++i){
+            for(int j = i+1; j < pool.getSize(); ++j){
                 Tile t1 = pool.getTile(i);
                 Tile t2 = pool.getTile(j);
 
