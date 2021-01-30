@@ -1,5 +1,7 @@
 package takeiteasy.tilepool;
 
+import java.util.Arrays;
+
 public class Tile {
 
     public static final Integer[] topValues={1,5,9};
@@ -22,8 +24,12 @@ public class Tile {
         return right;
     }
 
-    public Tile(Integer top, Integer left, Integer right) {
-        // TODO: implement validity check
+    public Tile(Integer top, Integer left, Integer right) throws IllegalArgumentException{
+        if(!(Arrays.stream(topValues).anyMatch(top::equals)
+                && Arrays.stream(leftValues).anyMatch(left::equals)
+                && Arrays.stream(rightValues).anyMatch(right::equals)) ){
+            throw new IllegalArgumentException();
+        }
         this.top = top;
         this.left = left;
         this.right = right;

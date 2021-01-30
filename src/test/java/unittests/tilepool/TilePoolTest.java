@@ -64,4 +64,14 @@ public class TilePoolTest {
             }
         }
     }
+
+    @Test
+    public void testCorrectValueForTile() throws Exception{
+        try{
+            Tile t = new Tile(3,2,1);
+        }
+        catch (IllegalArgumentException E){
+
+        }
+    }
 }
