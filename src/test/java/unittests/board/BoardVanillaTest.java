@@ -76,10 +76,8 @@ public class BoardVanillaTest {
                 board.placeTile(otherTile,new HexCoordinates(-iii,2*iii,-iii));
                 board.placeTile(otherTile,new HexCoordinates(-iii,-iii,2*iii));
             }
-            board.printBoard();
         }
         board.placeTile(tile, new HexCoordinates(0, 0, 0));
-        board.printBoard();
         Assertions.assertEquals(5*(1+2+3),board.computeScore());
     }
 }

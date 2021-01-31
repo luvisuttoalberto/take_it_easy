@@ -17,7 +17,6 @@ public class BoardVanilla implements IBoard {
 
     private Integer[] getStorageIdxsFromCoordinates(HexCoordinates coordinates){
         return new Integer[]{coordinates.getX()+2,coordinates.getY()+2};
-
     }
 
     @Override
@@ -58,8 +57,10 @@ public class BoardVanilla implements IBoard {
             case RIGHT -> {
                 return tile.getRight();
             }
+            default ->{
+                return tile.getTop();
+            }
         }
-        return tile.getTop();
     }
 
     private Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
@@ -70,24 +71,28 @@ public class BoardVanilla implements IBoard {
             case RIGHT -> {
                 return this.getTile(coordinates.rotateLeft());
             }
+            default -> {
+                return this.getTile(coordinates);
+            }
         }
-        return this.getTile(coordinates);
     }
 
     private Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
 
+        // Get coordinates of first tile in the row
         Integer x0 = rowIndex,
                 y0 = 2 - Math.max(0,x0),
                 z0 = -2 - Math.min(x0,0) ;
         Integer rowLength = 5-Math.abs(rowIndex);
 
-
         Integer score = 0;
         try {
-            Tile tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y0, z0), rowOrientation);
 
+            // retrieve row number from first tile
+            Tile tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y0, z0), rowOrientation);
             Integer rowNumber = this.getTileNumberAtOrientation(tile, rowOrientation);
 
+            // Scan tiles in row and check they all have the same number at given orientation
             for (int i = 0; i < rowLength; ++i) {
 
                 Integer y = y0 - i;
@@ -95,35 +100,27 @@ public class BoardVanilla implements IBoard {
                 tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y, z), rowOrientation);
                 Integer cellValue = this.getTileNumberAtOrientation(tile,rowOrientation);
 
-                //DEBUG
-                System.out.format(" %d",cellValue);
-
                 if (cellValue != rowNumber) {
-                    //DEBUG
-                    System.out.format("!",cellValue);
                     // Differing value, no points
                     return 0;
                 }
             }
+            // compute score
             score = rowNumber * rowLength;
         }
         catch(Exception ignored){
         }
-        //DEBUG
-        System.out.format("=%d",score);
+
         return score;
     }
 
     @Override
     public Integer computeScore() {
-        //TODO: check board is full?
         Integer score = 0;
         for (RowOrientation orientation : RowOrientation.values()) {
             for (Integer i=-2;i<3;++i){
-                System.out.format("|%d:",i);
                 score += computeRowScore(i,orientation);
             }
-            System.out.format("\n");
         }
         return score;
     }
@@ -149,6 +146,8 @@ public class BoardVanilla implements IBoard {
         }
         System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,4) + "|");
     }
+
+    //DEBUG
     public void printMatrixBoard(){
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){

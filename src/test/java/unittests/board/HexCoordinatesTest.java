@@ -1,9 +1,6 @@
 package unittests.board;
-import takeiteasy.board.BadHexCoordinatesException;
-import takeiteasy.board.HexCoordinates;
+import takeiteasy.board.*;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.catalog.Catalog;
 
 public class HexCoordinatesTest {
 
