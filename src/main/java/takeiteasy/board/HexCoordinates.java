@@ -1,9 +1,9 @@
 package takeiteasy.board;
 
 public class HexCoordinates {
-    private final Integer x;
-    private final Integer y;
-    private final Integer z;
+    private Integer x;
+    private Integer y;
+    private Integer z;
 
     public HexCoordinates(Integer x, Integer y, Integer z) throws BadHexCoordinatesException {
         if (x + y + z != 0) {
@@ -27,4 +27,21 @@ public class HexCoordinates {
     }
 
 
+    public HexCoordinates rotateLeft() {
+        Integer buffer = this.x;
+        this.x = this.y;
+        this.y = this.z;
+        this.z = buffer;
+
+        return this;
+    }
+
+    public HexCoordinates rotateRight() {
+        Integer buffer = this.x;
+        this.x = this.z;
+        this.z = this.y;
+        this.y = buffer;
+
+        return this;
+    }
 }

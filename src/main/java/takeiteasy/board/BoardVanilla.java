@@ -2,9 +2,6 @@ package takeiteasy.board;
 
 import takeiteasy.tilepool.Tile;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 public class BoardVanilla implements IBoard {
 
     private Tile[][] tileStorage = new Tile[5][5];
@@ -47,9 +44,87 @@ public class BoardVanilla implements IBoard {
         return this.tileStorage[storageIdx[0]][storageIdx[1]];
     }
 
+    public enum RowOrientation{
+        TOP,
+        LEFT,
+        RIGHT
+    }
+
+    private Integer getTileNumberAtOrientation(Tile tile, RowOrientation orientation){
+        switch (orientation) {
+            case LEFT -> {
+                return tile.getLeft();
+            }
+            case RIGHT -> {
+                return tile.getRight();
+            }
+        }
+        return tile.getTop();
+    }
+
+    private Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
+        switch (counterRotation){
+            case LEFT -> {
+                return this.getTile(coordinates.rotateRight());
+            }
+            case RIGHT -> {
+                return this.getTile(coordinates.rotateLeft());
+            }
+        }
+        return this.getTile(coordinates);
+    }
+
+    private Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
+
+        Integer x0 = rowIndex,
+                y0 = 2 - Math.max(0,x0),
+                z0 = -2 - Math.min(x0,0) ;
+        Integer rowLength = 5-Math.abs(rowIndex);
+
+
+        Integer score = 0;
+        try {
+            Tile tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y0, z0), rowOrientation);
+
+            Integer rowNumber = this.getTileNumberAtOrientation(tile, rowOrientation);
+
+            for (int i = 0; i < rowLength; ++i) {
+
+                Integer y = y0 - i;
+                Integer z = z0 + i;
+                tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y, z), rowOrientation);
+                Integer cellValue = this.getTileNumberAtOrientation(tile,rowOrientation);
+
+                //DEBUG
+                System.out.format(" %d",cellValue);
+
+                if (cellValue != rowNumber) {
+                    //DEBUG
+                    System.out.format("!",cellValue);
+                    // Differing value, no points
+                    return 0;
+                }
+            }
+            score = rowNumber * rowLength;
+        }
+        catch(Exception ignored){
+        }
+        //DEBUG
+        System.out.format("=%d",score);
+        return score;
+    }
 
     @Override
     public Integer computeScore() {
-        return null;
+        //TODO: check board is full?
+        Integer score = 0;
+        for (RowOrientation orientation : RowOrientation.values()) {
+            for (Integer i=-2;i<3;++i){
+                System.out.format("|%d:",i);
+                score += computeRowScore(i,orientation);
+            }
+            System.out.format("\n");
+        }
+        return score;
     }
 }

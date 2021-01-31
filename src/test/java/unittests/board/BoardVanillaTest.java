@@ -58,4 +58,26 @@ public class BoardVanillaTest {
         catch (CoordinatesOccupidedException ignored) {
         }
     }
+
+    @Test
+    public void computeScore123Board() throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+        BoardVanilla board = new BoardVanilla();
+        Tile tile = new Tile(1,2,3);
+        Tile otherTile = new Tile(5,6,4);
+        for (Integer iii=-2;iii<3;++iii) {
+            if (iii==0) {
+                continue;
+            }
+            board.placeTile(tile, new HexCoordinates(0, iii, -iii));
+            board.placeTile(tile, new HexCoordinates(iii, 0, -iii));
+            board.placeTile(tile, new HexCoordinates(iii, -iii, 0));
+            if (iii==1 || iii==-1) {
+                board.placeTile(otherTile,new HexCoordinates(2*iii,-iii,-iii));
+                board.placeTile(otherTile,new HexCoordinates(-iii,2*iii,-iii));
+                board.placeTile(otherTile,new HexCoordinates(-iii,-iii,2*iii));
+            }
+        }
+        board.placeTile(tile, new HexCoordinates(0, 0, 0));
+        Assertions.assertEquals(5*(1+2+3),board.computeScore());
+    }
 }
