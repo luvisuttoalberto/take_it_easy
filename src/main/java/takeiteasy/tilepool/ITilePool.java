@@ -8,6 +8,6 @@ public interface ITilePool {
 
     long getSeed();
 
-    int getSize();
+    Integer getSize();
 
 }

@@ -48,4 +48,9 @@ public class Tile {
     public int hashCode() {
         return Objects.hash(top, left, right);
     }
+
+    @Override
+    public String toString() {
+        return ""+left+","+top+","+right;
+    }
 }

@@ -14,7 +14,7 @@ public class TilePoolTest {
             TilePool pool = new TilePool(19);
             Tile t = pool.getTile(28);
         }
-        catch (ArrayIndexOutOfBoundsException E){
+        catch (ArrayIndexOutOfBoundsException ignored){
 
         }
     }
@@ -36,31 +36,27 @@ public class TilePoolTest {
     public void testGenerationWithSeed() throws Exception{
 
         long seed = 1;
-        int size = 19;
-        TilePool tilePool1 = new TilePool(size, seed);
-        TilePool tilePool2 = new TilePool(size, seed);
+        TilePool tilePool1 = new TilePool(seed);
+        TilePool tilePool2 = new TilePool(seed);
+        Integer size = tilePool1.getSize();
 
         Random rand = new Random();
         int index = rand.nextInt(size);
         Tile t1 = tilePool1.getTile(index);
         Tile t2 = tilePool2.getTile(index);
 
-        assertTrue(t1.getTop().equals(t2.getTop())
-                            && t1.getLeft().equals(t2.getLeft())
-                            && t1.getRight().equals(t2.getRight()));
+        assertEquals(t1, t2);
     }
 
     @Test
     public void testAllDifferentTilesInATilePool() throws Exception{
-        TilePool pool = new TilePool(19, 1);
+        TilePool pool = new TilePool(1);
         for(int i = 0; i < pool.getSize() - 1; ++i){
             for(int j = i+1; j < pool.getSize(); ++j){
                 Tile t1 = pool.getTile(i);
                 Tile t2 = pool.getTile(j);
 
-                assertFalse(t1.getTop().equals(t2.getTop())
-                                    && t1.getLeft().equals(t2.getLeft())
-                                    && t1.getRight().equals(t2.getRight()));
+                assertNotEquals(t1, t2);
             }
         }
     }

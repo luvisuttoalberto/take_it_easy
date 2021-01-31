@@ -8,10 +8,10 @@ public class TilePool implements ITilePool {
 
     private final Tile[] extractedTiles;
     public long seed;
-    private final int size;
+    private final static Integer size = 19;
 
     @Override
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 
@@ -33,7 +33,7 @@ public class TilePool implements ITilePool {
         Tile[] tileset = createFullTileSet();
         Random rand = new Random(seed);
         Collections.shuffle(Arrays.asList(tileset), rand);
-        System.arraycopy(tileset, 0, extractedTiles, 0, extractedTiles.length);
+        System.arraycopy(tileset, 0, extractedTiles, 0, size);
     }
 
     private static long generateSeed(){
@@ -41,15 +41,14 @@ public class TilePool implements ITilePool {
         return rand.nextLong();
     }
 
-    public TilePool(int size, long seed){
-        this.size = size;
+    public TilePool(long seed){
         this.extractedTiles = new Tile[size];
         this.seed = seed;
         reset(this.seed);
     }
 
-    public TilePool(int size) {
-        this(size, generateSeed());
+    public TilePool() {
+        this(generateSeed());
     }
 
     private Tile[] createFullTileSet() {

@@ -127,4 +127,34 @@ public class BoardVanilla implements IBoard {
         }
         return score;
     }
+
+    private String stringifyTileContentAtStorageCoordinates(int i, int j){
+        Tile res = tileStorage[i][j];
+        if(res == null){
+            return ".....";
+        }
+        return res.toString();
+    }
+
+    public void printBoard(){
+        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,0) + "|");
+        for(int i = 0; i < 4; ++i){
+            System.out.println("      |" + stringifyTileContentAtStorageCoordinates(1,i+1) + "|     |" +
+                                           stringifyTileContentAtStorageCoordinates(3,i) + "|");
+            if(i < 3){
+                System.out.println("|" + stringifyTileContentAtStorageCoordinates(0,i+2) + "|     |" +
+                                         stringifyTileContentAtStorageCoordinates(2,i+1) + "|     |" +
+                                         stringifyTileContentAtStorageCoordinates(4,i) + "|");
+            }
+        }
+        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,4) + "|");
+    }
+    public void printMatrixBoard(){
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                System.out.print(stringifyTileContentAtStorageCoordinates(i,j));
+            }
+            System.out.print("\n");
+        }
+    }
 }
