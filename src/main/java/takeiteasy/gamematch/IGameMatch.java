@@ -1,6 +1,7 @@
 package takeiteasy.gamematch;
 
 import takeiteasy.board.HexCoordinates;
+import takeiteasy.player.IPlayer;
 import takeiteasy.tilepool.Tile;
 
 public interface IGameMatch {
@@ -12,9 +13,10 @@ public interface IGameMatch {
         FINISH;
     }
 
-    void addPlayer();
+    void addPlayer(IPlayer player);
     void setPlayerName(String name, Integer playerIndex);
     void removePlayer();
+    void setTilePoolSeed(long seed);
 
     void startMatch();
 
@@ -24,6 +26,7 @@ public interface IGameMatch {
     Boolean checkIfThereAreActivePlayers();
     Boolean checkIfPlayersAreWaitingForTile();
     void pickNextTile();
+
 
 
     void endMatch();

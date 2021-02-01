@@ -9,10 +9,19 @@ import java.util.Vector;
 public class GameMatch implements IGameMatch{
 
     Vector<IPlayer> players = new Vector<IPlayer>();
-    ITilePool tilePool;
+    TilePool tilePool;
+
+    public GameMatch() {
+        tilePool = new TilePool();
+    }
 
     @Override
-    public void addPlayer() {
+    public void setTilePoolSeed(long seed){
+        tilePool.reset(seed);
+    }
+
+    @Override
+    public void addPlayer(IPlayer player) {
 
     }
 
