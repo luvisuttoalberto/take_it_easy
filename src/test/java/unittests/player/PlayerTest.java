@@ -3,15 +3,18 @@ package unittests.player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.BoardVanilla;
+import takeiteasy.player.IPlayer;
+import takeiteasy.player.OutOfProperStateException;
 import takeiteasy.player.Player;
 import takeiteasy.tilepool.Tile;
 
 public class PlayerTest {
+
     @Test
-    public void testGetSetName() {
-        Player p = new Player("Casagrande");
-        p.setName("Medvet");
-        Assertions.assertEquals("Medvet", p.getName());
+    public void testStartMatch() throws OutOfProperStateException {
+        Player p = new Player("Kafka");
+        p.startMatch();
+        Assertions.assertEquals(p.getState(), IPlayer.State.Placing);
     }
 
     @Test
