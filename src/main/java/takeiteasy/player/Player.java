@@ -33,8 +33,39 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        playerBoard.placeTile(tile, coordinates);
+    public void resetBoard() {
+        playerBoard = new BoardVanilla();
+    }
+
+    @Override
+    public void startMatch() throws OutOfProperStateException {
+        if (playerState == State.WaitMatch) {
+            playerState = State.Placing;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
+    }
+
+
+    @Override
+    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException {
+        if (playerState == State.Placing) {
+            playerBoard.placeTile(tile, coordinates);
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
+    }
+
+    @Override
+    public void transitionFromWaitingPlayersToPlacing() throws OutOfProperStateException {
+        if (playerState == State.WaitOther) {
+            playerState = State.Placing;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
     }
 
     @Override
@@ -43,13 +74,23 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
-        return playerBoard.getTile(coordinates);
+    public void endMatch() throws OutOfProperStateException {
+        if (playerState == State.WaitOther) {
+            playerState = State.WaitMatch;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
     }
 
     @Override
     public Integer computeScore() {
         return playerBoard.computeScore();
+    }
+
+    @Override
+    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
+        return playerBoard.getTile(coordinates);
     }
 
     private HexCoordinates getCoordinatesFromUser() throws BadHexCoordinatesException {
@@ -59,4 +100,5 @@ public class Player implements IPlayer{
         Integer index3 = sc.nextInt();
         return new HexCoordinates(index1, index2, index3);
     }
+
 }
