@@ -6,10 +6,20 @@ public interface IPlayer {
     State getState();
     void setName(String name);
     String getName();
-    void placeTile(Tile tile) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException;
+
+    void resetBoard();
+    void startMatch();
+
+    Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException;
+    void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException;
+
+    void transitionFromWaitingPlayersToPlacing();
+
     void leaveTheMatch();
-    Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates);
+
+    void endMatch();
     Integer computeScore();
+
     public enum State {
         Placing,
         WaitOther,

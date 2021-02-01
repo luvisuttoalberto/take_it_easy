@@ -33,8 +33,7 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void placeTile(Tile tile) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        HexCoordinates coordinates = getCoordinatesFromUser();
+    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
         playerBoard.placeTile(tile, coordinates);
     }
 
@@ -44,7 +43,7 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) {
+    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
         return playerBoard.getTile(coordinates);
     }
 
