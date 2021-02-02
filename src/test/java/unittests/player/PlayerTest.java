@@ -3,11 +3,8 @@ package unittests.player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.*;
-import takeiteasy.player.IPlayer;
-import takeiteasy.player.OutOfProperStateException;
-import takeiteasy.player.Player;
-import takeiteasy.tilepool.Tile;
-import takeiteasy.tilepool.TilePool;
+import takeiteasy.player.*;
+import takeiteasy.tilepool.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,14 +14,14 @@ public class PlayerTest {
 
     @Test
     public void testStartMatch() throws OutOfProperStateException {
-        Player p = new Player("Kafka");
+        Player p = new Player("Sadr");
         p.startMatch();
-        Assertions.assertEquals(p.getState(), IPlayer.State.Placing);
+        Assertions.assertEquals(IPlayer.State.Placing, p.getState());
     }
 
     @Test
     public void testPlaceTile() throws OutOfBoardCoordinatesException, CoordinatesOccupidedException, BadHexCoordinatesException, OutOfProperStateException {
-        Player p = new Player("Tornatore");
+        Player p = new Player("Sadr");
         p.startMatch();
         Tile expectedTile = new Tile(1, 2, 3);
         HexCoordinates c = new HexCoordinates(0,0,0);
@@ -35,71 +32,52 @@ public class PlayerTest {
 
     @Test
     public void testTransitionFromWaitingPlayersToPlacing() throws OutOfProperStateException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player p = new Player("Campagna");
+        Player p = new Player("Sadr");
         Tile tile = new Tile(1, 2, 3);
         HexCoordinates c = new HexCoordinates(0,0,0);
         p.startMatch();
         p.placeTile(tile, c);
         p.transitionFromWaitingPlayersToPlacing();
-        Assertions.assertEquals(p.getState(),IPlayer.State.Placing);
+        Assertions.assertEquals(IPlayer.State.Placing, p.getState());
     }
 
     @Test
     public void testLeaveTheMatchFromWaitMatchState() {
-        Player p = new Player("Bortolussi");
+        Player p = new Player("Sadr");
         p.leaveTheMatch();
-        Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
+        Assertions.assertEquals(IPlayer.State.Leave, p.getState());
     }
 
     @Test
     public void testLeaveTheMatchFromPlacingState() throws OutOfProperStateException {
-        Player p = new Player("Bortolussi");
+        Player p = new Player("Sadr");
         p.startMatch();
         p.leaveTheMatch();
-        Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
+        Assertions.assertEquals(IPlayer.State.Leave, p.getState());
     }
 
     @Test
     public void testLeaveTheMatchFromWaitOtherState() throws OutOfProperStateException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player p = new Player("Bortolussi");
+        Player p = new Player("Sadr");
         Tile tile = new Tile(1, 2, 3);
         HexCoordinates c = new HexCoordinates(0,0,0);
         p.startMatch();
         p.placeTile(tile, c);
         p.leaveTheMatch();
-        Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
+        Assertions.assertEquals(IPlayer.State.Leave, p.getState());
     }
 
     @Test
     public void testEndMatch() throws BadHexCoordinatesException, OutOfProperStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player p = new Player("Kavka");
+        Player p = new Player("Sadr");
         TilePool tp = new TilePool(1);
 
         int[][] arr = {
-                {-1, 2, -1},
-                {1, 1, -2},
-                {0,0,0},
-
-                {-2, 2, 0},
-                {-1, 1, 0},
-                {-1, 0, 1},
-                {-1, -1, 2},
-
-                {0, 2, -2},
-                {0, 1, -1},
-                {-2, 0, 2},
-                {0, -1, 1},
-                {0,-2, 2},
-
-
-                {-2, 1, 1},
-                {1, 0, -1},
-                {1, -1, 0},
-                {1, -2, 1},
-
-                {2, 0, -2},
-                {2, -1, -1},
-                {2, -2, 0}
+                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
+                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
         };
         Random rand = new Random(10);
         Collections.shuffle(Arrays.asList(arr), rand);
@@ -120,52 +98,32 @@ public class PlayerTest {
         }
         p.computeScore();
         p.endMatch();
-        Assertions.assertEquals(IPlayer.State.WaitMatch,p.getState());
+        Assertions.assertEquals(IPlayer.State.WaitMatch, p.getState());
     }
 
     @Test
     public void testResetBoard() throws BadHexCoordinatesException, OutOfProperStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player p = new Player("Cozzini");
+        Player p = new Player("Sadr");
         Tile tile = new Tile(1, 2, 3);
         HexCoordinates c = new HexCoordinates(0,0,0);
         p.startMatch();
-        Tile expectedTile = p.showTileFromBoardAtCoordinates(c);
         p.placeTile(tile, c);
         p.resetBoard();
         Tile realTile = p.showTileFromBoardAtCoordinates(c);
-        Assertions.assertEquals(expectedTile, realTile);
+        Assertions.assertNull(realTile);
     }
 
     @Test
     public void testComputeScore() throws BadHexCoordinatesException, OutOfProperStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player p = new Player("Kavka");
+        Player p = new Player("Sadr");
         TilePool tp = new TilePool(1);
 
         int[][] arr = {
-                {-1, 2, -1},
-                {1, 1, -2},
-                {0,0,0},
-
-                {-2, 2, 0},
-                {-1, 1, 0},
-                {-1, 0, 1},
-                {-1, -1, 2},
-
-                {0, 2, -2},
-                {0, 1, -1},
-                {-2, 0, 2},
-                {0, -1, 1},
-                {0,-2, 2},
-
-
-                {-2, 1, 1},
-                {1, 0, -1},
-                {1, -1, 0},
-                {1, -2, 1},
-
-                {2, 0, -2},
-                {2, -1, -1},
-                {2, -2, 0}
+                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
+                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
         };
         Random rand = new Random(10);
         Collections.shuffle(Arrays.asList(arr), rand);
@@ -181,10 +139,11 @@ public class PlayerTest {
         for (int i=0; i<19; ++i) {
             Tile tile = tp.getTile(i);
             p.placeTile(tile, coords[i]);
+            if(i==18) break;
             p.transitionFromWaitingPlayersToPlacing();
         }
-        BoardVanilla b = p.PlayerBoard();
-        b.printBoard();
+        p.playerBoard.computeScore();
+        p.playerBoard.printBoard();
         Assertions.assertEquals(27,p.computeScore());
     }
 }
