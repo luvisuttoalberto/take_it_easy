@@ -1,9 +1,7 @@
 package unittests.gamematch;
 
 import org.junit.jupiter.api.Test;
-import takeiteasy.gamematch.GameMatch;
-import takeiteasy.gamematch.PlayerNameNotFoundException;
-import takeiteasy.gamematch.PlayerWithSameNameCannotBeAddedException;
+import takeiteasy.gamematch.*;
 import takeiteasy.player.Player;
 
 import java.util.Arrays;
@@ -102,12 +100,31 @@ public class GameMatchTest {
 
     @Test
     public void testStartMatchWithPlayers(){
-
+        GameMatch gm = new GameMatch();
+        Player player = new Player("Dario");
+        try{
+            gm.addPlayer(player);
+            gm.startMatch();
+            assertEquals(IGameMatch.State.PLAY, gm.getState());
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testStartMatchWithoutPlayers(){
-
+        GameMatch gm = new GameMatch();
+        try{
+            gm.startMatch();
+            fail();
+        }
+        catch (NotEnoughPlayersException ignored){
+            assertEquals(IGameMatch.State.SETUP, gm.getState());
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test

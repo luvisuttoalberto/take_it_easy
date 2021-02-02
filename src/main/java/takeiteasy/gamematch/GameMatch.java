@@ -10,9 +10,15 @@ public class GameMatch implements IGameMatch{
 
     Vector<IPlayer> players = new Vector<IPlayer>();
     TilePool tilePool;
+    State state;
 
     public GameMatch() {
         tilePool = new TilePool();
+        state = State.SETUP;
+    }
+
+    public State getState() {
+        return state;
     }
 
     @Override
@@ -61,8 +67,19 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void startMatch() {
+    public void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException {
 
+        if(state != State.SETUP){
+            throw new InvalidMatchStateException();
+        }
+        if(players.size() < 1){
+            throw new NotEnoughPlayersException();
+        }
+        for(IPlayer p : players){
+            // TODO: add to signature exception thrown by startMatch()
+            p.startMatch();
+        }
+        state = State.PLAY;
     }
 
     @Override
