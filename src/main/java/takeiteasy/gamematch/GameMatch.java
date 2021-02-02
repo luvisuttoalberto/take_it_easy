@@ -4,7 +4,6 @@ import takeiteasy.board.HexCoordinates;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
-import java.util.Arrays;
 import java.util.Vector;
 
 public class GameMatch implements IGameMatch{
@@ -28,10 +27,11 @@ public class GameMatch implements IGameMatch{
         return playerNames;
     }
 
-    private IPlayer retrievePlayerFromName(String playerName) throws PlayerNameNotFoundException {
-        for (IPlayer p : players){
-            if (p.getName() == playerName){
-                return p;
+    private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
+
+        for (Integer i = 0; i< players.size();++i){
+            if (players.get(i).getName() == playerName){
+                return i;
             }
         }
         throw new PlayerNameNotFoundException(playerName);
@@ -40,13 +40,12 @@ public class GameMatch implements IGameMatch{
     @Override
     public void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException {
         try{
-            retrievePlayerFromName(player.getName());
+            retrievePlayerIndexFromName(player.getName());
             throw new PlayerWithSameNameCannotBeAddedException(player.getName());
         }
         catch (PlayerNameNotFoundException e){
             players.add(player);
         }
-
     }
 
     @Override
@@ -55,8 +54,9 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void removePlayer(String playerName) {
-
+    public void removePlayer(String playerName) throws PlayerNameNotFoundException {
+        Integer playerIndex = retrievePlayerIndexFromName(playerName);
+        players.removeElementAt(playerIndex);
     }
 
     @Override

@@ -2,6 +2,8 @@ package unittests.gamematch;
 
 import org.junit.jupiter.api.Test;
 import takeiteasy.gamematch.GameMatch;
+import takeiteasy.gamematch.PlayerNameNotFoundException;
+import takeiteasy.gamematch.PlayerWithSameNameCannotBeAddedException;
 import takeiteasy.player.Player;
 
 import java.util.Arrays;
@@ -21,14 +23,49 @@ public class GameMatchTest {
         catch (Exception e){
             fail("player add failed");
         }
-        
+
         assertTrue(Arrays.stream(gm.getPlayerNames()).anyMatch(plyName::equals));
 
+    }
+    @Test
+    public void testAddDuplicatePlayer(){
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+        Player ply = new Player(plyName);
+        try {
+            gm.addPlayer(ply);
+            gm.addPlayer(ply);
+            fail();
+        }
+        catch (PlayerWithSameNameCannotBeAddedException ignored){
+            // test passed
+        }
     }
 
     @Test
     public void testRemovePlayer(){
-
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+        Player ply = new Player(plyName);
+        try {
+            gm.addPlayer(ply);
+            gm.removePlayer(plyName);
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+    @Test
+    public void testRemoveAbsentPlayer(){
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+        try {
+            gm.removePlayer(plyName);
+            fail();
+        }
+        catch (PlayerNameNotFoundException ignored){
+            // test pass
+        }
     }
 
     @Test
