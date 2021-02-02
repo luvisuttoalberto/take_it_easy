@@ -21,16 +21,8 @@ public class GameMatchTest {
         catch (Exception e){
             fail("player add failed");
         }
-
-
-        for (String pname : gm.getPlayerNames()){
-            System.out.println(pname);
-            if (pname==plyName){
-                return;
-            }
-        }
-        fail();
-        //assertTrue(Arrays.stream(gm.getPlayerNames()).anyMatch(plyName::equals));
+        
+        assertTrue(Arrays.stream(gm.getPlayerNames()).anyMatch(plyName::equals));
 
     }
 
