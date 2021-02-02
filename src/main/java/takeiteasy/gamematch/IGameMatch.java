@@ -13,21 +13,22 @@ public interface IGameMatch {
         FINISH;
     }
 
-    void addPlayer(IPlayer player);
-    void setPlayerName(String name, Integer playerIndex);
-    void removePlayer();
+    void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException;
+    void setPlayerName(String oldName, String newName);
+    void removePlayer(String playerName);
     void setTilePoolSeed(long seed);
+    String[] getPlayerNames();
 
     void startMatch();
 
     Tile getCurrentTile();
-    void positionCurrentTileOnPlayerBoard(Integer playerIndex, HexCoordinates coordinates);
+    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates);
 
     Boolean checkIfThereAreActivePlayers();
-    Boolean checkIfPlayersAreWaitingForTile();
+    Boolean checkIfAllPlayersAreWaitingForTile();
     void pickNextTile();
 
-
+    void abortMatch();
 
     void endMatch();
 

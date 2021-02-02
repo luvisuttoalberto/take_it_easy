@@ -4,6 +4,7 @@ import takeiteasy.board.HexCoordinates;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 public class GameMatch implements IGameMatch{
@@ -21,17 +22,40 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void addPlayer(IPlayer player) {
+    public String[] getPlayerNames() {
+
+        String[] playerNames = players.stream().map(IPlayer::getName).toArray(String[]::new);
+        return playerNames;
+    }
+
+    private IPlayer retrievePlayerFromName(String playerName) throws PlayerNameNotFoundException {
+        for (IPlayer p : players){
+            if (p.getName() == playerName){
+                return p;
+            }
+        }
+        throw new PlayerNameNotFoundException(playerName);
+    }
+
+    @Override
+    public void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException {
+        try{
+            retrievePlayerFromName(player.getName());
+            throw new PlayerWithSameNameCannotBeAddedException(player.getName());
+        }
+        catch (PlayerNameNotFoundException e){
+            players.add(player);
+        }
 
     }
 
     @Override
-    public void setPlayerName(String name, Integer playerIndex) {
+    public void setPlayerName(String oldName, String newName) {
 
     }
 
     @Override
-    public void removePlayer() {
+    public void removePlayer(String playerName) {
 
     }
 
@@ -46,7 +70,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void positionCurrentTileOnPlayerBoard(Integer playerIndex, HexCoordinates coordinates) {
+    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) {
 
     }
 
@@ -56,12 +80,17 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public Boolean checkIfPlayersAreWaitingForTile() {
+    public Boolean checkIfAllPlayersAreWaitingForTile() {
         return null;
     }
 
     @Override
     public void pickNextTile() {
+
+    }
+
+    @Override
+    public void abortMatch() {
 
     }
 
