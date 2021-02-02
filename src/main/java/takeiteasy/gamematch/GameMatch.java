@@ -49,8 +49,9 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void setPlayerName(String oldName, String newName) {
-
+    public void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException {
+        Integer playerIndex = retrievePlayerIndexFromName(oldName);
+        players.get(playerIndex).setName(newName);
     }
 
     @Override

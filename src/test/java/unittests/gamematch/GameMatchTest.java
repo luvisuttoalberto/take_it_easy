@@ -70,6 +70,19 @@ public class GameMatchTest {
 
     @Test
     public void testSetPlayerName(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        Player ply = new Player(oldName);
+        try{
+            gm.addPlayer(ply);
+            gm.setPlayerName(oldName, newName);
+            assertTrue(Arrays.stream(gm.getPlayerNames()).anyMatch(newName::equals));
+            assertFalse(Arrays.stream(gm.getPlayerNames()).anyMatch(oldName::equals));
+        }
+        catch (Exception e){
+            fail();
+        }
 
     }
 

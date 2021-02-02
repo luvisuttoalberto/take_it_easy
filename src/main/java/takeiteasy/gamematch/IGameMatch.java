@@ -14,7 +14,7 @@ public interface IGameMatch {
     }
 
     void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException;
-    void setPlayerName(String oldName, String newName);
+    void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException;
     void setTilePoolSeed(long seed);
     String[] getPlayerNames();
