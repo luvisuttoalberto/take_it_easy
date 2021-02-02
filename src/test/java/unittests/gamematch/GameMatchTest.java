@@ -3,6 +3,7 @@ package unittests.gamematch;
 import org.junit.jupiter.api.Test;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.Player;
+import takeiteasy.tilepool.TilePool;
 
 import java.util.Arrays;
 
@@ -99,6 +100,15 @@ public class GameMatchTest {
     }
 
     @Test
+    public void testGetCurrentTile(){
+        GameMatch gm = new GameMatch();
+        long seed = 666;
+        gm.setTilePoolSeed(seed);
+        TilePool tilePool = new TilePool(seed);
+        assertEquals(tilePool.getTile(0), gm.getCurrentTile());
+    }
+
+    @Test
     public void testStartMatchWithPlayers(){
         GameMatch gm = new GameMatch();
         Player player = new Player("Dario");
@@ -128,17 +138,17 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testPositionTile(){
-
-    }
-
-    @Test
     public void testPickNextTile(){
 
     }
 
     @Test
     public void testPickNextTileFail(){
+
+    }
+
+    @Test
+    public void testPositionTile(){
 
     }
 

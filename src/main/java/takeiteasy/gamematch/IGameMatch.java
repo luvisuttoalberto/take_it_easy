@@ -14,21 +14,22 @@ public interface IGameMatch {
     }
 
     State getState();
+    Integer getCurrentTileIndex();
+    String[] getPlayerNames();
+    Tile getCurrentTile();
 
     void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException;
     void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException;
     void setTilePoolSeed(long seed);
-    String[] getPlayerNames();
 
     void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException;
 
-    Tile getCurrentTile();
     void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates);
 
     Boolean checkIfThereAreActivePlayers();
     Boolean checkIfAllPlayersAreWaitingForTile();
-    void pickNextTile();
+    void setCurrentTileToNextInPool();
 
     void abortMatch();
 

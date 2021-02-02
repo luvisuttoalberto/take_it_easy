@@ -11,12 +11,15 @@ public class GameMatch implements IGameMatch{
     Vector<IPlayer> players = new Vector<IPlayer>();
     TilePool tilePool;
     State state;
+    Integer currentTileIndex;
 
     public GameMatch() {
         tilePool = new TilePool();
         state = State.SETUP;
+        currentTileIndex = 0;
     }
 
+    @Override
     public State getState() {
         return state;
     }
@@ -83,8 +86,13 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
+    public Integer getCurrentTileIndex() {
+        return currentTileIndex;
+    }
+
+    @Override
     public Tile getCurrentTile() {
-        return null;
+        return tilePool.getTile(currentTileIndex);
     }
 
     @Override
@@ -103,7 +111,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void pickNextTile() {
+    public void setCurrentTileToNextInPool() {
 
     }
 
