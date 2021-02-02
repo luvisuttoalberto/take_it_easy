@@ -52,6 +52,7 @@ public class Player implements IPlayer{
     public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException {
         if (playerState == State.Placing) {
             playerBoard.placeTile(tile, coordinates);
+            playerState = State.WaitOther;
         }
         else {
             throw new OutOfProperStateException();
