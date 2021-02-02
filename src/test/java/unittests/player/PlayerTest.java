@@ -38,4 +38,30 @@ public class PlayerTest {
         p.transitionFromWaitingPlayersToPlacing();
         Assertions.assertEquals(p.getState(),IPlayer.State.Placing);
     }
+
+    @Test
+    public void testLeaveTheMatchFromWaitMatchState() {
+        Player p = new Player("Bortolussi");
+        p.leaveTheMatch();
+        Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
+    }
+
+    @Test
+    public void testLeaveTheMatchFromPlacingState() throws OutOfProperStateException {
+        Player p = new Player("Bortolussi");
+        p.startMatch();
+        p.leaveTheMatch();
+        Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
+    }
+
+    @Test
+    public void testLeaveTheMatchFromWaitOtherState() throws OutOfProperStateException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+        Player p = new Player("Bortolussi");
+        Tile tile = new Tile(1, 2, 3);
+        HexCoordinates c = new HexCoordinates(0,0,0);
+        p.startMatch();
+        p.placeTile(tile, c);
+        p.leaveTheMatch();
+        Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
+    }
 }

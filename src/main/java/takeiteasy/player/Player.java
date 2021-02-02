@@ -47,7 +47,6 @@ public class Player implements IPlayer{
         }
     }
 
-
     @Override
     public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException {
         if (playerState == State.Placing) {
