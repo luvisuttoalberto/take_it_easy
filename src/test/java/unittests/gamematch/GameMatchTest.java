@@ -83,7 +83,6 @@ public class GameMatchTest {
         catch (Exception e){
             fail();
         }
-
     }
 
     @Test

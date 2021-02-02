@@ -6,24 +6,25 @@ public interface IPlayer {
     State getState();
     void setName(String name);
     String getName();
+    IBoard getBoard();
 
     void resetBoard();
-    void startMatch();
+    void startMatch() throws OutOfProperStateException;
 
     Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException;
-    void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException;
+    void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException;
 
-    void transitionFromWaitingPlayersToPlacing();
+    void transitionFromWaitingPlayersToPlacing() throws OutOfProperStateException;
 
     void leaveTheMatch();
 
-    void endMatch();
+    void endMatch() throws OutOfProperStateException;
     Integer computeScore();
 
     public enum State {
-        Placing,
-        WaitOther,
-        WaitMatch,
-        Leave;
+        PLACING,
+        WAIT_OTHER,
+        WAIT_MATCH,
+        LEFT;
     }
 }

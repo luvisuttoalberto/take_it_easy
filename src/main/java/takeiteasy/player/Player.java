@@ -9,11 +9,11 @@ public class Player implements IPlayer{
 
     private String Name;
     private State playerState;
-    BoardVanilla playerBoard;
+    private IBoard playerBoard;
 
     public Player(String name) {
         Name = name;
-        this.playerState = State.WaitMatch;
+        this.playerState = State.WAIT_MATCH;
         this.playerBoard = new BoardVanilla();
     }
 
@@ -28,23 +28,60 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public String getName() {
-        return Name;
+    public String getName() { return Name; }
+
+    @Override
+    public IBoard getBoard() { return playerBoard; }
+
+    @Override
+    public void resetBoard() {
+        playerBoard = new BoardVanilla();
     }
 
     @Override
-    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        playerBoard.placeTile(tile, coordinates);
+    public void startMatch() throws OutOfProperStateException {
+        if (playerState == State.WAIT_MATCH) {
+            playerState = State.PLACING;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
+    }
+
+    @Override
+    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException {
+        if (playerState == State.PLACING) {
+            playerBoard.placeTile(tile, coordinates);
+            playerState = State.WAIT_OTHER;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
+    }
+
+    @Override
+    public void transitionFromWaitingPlayersToPlacing() throws OutOfProperStateException {
+        if (playerState == State.WAIT_OTHER) {
+            playerState = State.PLACING;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
     }
 
     @Override
     public void leaveTheMatch() {
-        playerState = State.Leave;
+        playerState = State.LEFT;
     }
 
     @Override
-    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
-        return playerBoard.getTile(coordinates);
+    public void endMatch() throws OutOfProperStateException {
+        if (playerState == State.WAIT_OTHER) {
+            playerState = State.WAIT_MATCH;
+        }
+        else {
+            throw new OutOfProperStateException();
+        }
     }
 
     @Override
@@ -52,6 +89,12 @@ public class Player implements IPlayer{
         return playerBoard.computeScore();
     }
 
+    @Override
+    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
+        return playerBoard.getTile(coordinates);
+    }
+
+    //TODO: Remove?
     private HexCoordinates getCoordinatesFromUser() throws BadHexCoordinatesException {
         Scanner sc = new Scanner(System.in);
         Integer index1 = sc.nextInt();
