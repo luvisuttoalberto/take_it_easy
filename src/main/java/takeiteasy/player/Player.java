@@ -9,7 +9,7 @@ public class Player implements IPlayer{
 
     private String Name;
     private State playerState;
-    BoardVanilla playerBoard;
+    public BoardVanilla playerBoard;
 
     public Player(String name) {
         Name = name;
@@ -100,9 +100,4 @@ public class Player implements IPlayer{
         Integer index3 = sc.nextInt();
         return new HexCoordinates(index1, index2, index3);
     }
-
-    public BoardVanilla PlayerBoard(){
-        return playerBoard;
-    }
-
 }
