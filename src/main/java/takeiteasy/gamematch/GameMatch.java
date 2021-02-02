@@ -105,18 +105,32 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public Boolean checkIfThereAreActivePlayers() {
-        return null;
-    }
+    public void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayerNotReadyForNextTile, TilePoolDepletedException {
+        if (state != State.PLAY){
+            throw new InvalidMatchStateException();
+        }
+        if (players.size()<1){
+            throw new NotEnoughPlayersException();
+        }
+        for (IPlayer p : players){
+            IPlayer.State pstate = p.getState();
+            if (pstate== IPlayer.State.PLACING){
+                throw new PlayerNotReadyForNextTile();
+            }
+        }
+        if (currentTileIndex >= tilePool.getSize()-1){
+            throw new TilePoolDepletedException();
+        }
 
-    @Override
-    public Boolean checkIfAllPlayersAreWaitingForTile() {
-        return null;
-    }
-
-    @Override
-    public void setCurrentTileToNextInPool() {
-
+        // update currentTileIndex and player states
+        ++currentTileIndex;
+        for (IPlayer p : players){
+            try{
+                p.transitionFromWaitingPlayersToPlacing();
+            }
+            catch (OutOfProperStateException ignored){
+            }
+        }
     }
 
     @Override

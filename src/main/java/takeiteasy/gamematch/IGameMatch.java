@@ -30,9 +30,7 @@ public interface IGameMatch {
 
     void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException;
 
-    Boolean checkIfThereAreActivePlayers();
-    Boolean checkIfAllPlayersAreWaitingForTile();
-    void setCurrentTileToNextInPool();
+    void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayerNotReadyForNextTile, TilePoolDepletedException;
 
     void abortMatch();
 

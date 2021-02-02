@@ -154,12 +154,79 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testPickNextTile(){
-
+    public void testDealNextTileNoPlayers(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Karlos";
+        try{
+            gm.addPlayer(new Player(name));
+            gm.addPlayer(new Player(otherName));
+            gm.startMatch();
+            gm.removePlayer(name);
+            gm.removePlayer(otherName);
+            gm.dealNextTile();
+            fail();
+        }
+        catch (NotEnoughPlayersException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
-    public void testPickNextTileFail(){
+    public void testDealNextTilePlayersNotReady(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Karlos";
+        try{
+            gm.addPlayer(new Player(name));
+            gm.addPlayer(new Player(otherName));
+            gm.startMatch();
+            gm.positionCurrentTileOnPlayerBoard(otherName,new HexCoordinates(0,0,0));
+            gm.dealNextTile();
+            fail();
+        }
+        catch (PlayerNotReadyForNextTile ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testDealNextTilePlayersTilePoolOver(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        int[][] coordinateSet = {
+                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
+                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
+        };
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
+
+            for (int[] c : coordinateSet) {
+                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+                gm.dealNextTile();
+            }
+            fail();
+        }
+        catch (TilePoolDepletedException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testAbortMatch(){
 
     }
 
