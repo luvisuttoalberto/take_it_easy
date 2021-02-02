@@ -101,4 +101,8 @@ public class Player implements IPlayer{
         return new HexCoordinates(index1, index2, index3);
     }
 
+    public BoardVanilla PlayerBoard(){
+        return playerBoard;
+    }
+
 }
