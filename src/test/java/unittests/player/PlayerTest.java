@@ -26,6 +26,16 @@ public class PlayerTest {
         p.placeTile(expectedTile, c);
         Tile realTile = p.showTileFromBoardAtCoordinates(c);
         Assertions.assertEquals(expectedTile,realTile);
+    }
 
+    @Test
+    public void testTransitionFromWaitingPlayersToPlacing() throws OutOfProperStateException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+        Player p = new Player("Campagna");
+        Tile tile = new Tile(1, 2, 3);
+        HexCoordinates c = new HexCoordinates(0,0,0);
+        p.startMatch();
+        p.placeTile(tile, c);
+        p.transitionFromWaitingPlayersToPlacing();
+        Assertions.assertEquals(p.getState(),IPlayer.State.Placing);
     }
 }
