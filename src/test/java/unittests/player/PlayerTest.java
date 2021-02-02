@@ -43,74 +43,99 @@ public class PlayerTest {
     }
 
     @Test
-    public void testTransitionFromWaitingPlayersToPlacing() throws OutOfProperStateException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player player = new Player("Sadr");
-        Tile tile = new Tile(1, 2, 3);
-        HexCoordinates coordinates = new HexCoordinates(0,0,0);
-        player.startMatch();
-        player.placeTile(tile, coordinates);
-        player.transitionFromWaitingPlayersToPlacing();
-        Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
+    public void testTransitionFromWaitingPlayersToPlacing() {
+        try {
+            Player player = new Player("Sadr");
+            Tile tile = new Tile(1, 2, 3);
+            HexCoordinates coordinates = new HexCoordinates(0,0,0);
+            player.startMatch();
+            player.placeTile(tile, coordinates);
+            player.transitionFromWaitingPlayersToPlacing();
+            Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
+        }
+        catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
     public void testLeaveTheMatchFromWaitMatchState() {
-        Player player = new Player("Sadr");
-        player.leaveTheMatch();
-        Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
-    }
-
-    @Test
-    public void testLeaveTheMatchFromPlacingState() throws OutOfProperStateException {
-        Player player = new Player("Sadr");
-        player.startMatch();
-        player.leaveTheMatch();
-        Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
-    }
-
-    @Test
-    public void testLeaveTheMatchFromWaitOtherState() throws OutOfProperStateException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player player = new Player("Sadr");
-        Tile tile = new Tile(1, 2, 3);
-        HexCoordinates coordinates = new HexCoordinates(0,0,0);
-        player.startMatch();
-        player.placeTile(tile, coordinates);
-        player.leaveTheMatch();
-        Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
-    }
-
-    @Test
-    public void testEndMatch() throws BadHexCoordinatesException, OutOfProperStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-        Player player = new Player("Sadr");
-        TilePool tilepool = new TilePool(1);
-
-        int[][] coordinateSet = {
-                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
-                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
-                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
-        };
-        Random rand = new Random(10);
-        Collections.shuffle(Arrays.asList(coordinateSet), rand);
-        HexCoordinates[] hexCoordinates = new HexCoordinates[19];
-        for (int i=0; i<19; ++i) {
-            int x = coordinateSet[i][0];
-            int y = coordinateSet[i][1];
-            int z = coordinateSet[i][2];
-            hexCoordinates[i] = new HexCoordinates(x, y, z);
+        try {
+            Player player = new Player("Sadr");
+            player.leaveTheMatch();
+            Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
         }
-
-        player.startMatch();
-        for (int i=0; i<19; ++i) {
-            Tile tile = tilepool.getTile(i);
-            player.placeTile(tile, hexCoordinates[i]);
-            if(i==18) break;
-            player.transitionFromWaitingPlayersToPlacing();
+        catch (Exception e) {
+            fail();
         }
-        player.computeScore();
-        player.endMatch();
-        Assertions.assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
+    }
+
+    @Test
+    public void testLeaveTheMatchFromPlacingState() {
+        try {
+            Player player = new Player("Sadr");
+            player.startMatch();
+            player.leaveTheMatch();
+            Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
+        }
+        catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testLeaveTheMatchFromWaitOtherState() {
+        try {
+            Player player = new Player("Sadr");
+            Tile tile = new Tile(1, 2, 3);
+            HexCoordinates coordinates = new HexCoordinates(0, 0, 0);
+            player.startMatch();
+            player.placeTile(tile, coordinates);
+            player.leaveTheMatch();
+            Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
+        }
+        catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testEndMatch() {
+        try {
+            Player player = new Player("Sadr");
+            TilePool tilepool = new TilePool(1);
+
+            int[][] coordinateSet = {
+                    {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                    {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                    {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0, -2, 2},
+                    {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                    {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
+            };
+            Random rand = new Random(10);
+            Collections.shuffle(Arrays.asList(coordinateSet), rand);
+            HexCoordinates[] hexCoordinates = new HexCoordinates[19];
+            for (int i = 0; i < 19; ++i) {
+                int x = coordinateSet[i][0];
+                int y = coordinateSet[i][1];
+                int z = coordinateSet[i][2];
+                hexCoordinates[i] = new HexCoordinates(x, y, z);
+            }
+
+            player.startMatch();
+            for (int i = 0; i < 19; ++i) {
+                Tile tile = tilepool.getTile(i);
+                player.placeTile(tile, hexCoordinates[i]);
+                if (i == 18) break;
+                player.transitionFromWaitingPlayersToPlacing();
+            }
+            player.computeScore();
+            player.endMatch();
+            Assertions.assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
+        }
+        catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
