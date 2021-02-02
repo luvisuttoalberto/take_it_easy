@@ -6,6 +6,7 @@ public interface IPlayer {
     State getState();
     void setName(String name);
     String getName();
+    public IBoard getBoard();
 
     void resetBoard();
     void startMatch() throws OutOfProperStateException;

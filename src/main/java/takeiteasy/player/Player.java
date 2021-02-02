@@ -9,7 +9,7 @@ public class Player implements IPlayer{
 
     private String Name;
     private State playerState;
-    public BoardVanilla playerBoard;
+    private IBoard playerBoard;
 
     public Player(String name) {
         Name = name;
@@ -28,9 +28,10 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public String getName() {
-        return Name;
-    }
+    public String getName() { return Name; }
+
+    @Override
+    public IBoard getBoard() { return playerBoard; }
 
     @Override
     public void resetBoard() {
