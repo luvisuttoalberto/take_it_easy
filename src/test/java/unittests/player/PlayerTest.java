@@ -10,24 +10,36 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 public class PlayerTest {
 
     @Test
-    public void testStartMatch() throws OutOfProperStateException {
+    public void testStartMatch(){
         Player player = new Player("Sadr");
-        player.startMatch();
-        Assertions.assertEquals(IPlayer.State.Placing, player.getState());
+        try {
+            player.startMatch();
+            Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
-    public void testPlaceTile() throws OutOfBoardCoordinatesException, CoordinatesOccupidedException, BadHexCoordinatesException, OutOfProperStateException {
+    public void testPlaceTile() {
         Player player = new Player("Sadr");
-        player.startMatch();
-        Tile expectedTile = new Tile(1, 2, 3);
-        HexCoordinates coordinates = new HexCoordinates(0,0,0);
-        player.placeTile(expectedTile, coordinates);
-        Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
-        Assertions.assertEquals(expectedTile,realTile);
+        try {
+            player.startMatch();
+            Tile expectedTile = new Tile(1, 2, 3);
+            HexCoordinates coordinates = new HexCoordinates(0,0,0);
+            player.placeTile(expectedTile, coordinates);
+            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
+            Assertions.assertEquals(expectedTile,realTile);
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
@@ -38,14 +50,14 @@ public class PlayerTest {
         player.startMatch();
         player.placeTile(tile, coordinates);
         player.transitionFromWaitingPlayersToPlacing();
-        Assertions.assertEquals(IPlayer.State.Placing, player.getState());
+        Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
     }
 
     @Test
     public void testLeaveTheMatchFromWaitMatchState() {
         Player player = new Player("Sadr");
         player.leaveTheMatch();
-        Assertions.assertEquals(IPlayer.State.Leave, player.getState());
+        Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
     }
 
     @Test
@@ -53,7 +65,7 @@ public class PlayerTest {
         Player player = new Player("Sadr");
         player.startMatch();
         player.leaveTheMatch();
-        Assertions.assertEquals(IPlayer.State.Leave, player.getState());
+        Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
     }
 
     @Test
@@ -64,7 +76,7 @@ public class PlayerTest {
         player.startMatch();
         player.placeTile(tile, coordinates);
         player.leaveTheMatch();
-        Assertions.assertEquals(IPlayer.State.Leave, player.getState());
+        Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
     }
 
     @Test
@@ -98,7 +110,7 @@ public class PlayerTest {
         }
         player.computeScore();
         player.endMatch();
-        Assertions.assertEquals(IPlayer.State.WaitMatch, player.getState());
+        Assertions.assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
     }
 
     @Test

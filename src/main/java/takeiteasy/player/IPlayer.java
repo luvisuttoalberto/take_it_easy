@@ -6,7 +6,7 @@ public interface IPlayer {
     State getState();
     void setName(String name);
     String getName();
-    public IBoard getBoard();
+    IBoard getBoard();
 
     void resetBoard();
     void startMatch() throws OutOfProperStateException;
@@ -22,9 +22,9 @@ public interface IPlayer {
     Integer computeScore();
 
     public enum State {
-        Placing,
-        WaitOther,
-        WaitMatch,
-        Leave;
+        PLACING,
+        WAIT_OTHER,
+        WAIT_MATCH,
+        LEFT;
     }
 }
