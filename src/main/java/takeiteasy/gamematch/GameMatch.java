@@ -1,6 +1,6 @@
 package takeiteasy.gamematch;
 
-import takeiteasy.board.HexCoordinates;
+import takeiteasy.board.*;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
@@ -44,6 +44,11 @@ public class GameMatch implements IGameMatch{
             }
         }
         throw new PlayerNameNotFoundException(playerName);
+    }
+
+    @Override
+    public IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException {
+        return players.get(retrievePlayerIndexFromName(playerName)).getBoard();
     }
 
     @Override
@@ -96,8 +101,8 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) {
-
+    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+        players.get(retrievePlayerIndexFromName(playerName)).placeTile(getCurrentTile(), coordinates);
     }
 
     @Override

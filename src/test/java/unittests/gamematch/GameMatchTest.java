@@ -1,6 +1,7 @@
 package unittests.gamematch;
 
 import org.junit.jupiter.api.Test;
+import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.Player;
 import takeiteasy.tilepool.TilePool;
@@ -109,20 +110,6 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testStartMatchWithPlayers(){
-        GameMatch gm = new GameMatch();
-        Player player = new Player("Dario");
-        try{
-            gm.addPlayer(player);
-            gm.startMatch();
-            assertEquals(IGameMatch.State.PLAY, gm.getState());
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
     public void testStartMatchWithoutPlayers(){
         GameMatch gm = new GameMatch();
         try{
@@ -138,17 +125,42 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testPickNextTile(){
-
-    }
-
-    @Test
-    public void testPickNextTileFail(){
-
+    public void testStartMatchWithPlayers(){
+        GameMatch gm = new GameMatch();
+        Player player = new Player("Dario");
+        try{
+            gm.addPlayer(player);
+            gm.startMatch();
+            assertEquals(IGameMatch.State.PLAY, gm.getState());
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testPositionTile(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
+            HexCoordinates coords = new HexCoordinates(0,0,0);
+            gm.positionCurrentTileOnPlayerBoard(name, coords);
+            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testPickNextTile(){
+        
+    }
+
+    @Test
+    public void testPickNextTileFail(){
 
     }
 
