@@ -72,7 +72,7 @@ public class GameMatchTest {
     public void testSetPlayerName(){
         GameMatch gm = new GameMatch();
         String oldName = "Dario";
-        String newName = "Carlos";
+        String newName = "Karlos";
         Player ply = new Player(oldName);
         try{
             gm.addPlayer(ply);
@@ -84,6 +84,20 @@ public class GameMatchTest {
             fail();
         }
 
+    }
+
+    @Test
+    public void testSetAbsentPlayerName(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Karlos";
+        try{
+            gm.setPlayerName(oldName, newName);
+            fail();
+        }
+        catch (PlayerNameNotFoundException ignored){
+            // test passed
+        }
     }
 
     @Test
