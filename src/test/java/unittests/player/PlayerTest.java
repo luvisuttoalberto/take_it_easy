@@ -64,4 +64,23 @@ public class PlayerTest {
         p.leaveTheMatch();
         Assertions.assertEquals(p.getState(),IPlayer.State.Leave);
     }
+
+    @Test
+    public void testEndMatch() throws OutOfProperStateException {
+        Player p = new Player("Sartori");
+        p.startMatch();
+    }
+
+    @Test
+    public void testResetBoard() throws BadHexCoordinatesException, OutOfProperStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+        Player p = new Player("Cozzini");
+        Tile tile = new Tile(1, 2, 3);
+        HexCoordinates c = new HexCoordinates(0,0,0);
+        p.startMatch();
+        Tile expectedTile = p.showTileFromBoardAtCoordinates(c);
+        p.placeTile(tile, c);
+        p.resetBoard();
+        Tile realTile = p.showTileFromBoardAtCoordinates(c);
+        Assertions.assertEquals(expectedTile, realTile);
+    }
 }
