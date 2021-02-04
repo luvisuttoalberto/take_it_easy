@@ -107,29 +107,11 @@ public class PlayerTest {
     public void testEndMatch() {
         try {
             Player player = new Player("Sadr");
-            TilePool tilepool = new TilePool(1);
-
-            int[][] coordinateSet = {
-                    {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
-                    {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                    {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0, -2, 2},
-                    {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                    {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
-            };
-            Random rand = new Random(10);
-            Collections.shuffle(Arrays.asList(coordinateSet), rand);
-            HexCoordinates[] hexCoordinates = new HexCoordinates[19];
-            for (int i = 0; i < 19; ++i) {
-                int x = coordinateSet[i][0];
-                int y = coordinateSet[i][1];
-                int z = coordinateSet[i][2];
-                hexCoordinates[i] = new HexCoordinates(x, y, z);
-            }
-
+            ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
+            PlaceTileInput(list);
             player.startMatch();
-            for (int i = 0; i < 19; ++i) {
-                Tile tile = tilepool.getTile(i);
-                player.placeTile(tile, hexCoordinates[i]);
+            for(int i = 0; i < 19; ++i) {
+                player.placeTile(list.get(i).tile, list.get(i).coordinate);
                 if (i == 18) break;
                 player.transitionFromWaitingPlayersToPlacing();
             }
