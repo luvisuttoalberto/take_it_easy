@@ -76,7 +76,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, OutOfProperStateException {
+    public void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException {
 
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
@@ -101,7 +101,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException {
+    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
         players.get(retrievePlayerIndexFromName(playerName)).placeTile(getCurrentTile(), coordinates);
     }
 
@@ -129,7 +129,7 @@ public class GameMatch implements IGameMatch{
             try{
                 p.transitionFromWaitingPlayersToPlacing();
             }
-            catch (OutOfProperStateException ignored){
+            catch (InvalidPlayerStateException ignored){
             }
         }
     }

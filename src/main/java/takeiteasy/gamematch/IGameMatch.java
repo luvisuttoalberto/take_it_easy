@@ -2,7 +2,7 @@ package takeiteasy.gamematch;
 
 import takeiteasy.board.*;
 import takeiteasy.player.IPlayer;
-import takeiteasy.player.OutOfProperStateException;
+import takeiteasy.player.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
 public interface IGameMatch {
@@ -26,9 +26,9 @@ public interface IGameMatch {
     void removePlayer(String playerName) throws PlayerNameNotFoundException;
     void setTilePoolSeed(long seed);
 
-    void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, OutOfProperStateException;
+    void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException;
 
-    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException;
+    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException;
 
     void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayersNotReadyForNextTileException, TilePoolDepletedException;
 
