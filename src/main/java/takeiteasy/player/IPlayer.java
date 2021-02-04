@@ -9,16 +9,16 @@ public interface IPlayer {
     IBoard getBoard();
 
     void reset();
-    void startMatch() throws OutOfProperStateException;
+    void startMatch() throws InvalidPlayerStateException;
 
     Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException;
-    void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException;
+    void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException;
 
-    void transitionFromWaitingPlayersToPlacing() throws OutOfProperStateException;
+    void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException;
 
     void leaveTheMatch();
 
-    void endMatch() throws OutOfProperStateException;
+    void endMatch() throws InvalidPlayerStateException;
     Integer computeScore();
 
     public enum State {

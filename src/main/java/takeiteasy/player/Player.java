@@ -40,33 +40,33 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void startMatch() throws OutOfProperStateException {
+    public void startMatch() throws InvalidPlayerStateException {
         if (playerState == State.WAIT_MATCH) {
             playerState = State.PLACING;
         }
         else {
-            throw new OutOfProperStateException();
+            throw new InvalidPlayerStateException();
         }
     }
 
     @Override
-    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, OutOfProperStateException {
+    public void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
         if (playerState == State.PLACING) {
             playerBoard.placeTile(tile, coordinates);
             playerState = State.WAIT_OTHER;
         }
         else {
-            throw new OutOfProperStateException();
+            throw new InvalidPlayerStateException();
         }
     }
 
     @Override
-    public void transitionFromWaitingPlayersToPlacing() throws OutOfProperStateException {
+    public void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException {
         if (playerState == State.WAIT_OTHER) {
             playerState = State.PLACING;
         }
         else {
-            throw new OutOfProperStateException();
+            throw new InvalidPlayerStateException();
         }
     }
 
@@ -76,12 +76,12 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void endMatch() throws OutOfProperStateException {
+    public void endMatch() throws InvalidPlayerStateException {
         if (playerState == State.WAIT_OTHER) {
             playerState = State.WAIT_MATCH;
         }
         else {
-            throw new OutOfProperStateException();
+            throw new InvalidPlayerStateException();
         }
     }
 

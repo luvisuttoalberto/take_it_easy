@@ -160,7 +160,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testComputeScore() throws BadHexCoordinatesException, OutOfProperStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+    public void testComputeScore() throws BadHexCoordinatesException, InvalidPlayerStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
 
         Player player = new Player("Sadr");
 
