@@ -188,7 +188,7 @@ public class GameMatchTest {
             gm.dealNextTile();
             fail();
         }
-        catch (PlayerNotReadyForNextTile ignored){
+        catch (PlayersNotReadyForNextTileException ignored){
             // test pass
         }
         catch (Exception e){
@@ -227,16 +227,180 @@ public class GameMatchTest {
 
     @Test
     public void testAbortMatch(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
 
+            HexCoordinates coords = new HexCoordinates(0,0,0);
+            gm.positionCurrentTileOnPlayerBoard(name, coords);
+
+            gm.dealNextTile();
+
+            gm.backToSetup();
+
+            assertEquals(IGameMatch.State.SETUP, gm.getState());
+            assertEquals(0, gm.getCurrentTileIndex());
+            assertEquals(null, gm.getBoardFromPlayerName(name).getTile(coords));
+        }catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testAbortMatchDuringSetup(){
+        GameMatch gm = new GameMatch();
+        try{
+            gm.backToSetup();
+            fail();
+        }catch (InvalidMatchStateException ignored){
+            // test passed
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testEndMatchDuringSetup(){
+        GameMatch gm = new GameMatch();
+        try{
+            gm.endMatch();
+            fail();
+        }catch (InvalidMatchStateException ignored){
+            // test passed
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testEndMatchDuringPlayTilePoolNotFinished(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
+
+            gm.endMatch();
+            fail();
+        }catch (TilePoolNotDepletedException ignored){
+            // test passed
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testEndMatchDuringPlayPlayersNotReady(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Karlos";
+        int[][] coordinateSet = {
+                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
+                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                {2, 0, -2}, {2, -1, -1}
+        };
+        try{
+            gm.addPlayer(new Player(name));
+            gm.addPlayer(new Player(otherName));
+            gm.startMatch();
+
+            for (int[] c : coordinateSet) {
+                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+                gm.positionCurrentTileOnPlayerBoard(otherName, new HexCoordinates(c[0], c[1], c[2]));
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(2, -2, 0));
+            gm.endMatch();
+            fail();
+        }
+        catch (PlayersNotReadyToEndMatchException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testEndMatchDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        int[][] coordinateSet = {
+                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
+                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                {2, 0, -2}, {2, -1, -1}
+        };
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
+
+            for (int[] c : coordinateSet) {
+                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(2, -2, 0));
+            gm.endMatch();
+            gm.endMatch();
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testEndMatch(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        int[][] coordinateSet = {
+                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
+                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
+                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                {2, 0, -2}, {2, -1, -1}
+        };
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
+
+            for (int[] c : coordinateSet) {
+                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(2, -2, 0));
+            gm.endMatch();
+            assertEquals(IGameMatch.State.FINISH, gm.getState());
+        }
+        catch (Exception e){
+            fail();
+        }
 
     }
 
     @Test
-    public void testEndMatchFail(){
+    public void testComputeScoreDuringSetup(){
+
+    }
+
+    @Test
+    public void testComputeScoreDuringPlay(){
+
+    }
+
+    @Test
+    public void testComputeScore(){
 
     }
 

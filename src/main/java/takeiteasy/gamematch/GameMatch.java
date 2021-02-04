@@ -70,6 +70,7 @@ public class GameMatch implements IGameMatch{
 
     @Override
     public void removePlayer(String playerName) throws PlayerNameNotFoundException {
+        // TODO: cannot remove last player: maybe just call abortMatch(), or throw an exception
         Integer playerIndex = retrievePlayerIndexFromName(playerName);
         players.removeElementAt(playerIndex);
     }
@@ -105,7 +106,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayerNotReadyForNextTile, TilePoolDepletedException {
+    public void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayersNotReadyForNextTileException, TilePoolDepletedException {
         if (state != State.PLAY){
             throw new InvalidMatchStateException();
         }
@@ -115,7 +116,7 @@ public class GameMatch implements IGameMatch{
         for (IPlayer p : players){
             IPlayer.State pstate = p.getState();
             if (pstate== IPlayer.State.PLACING){
-                throw new PlayerNotReadyForNextTile();
+                throw new PlayersNotReadyForNextTileException();
             }
         }
         if (currentTileIndex >= tilePool.getSize()-1){
@@ -134,12 +135,36 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void abortMatch() {
-
+    public void backToSetup() throws InvalidMatchStateException {
+        if(state == State.SETUP){
+            throw new InvalidMatchStateException();
+        }
+        currentTileIndex = 0;
+        for(IPlayer p : players){
+            p.reset();
+        }
+        state = State.SETUP;
     }
 
     @Override
-    public void endMatch() {
+    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException {
 
+        if(state != State.PLAY){
+            throw new InvalidMatchStateException();
+        }
+
+        if(currentTileIndex < tilePool.getSize() - 1){
+            throw new TilePoolNotDepletedException();
+        }
+
+        for(IPlayer p : players){
+            if(p.getState() != IPlayer.State.WAIT_OTHER){
+                throw new PlayersNotReadyToEndMatchException();
+            }
+        }
+
+        state = State.FINISH;
     }
+
+    //TODO: compute score
 }
