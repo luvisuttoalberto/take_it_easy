@@ -8,11 +8,7 @@ import takeiteasy.tilepool.*;
 import unittests.utility.Pair;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static unittests.utility.Utility.PlaceTileInput;
 
