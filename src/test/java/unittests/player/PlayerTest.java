@@ -150,7 +150,7 @@ public class PlayerTest {
             HexCoordinates coordinates = new HexCoordinates(0, 0, 0);
             player.startMatch();
             player.placeTile(tile, coordinates);
-            player.resetBoard();
+            player.reset();
             Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
             Assertions.assertNull(realTile);
         }

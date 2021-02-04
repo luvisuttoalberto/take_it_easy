@@ -8,7 +8,7 @@ public interface IPlayer {
     String getName();
     IBoard getBoard();
 
-    void resetBoard();
+    void reset();
     void startMatch() throws OutOfProperStateException;
 
     Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException;

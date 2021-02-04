@@ -34,8 +34,9 @@ public class Player implements IPlayer{
     public IBoard getBoard() { return playerBoard; }
 
     @Override
-    public void resetBoard() {
+    public void reset() {
         playerBoard = new BoardVanilla();
+        playerState = State.WAIT_MATCH;
     }
 
     @Override
