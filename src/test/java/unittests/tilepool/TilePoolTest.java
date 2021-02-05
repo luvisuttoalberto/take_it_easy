@@ -13,9 +13,12 @@ public class TilePoolTest {
         try{
             TilePool pool = new TilePool(19);
             Tile t = pool.getTile(28);
+            fail();
         }
         catch (ArrayIndexOutOfBoundsException ignored){
-
+        }
+        catch (Exception e){
+            fail();
         }
     }
 
@@ -23,7 +26,7 @@ public class TilePoolTest {
     public void testTileInBound() throws Exception{
         try{
             TilePool pool = new TilePool(19);
-            for(int i = 0; i < 19; ++i){
+            for(int i = 0; i < pool.getSize(); ++i){
                 Tile t = pool.getTile(i);
             }
         }
@@ -65,9 +68,12 @@ public class TilePoolTest {
     public void testCorrectValueForTile() throws Exception{
         try{
             Tile t = new Tile(3,2,1);
+            fail();
         }
         catch (IllegalArgumentException E){
-
+        }
+        catch (Exception e){
+            fail();
         }
     }
 }
