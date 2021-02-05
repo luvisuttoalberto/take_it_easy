@@ -10,7 +10,7 @@ import unittests.utility.Pair;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static unittests.utility.Utility.PlaceTileInput;
+import static unittests.utility.Utility.*;
 
 public class PlayerTest {
 
@@ -62,8 +62,7 @@ public class PlayerTest {
     public void testEndMatch() {
         Player player = new Player("Sadr");
         try {
-            ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
-            PlaceTileInput(list);
+            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(54);
             player.startMatch();
             for(int i = 0; i < list.size(); ++i) {
                 player.placeTile(list.get(i).tile, list.get(i).coordinate);
@@ -98,10 +97,10 @@ public class PlayerTest {
 
     @Test
     public void testComputeScore() {
+        Integer score = 54;
         try {
             Player player = new Player("Sadr");
-            ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
-            PlaceTileInput(list);
+            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
             player.startMatch();
             for (int i = 0; i < list.size(); ++i) {
                 player.placeTile(list.get(i).tile, list.get(i).coordinate);
@@ -109,7 +108,7 @@ public class PlayerTest {
                 player.transitionFromWaitingPlayersToPlacing();
             }
             IBoard board = player.getBoard();
-            Assertions.assertEquals(54, board.computeScore());
+            Assertions.assertEquals(score, board.computeScore());
         }
         catch(Exception e){
            fail();

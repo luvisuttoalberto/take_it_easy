@@ -10,7 +10,7 @@ import unittests.utility.Pair;
 
 import java.util.ArrayList;
 
-import static unittests.utility.Utility.PlaceTileInput;
+import static unittests.utility.Utility.*;
 
 
 public class BoardVanillaTest {
@@ -97,13 +97,13 @@ public class BoardVanillaTest {
     @Test
     public void testComputeScore() {
         BoardVanilla board = new BoardVanilla();
+        Integer score = 54;
         try {
-            ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
-            PlaceTileInput(list);
+            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
             for (int i = 0; i < 19; ++i) {
                 board.placeTile(list.get(i).tile, list.get(i).coordinate);
             }
-            Assertions.assertEquals(54, board.computeScore());
+            Assertions.assertEquals(score, board.computeScore());
         }
         catch(Exception e){
             fail();

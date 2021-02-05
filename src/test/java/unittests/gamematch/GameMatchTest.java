@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.Player;
-import takeiteasy.tilepool.Tile;
-import takeiteasy.tilepool.TilePool;
+import takeiteasy.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.Collections;
 import java.util.Dictionary;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;
 
 public class GameMatchTest {
 
@@ -205,19 +205,17 @@ public class GameMatchTest {
     public void testDealNextTilePlayersTilePoolOver(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        int[][] coordinateSet = {
-                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
-                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
-                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
-        };
+        Integer tilePoolSeed = 11;
+
         try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+
             gm.addPlayer(new Player(name));
+            gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
-            for (int[] c : coordinateSet) {
-                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+            for (Integer i=0;i<tilesAndCoords.size();++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
                 gm.dealNextTile();
             }
             fail();
@@ -302,26 +300,27 @@ public class GameMatchTest {
     @Test
     public void testEndMatchDuringPlayPlayersNotReady(){
         GameMatch gm = new GameMatch();
+
         String name = "Dario";
         String otherName = "Carlos";
-        int[][] coordinateSet = {
-                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
-                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
-                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                {2, 0, -2}, {2, -1, -1}
-        };
+        Integer finalScore = 54;
+        Integer otherFinalScore = 27;
+        Integer tilePoolSeed = 11;
         try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
+            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
+
             gm.addPlayer(new Player(name));
             gm.addPlayer(new Player(otherName));
+            gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
-            for (int[] c : coordinateSet) {
-                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
-                gm.positionCurrentTileOnPlayerBoard(otherName, new HexCoordinates(c[0], c[1], c[2]));
+            for (Integer i=0; i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
+                gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(i).coordinate);
                 gm.dealNextTile();
             }
-            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(2, -2, 0));
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
             gm.endMatch();
             fail();
         }
@@ -337,12 +336,10 @@ public class GameMatchTest {
     public void testEndMatchDuringFinish(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        Integer tilePoolSeed = 11; //TODO: seed
+        Integer tilePoolSeed = 11;
 
         try{
-            //TODO: initialize inside
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
-            Utility.PlaceTileInput(tilesAndCoords);
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
             gm.addPlayer(new Player(name));
             gm.setTilePoolSeed(tilePoolSeed);
@@ -369,22 +366,17 @@ public class GameMatchTest {
     public void testEndMatch(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        int[][] coordinateSet = {
-                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
-                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
-                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                {2, 0, -2}, {2, -1, -1}
-        };
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
         try{
             gm.addPlayer(new Player(name));
+            gm.setTilePoolSeed(11);
             gm.startMatch();
 
-            for (int[] c : coordinateSet) {
-                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+            for (int i=0;i<18;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
                 gm.dealNextTile();
             }
-            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(2, -2, 0));
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
             gm.endMatch();
             assertEquals(IGameMatch.State.FINISH, gm.getState());
         }
@@ -435,8 +427,7 @@ public class GameMatchTest {
         Integer tilePoolSeed = 11;
         Integer finalScore = 54;
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
-            Utility.PlaceTileInput(tilesAndCoords);
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
 
             gm.addPlayer(new Player(name));
             gm.setTilePoolSeed(tilePoolSeed);
@@ -466,12 +457,8 @@ public class GameMatchTest {
         Integer otherFinalScore = 27;
         Integer tilePoolSeed = 11;
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
-            Utility.PlaceTileInput(tilesAndCoords);
-            //TODO: refactor this horror
-            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
-            Utility.PlaceTileInput(otherTilesAndCoords);
-            Collections.swap(otherTilesAndCoords, 13,17);
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
+            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
 
             gm.addPlayer(new Player(name));
             gm.addPlayer(new Player(otherName));
@@ -488,7 +475,6 @@ public class GameMatchTest {
 
             gm.endMatch();
             Dictionary<String,Integer> playerScores = gm.computeScore();
-            System.out.println(playerScores);
             assertEquals(finalScore,playerScores.get(name));
             assertEquals(otherFinalScore,playerScores.get(otherName));
         }
