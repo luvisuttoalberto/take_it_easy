@@ -141,7 +141,6 @@ public class PlayerTest {
     public void testComputeScore() throws BadHexCoordinatesException, InvalidPlayerStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
 
         Player player = new Player("Sadr");
-
         ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
         PlaceTileInput(list);
         player.startMatch();

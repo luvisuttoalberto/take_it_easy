@@ -1,6 +1,7 @@
 package unittests.board;
 
 import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
@@ -14,13 +15,17 @@ import static unittests.utility.Utility.PlaceTileInput;
 
 public class BoardVanillaTest {
     @Test
-    public void getTileOutOfBoardCoordinates() throws BadHexCoordinatesException {
+    public void getTileOutOfBoardCoordinates() {
         BoardVanilla b = new BoardVanilla();
-        HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
         try {
+            HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
             b.getTile(badcoords);
+            fail();
         }
         catch (OutOfBoardCoordinatesException ignored) {
+        }
+        catch (Exception e) {
+            fail();
         }
     }
 
@@ -47,6 +52,7 @@ public class BoardVanillaTest {
         Tile tile = new Tile(1,2,3);
         try {
             b.placeTile(tile,badcoords);
+            fail();
         }
         catch (OutOfBoardCoordinatesException ignored) {
         }
@@ -60,6 +66,7 @@ public class BoardVanillaTest {
         try {
             b.placeTile(tile,coords);
             b.placeTile(tile,coords);
+            fail();
         }
         catch (CoordinatesOccupidedException ignored) {
         }
