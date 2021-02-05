@@ -14,6 +14,7 @@ import static unittests.utility.Utility.PlaceTileInput;
 
 
 public class BoardVanillaTest {
+
     @Test
     public void getTileOutOfBoardCoordinates() {
         BoardVanilla b = new BoardVanilla();
@@ -56,6 +57,9 @@ public class BoardVanillaTest {
         }
         catch (OutOfBoardCoordinatesException ignored) {
         }
+        catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
@@ -69,6 +73,9 @@ public class BoardVanillaTest {
             fail();
         }
         catch (CoordinatesOccupidedException ignored) {
+        }
+        catch (Exception e){
+            fail();
         }
     }
 
