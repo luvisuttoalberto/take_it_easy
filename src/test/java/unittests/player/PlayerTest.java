@@ -44,8 +44,8 @@ public class PlayerTest {
 
     @Test
     public void testTransitionFromWaitingPlayersToPlacing() {
+        Player player = new Player("Sadr");
         try {
-            Player player = new Player("Sadr");
             Tile tile = new Tile(1, 2, 3);
             HexCoordinates coordinates = new HexCoordinates(0,0,0);
             player.startMatch();
@@ -60,12 +60,12 @@ public class PlayerTest {
 
     @Test
     public void testEndMatch() {
+        Player player = new Player("Sadr");
         try {
-            Player player = new Player("Sadr");
             ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
             PlaceTileInput(list);
             player.startMatch();
-            for(int i = 0; i < 19; ++i) {
+            for(int i = 0; i < list.size(); ++i) {
                 player.placeTile(list.get(i).tile, list.get(i).coordinate);
                 if (i == 18) break;
                 player.transitionFromWaitingPlayersToPlacing();
@@ -97,18 +97,22 @@ public class PlayerTest {
     }
 
     @Test
-    public void testComputeScore() throws BadHexCoordinatesException, InvalidPlayerStateException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
-
-        Player player = new Player("Sadr");
-        ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
-        PlaceTileInput(list);
-        player.startMatch();
-        for(int i = 0; i < 19; ++i) {
-            player.placeTile(list.get(i).tile, list.get(i).coordinate);
-            if (i == 18) break;
-            player.transitionFromWaitingPlayersToPlacing();
+    public void testComputeScore() {
+        try {
+            Player player = new Player("Sadr");
+            ArrayList<Pair<Tile, HexCoordinates>> list = new ArrayList<>();
+            PlaceTileInput(list);
+            player.startMatch();
+            for (int i = 0; i < list.size(); ++i) {
+                player.placeTile(list.get(i).tile, list.get(i).coordinate);
+                if (i == 18) break;
+                player.transitionFromWaitingPlayersToPlacing();
+            }
+            IBoard board = player.getBoard();
+            Assertions.assertEquals(54, board.computeScore());
         }
-        IBoard board = player.getBoard();
-        Assertions.assertEquals(54, board.computeScore());
+        catch(Exception e){
+           fail();
+        }
     }
 }

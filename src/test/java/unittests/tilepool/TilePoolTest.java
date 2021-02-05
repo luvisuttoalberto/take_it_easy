@@ -9,7 +9,7 @@ import java.util.Random;
 public class TilePoolTest {
 
     @Test
-    public void testTileOutBound() throws Exception{
+    public void testTileOutBound(){
         try{
             TilePool pool = new TilePool(19);
             Tile t = pool.getTile(28);
@@ -23,7 +23,7 @@ public class TilePoolTest {
     }
 
     @Test
-    public void testTileInBound() throws Exception{
+    public void testTileInBound(){
         try{
             TilePool pool = new TilePool(19);
             for(int i = 0; i < pool.getSize(); ++i){
@@ -31,12 +31,12 @@ public class TilePoolTest {
             }
         }
         catch (Exception E){
-            fail("Should not have thrown any exception");
+            fail();
         }
     }
 
     @Test
-    public void testGenerationWithSeed() throws Exception{
+    public void testGenerationWithSeed(){
 
         long seed = 1;
         TilePool tilePool1 = new TilePool(seed);
@@ -52,20 +52,25 @@ public class TilePoolTest {
     }
 
     @Test
-    public void testAllDifferentTilesInATilePool() throws Exception{
-        TilePool pool = new TilePool(1);
-        for(int i = 0; i < pool.getSize() - 1; ++i){
-            for(int j = i+1; j < pool.getSize(); ++j){
-                Tile t1 = pool.getTile(i);
-                Tile t2 = pool.getTile(j);
+    public void testAllDifferentTilesInATilePool(){
+        try {
+            TilePool pool = new TilePool(1);
+            for (int i = 0; i < pool.getSize() - 1; ++i) {
+                for (int j = i + 1; j < pool.getSize(); ++j) {
+                    Tile t1 = pool.getTile(i);
+                    Tile t2 = pool.getTile(j);
 
-                assertNotEquals(t1, t2);
+                    assertNotEquals(t1, t2);
+                }
             }
+        }
+        catch(Exception e){
+            fail();
         }
     }
 
     @Test
-    public void testCorrectValueForTile() throws Exception{
+    public void testCorrectValueForTile(){
         try{
             Tile t = new Tile(3,2,1);
             fail();
