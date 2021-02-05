@@ -16,15 +16,12 @@ public interface IPlayer {
 
     void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException;
 
-    void leaveTheMatch();
-
     void endMatch() throws InvalidPlayerStateException;
     Integer computeScore();
 
     public enum State {
         PLACING,
         WAIT_OTHER,
-        WAIT_MATCH,
-        LEFT;
+        WAIT_MATCH;
     }
 }

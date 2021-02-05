@@ -71,11 +71,6 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void leaveTheMatch() {
-        playerState = State.LEFT;
-    }
-
-    @Override
     public void endMatch() throws InvalidPlayerStateException {
         if (playerState == State.WAIT_OTHER) {
             playerState = State.WAIT_MATCH;

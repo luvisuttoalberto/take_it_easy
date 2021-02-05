@@ -59,47 +59,6 @@ public class PlayerTest {
     }
 
     @Test
-    public void testLeaveTheMatchFromWaitMatchState() {
-        try {
-            Player player = new Player("Sadr");
-            player.leaveTheMatch();
-            Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
-        }
-        catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void testLeaveTheMatchFromPlacingState() {
-        try {
-            Player player = new Player("Sadr");
-            player.startMatch();
-            player.leaveTheMatch();
-            Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
-        }
-        catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void testLeaveTheMatchFromWaitOtherState() {
-        try {
-            Player player = new Player("Sadr");
-            Tile tile = new Tile(1, 2, 3);
-            HexCoordinates coordinates = new HexCoordinates(0, 0, 0);
-            player.startMatch();
-            player.placeTile(tile, coordinates);
-            player.leaveTheMatch();
-            Assertions.assertEquals(IPlayer.State.LEFT, player.getState());
-        }
-        catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
     public void testEndMatch() {
         try {
             Player player = new Player("Sadr");
