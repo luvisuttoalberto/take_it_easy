@@ -4,6 +4,9 @@ import takeiteasy.board.*;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 public class GameMatch implements IGameMatch{
@@ -166,5 +169,17 @@ public class GameMatch implements IGameMatch{
         state = State.FINISH;
     }
 
-    //TODO: compute score
+    @Override
+    public Dictionary<String,Integer> computeScore() throws InvalidMatchStateException{
+
+        if(state != State.FINISH){
+            throw new InvalidMatchStateException();
+        }
+
+        Dictionary<String, Integer> dict = new Hashtable<String, Integer>();
+        for (IPlayer p : players){
+            dict.put(p.getName(),p.computeScore());
+        }
+        return dict;
+    }
 }

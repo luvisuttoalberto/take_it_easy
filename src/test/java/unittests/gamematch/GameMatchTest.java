@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Test;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.Player;
+import takeiteasy.tilepool.Tile;
 import takeiteasy.tilepool.TilePool;
+import unittests.utility.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Dictionary;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -332,22 +336,22 @@ public class GameMatchTest {
     public void testEndMatchDuringFinish(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        int[][] coordinateSet = {
-                {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
-                {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                {0, 2, -2}, {0, 1, -1}, {-2, 0, 2}, {0, -1, 1}, {0,-2, 2},
-                {-2, 1, 1}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                {2, 0, -2}, {2, -1, -1}
-        };
+        Integer tilePoolSeed = 11; //TODO: seed
+
         try{
+            //TODO: initialize inside
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
+            Utility.PlaceTileInput(tilesAndCoords);
+
             gm.addPlayer(new Player(name));
+            gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
-            for (int[] c : coordinateSet) {
-                gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(c[0], c[1], c[2]));
+            for (Integer i=0;i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
                 gm.dealNextTile();
             }
-            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(2, -2, 0));
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
             gm.endMatch();
             gm.endMatch();
             fail();
@@ -391,24 +395,66 @@ public class GameMatchTest {
 
     @Test
     public void testComputeScoreDuringSetup(){
-
+        GameMatch gm = new GameMatch();
+        try{
+            gm.computeScore();
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            // test passed
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testComputeScoreDuringPlay(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
 
+        try{
+            gm.addPlayer(new Player(name));
+            gm.startMatch();
+            gm.computeScore();
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            // test passed
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testComputeScore(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        Integer tilePoolSeed = 11;
+        Integer finalScore = 54;
+        try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
+            Utility.PlaceTileInput(tilesAndCoords);
 
+            gm.addPlayer(new Player(name));
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+
+            for (Integer i=0; i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+
+            gm.endMatch();
+            Dictionary<String,Integer> playerScores = gm.computeScore();
+            assertEquals(finalScore,playerScores.get(name));
+        }
+        catch (Exception e){
+            fail();
+        }
     }
-
-    @Test
-    public void test1PMatch(){
-
-    }
-
 
     @Test
     public void test2PMatch(){
