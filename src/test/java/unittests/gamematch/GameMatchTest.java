@@ -10,6 +10,7 @@ import unittests.utility.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Dictionary;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,7 +77,7 @@ public class GameMatchTest {
     public void testSetPlayerName(){
         GameMatch gm = new GameMatch();
         String oldName = "Dario";
-        String newName = "Karlos";
+        String newName = "Carlos";
         Player ply = new Player(oldName);
         try{
             gm.addPlayer(ply);
@@ -93,7 +94,7 @@ public class GameMatchTest {
     public void testSetAbsentPlayerName(){
         GameMatch gm = new GameMatch();
         String oldName = "Dario";
-        String newName = "Karlos";
+        String newName = "Carlos";
         try{
             gm.setPlayerName(oldName, newName);
             fail();
@@ -161,7 +162,7 @@ public class GameMatchTest {
     public void testDealNextTileNoPlayers(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        String otherName = "Karlos";
+        String otherName = "Carlos";
         try{
             gm.addPlayer(new Player(name));
             gm.addPlayer(new Player(otherName));
@@ -183,7 +184,7 @@ public class GameMatchTest {
     public void testDealNextTilePlayersNotReady(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        String otherName = "Karlos";
+        String otherName = "Carlos";
         try{
             gm.addPlayer(new Player(name));
             gm.addPlayer(new Player(otherName));
@@ -302,7 +303,7 @@ public class GameMatchTest {
     public void testEndMatchDuringPlayPlayersNotReady(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        String otherName = "Karlos";
+        String otherName = "Carlos";
         int[][] coordinateSet = {
                 {-1, 2, -1}, {1, 1, -2}, {0, 0, 0},
                 {-2, 2, 0}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
@@ -458,6 +459,41 @@ public class GameMatchTest {
 
     @Test
     public void test2PMatch(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Carlos";
+        Integer finalScore = 54;
+        Integer otherFinalScore = 27;
+        Integer tilePoolSeed = 11;
+        try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
+            Utility.PlaceTileInput(tilesAndCoords);
+            //TODO: refactor this horror
+            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = new ArrayList<Pair<Tile, HexCoordinates>>();
+            Utility.PlaceTileInput(otherTilesAndCoords);
+            Collections.swap(otherTilesAndCoords, 13,17);
 
+            gm.addPlayer(new Player(name));
+            gm.addPlayer(new Player(otherName));
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+
+            for (Integer i=0; i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
+                gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(i).coordinate);
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+            gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(18).coordinate);
+
+            gm.endMatch();
+            Dictionary<String,Integer> playerScores = gm.computeScore();
+            System.out.println(playerScores);
+            assertEquals(finalScore,playerScores.get(name));
+            assertEquals(otherFinalScore,playerScores.get(otherName));
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 }
