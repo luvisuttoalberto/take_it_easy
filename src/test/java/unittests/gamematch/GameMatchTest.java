@@ -3,13 +3,11 @@ package unittests.gamematch;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
-import takeiteasy.player.Player;
 import takeiteasy.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Dictionary;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,9 +19,8 @@ public class GameMatchTest {
     public void testAddPlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
-        Player ply = new Player(plyName);
         try {
-            gm.addPlayer(ply);
+            gm.addPlayer(plyName);
         }
         catch (Exception e){
             fail("player add failed");
@@ -36,10 +33,9 @@ public class GameMatchTest {
     public void testAddDuplicatePlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
-        Player ply = new Player(plyName);
         try {
-            gm.addPlayer(ply);
-            gm.addPlayer(ply);
+            gm.addPlayer(plyName);
+            gm.addPlayer(plyName);
             fail();
         }
         catch (PlayerWithSameNameCannotBeAddedException ignored){
@@ -51,9 +47,8 @@ public class GameMatchTest {
     public void testRemovePlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
-        Player ply = new Player(plyName);
         try {
-            gm.addPlayer(ply);
+            gm.addPlayer(plyName);
             gm.removePlayer(plyName);
         }
         catch (Exception e){
@@ -78,9 +73,8 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String oldName = "Dario";
         String newName = "Carlos";
-        Player ply = new Player(oldName);
         try{
-            gm.addPlayer(ply);
+            gm.addPlayer(oldName);
             gm.setPlayerName(oldName, newName);
             assertTrue(Arrays.stream(gm.getPlayerNames()).anyMatch(newName::equals));
             assertFalse(Arrays.stream(gm.getPlayerNames()).anyMatch(oldName::equals));
@@ -131,9 +125,9 @@ public class GameMatchTest {
     @Test
     public void testStartMatchWithPlayers(){
         GameMatch gm = new GameMatch();
-        Player player = new Player("Dario");
+        String playerName = "Dario";
         try{
-            gm.addPlayer(player);
+            gm.addPlayer(playerName);
             gm.startMatch();
             assertEquals(IGameMatch.State.PLAY, gm.getState());
         }
@@ -147,7 +141,7 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String name = "Dario";
         try{
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.startMatch();
             HexCoordinates coords = new HexCoordinates(0,0,0);
             gm.positionCurrentTileOnPlayerBoard(name, coords);
@@ -164,8 +158,8 @@ public class GameMatchTest {
         String name = "Dario";
         String otherName = "Carlos";
         try{
-            gm.addPlayer(new Player(name));
-            gm.addPlayer(new Player(otherName));
+            gm.addPlayer(name);
+            gm.addPlayer(otherName);
             gm.startMatch();
             gm.removePlayer(name);
             gm.removePlayer(otherName);
@@ -186,8 +180,8 @@ public class GameMatchTest {
         String name = "Dario";
         String otherName = "Carlos";
         try{
-            gm.addPlayer(new Player(name));
-            gm.addPlayer(new Player(otherName));
+            gm.addPlayer(name);
+            gm.addPlayer(otherName);
             gm.startMatch();
             gm.positionCurrentTileOnPlayerBoard(otherName,new HexCoordinates(0,0,0));
             gm.dealNextTile();
@@ -210,7 +204,7 @@ public class GameMatchTest {
         try{
             ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
@@ -233,7 +227,7 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String name = "Dario";
         try{
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.startMatch();
 
             HexCoordinates coords = new HexCoordinates(0,0,0);
@@ -284,7 +278,7 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String name = "Dario";
         try{
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.startMatch();
 
             gm.endMatch();
@@ -310,8 +304,8 @@ public class GameMatchTest {
             ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
             ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
 
-            gm.addPlayer(new Player(name));
-            gm.addPlayer(new Player(otherName));
+            gm.addPlayer(name);
+            gm.addPlayer(otherName);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
@@ -341,7 +335,7 @@ public class GameMatchTest {
         try{
             ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
@@ -368,7 +362,7 @@ public class GameMatchTest {
         String name = "Dario";
         ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
         try{
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.setTilePoolSeed(11);
             gm.startMatch();
 
@@ -407,7 +401,7 @@ public class GameMatchTest {
         String name = "Dario";
 
         try{
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.startMatch();
             gm.computeScore();
             fail();
@@ -429,7 +423,7 @@ public class GameMatchTest {
         try{
             ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
 
-            gm.addPlayer(new Player(name));
+            gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
@@ -460,8 +454,8 @@ public class GameMatchTest {
             ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
             ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
 
-            gm.addPlayer(new Player(name));
-            gm.addPlayer(new Player(otherName));
+            gm.addPlayer(name);
+            gm.addPlayer(otherName);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 

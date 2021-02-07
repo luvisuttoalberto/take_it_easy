@@ -55,13 +55,13 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException {
+    public void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException {
         try{
-            retrievePlayerIndexFromName(player.getName());
-            throw new PlayerWithSameNameCannotBeAddedException(player.getName());
+            retrievePlayerIndexFromName(playerName);
+            throw new PlayerWithSameNameCannotBeAddedException(playerName);
         }
         catch (PlayerNameNotFoundException e){
-            players.add(player);
+            players.add(new Player(playerName));
         }
     }
 

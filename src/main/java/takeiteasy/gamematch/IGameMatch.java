@@ -23,7 +23,7 @@ public interface IGameMatch {
     Tile getCurrentTile();
     IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException;
 
-    void addPlayer(IPlayer player) throws PlayerWithSameNameCannotBeAddedException;
+    void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException;
 
     void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException;
