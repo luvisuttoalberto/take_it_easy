@@ -21,4 +21,6 @@ public interface IGame {
     void backToLocalSetup();
 
     JSONObject getData();
+
+    //TODO: States needed???
 }
