@@ -41,6 +41,59 @@ public class GameMatchTest {
         catch (PlayerWithSameNameCannotBeAddedException ignored){
             // test passed
         }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testAddPlayerDuringPlay(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Carlos";
+        try{
+            gm.addPlayer(name);
+            gm.startMatch();
+            gm.addPlayer(otherName);
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            //test passed
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testAddPlayerDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Carlos";
+        Integer tilePoolSeed = 11;
+
+        try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+
+            gm.addPlayer(name);
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+
+            for (Integer i=0;i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+            gm.endMatch();
+            gm.addPlayer(otherName);
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test

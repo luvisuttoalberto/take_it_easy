@@ -58,7 +58,10 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException {
+    public void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException, InvalidMatchStateException {
+        if(state != State.SETUP){
+            throw new InvalidMatchStateException();
+        }
         try{
             retrievePlayerIndexFromName(playerName);
             throw new PlayerWithSameNameCannotBeAddedException(playerName);
