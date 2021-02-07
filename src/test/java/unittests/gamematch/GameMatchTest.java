@@ -97,6 +97,56 @@ public class GameMatchTest {
     }
 
     @Test
+    public void testSetPlayerNameDuringPlay(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        try{
+            gm.addPlayer(oldName);
+            gm.startMatch();
+            gm.setPlayerName(oldName, newName);
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            //test passed
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testSetPlayerNameDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        Integer tilePoolSeed = 11;
+
+        try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+
+            gm.addPlayer(oldName);
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+
+            for (Integer i=0;i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(oldName, tilesAndCoords.get(i).coordinate);
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(oldName, tilesAndCoords.get(18).coordinate);
+            gm.endMatch();
+            gm.setPlayerName(oldName, newName);
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
     public void testRemovePlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
@@ -148,6 +198,9 @@ public class GameMatchTest {
         }
         catch (PlayerNameNotFoundException ignored){
             // test passed
+        }
+        catch (Exception e){
+            fail();
         }
     }
 

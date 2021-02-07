@@ -25,7 +25,7 @@ public interface IGameMatch {
 
     void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException, InvalidMatchStateException;
 
-    void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException;
+    void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException;
     void setTilePoolSeed(long seed) throws InvalidMatchStateException;
     void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException;
