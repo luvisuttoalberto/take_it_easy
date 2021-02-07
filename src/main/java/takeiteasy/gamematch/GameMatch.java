@@ -81,9 +81,11 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void removePlayer(String playerName) throws PlayerNameNotFoundException {
-        // TODO: cannot remove last player: maybe just call abortMatch(), or throw an exception
+    public void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException {
         Integer playerIndex = retrievePlayerIndexFromName(playerName);
+        if(players.size() <= 1){
+            throw new NotEnoughPlayersException();
+        }
         players.removeElementAt(playerIndex);
     }
 

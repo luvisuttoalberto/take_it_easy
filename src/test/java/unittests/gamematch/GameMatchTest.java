@@ -150,14 +150,17 @@ public class GameMatchTest {
     public void testRemovePlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
+        String otherPlyName = "Carlos";
         try {
             gm.addPlayer(plyName);
+            gm.addPlayer(otherPlyName);
             gm.removePlayer(plyName);
         }
         catch (Exception e){
             fail();
         }
     }
+
     @Test
     public void testRemoveAbsentPlayer(){
         GameMatch gm = new GameMatch();
@@ -168,6 +171,26 @@ public class GameMatchTest {
         }
         catch (PlayerNameNotFoundException ignored){
             // test pass
+        }
+        catch(Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testRemoveLastPlayer(){
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+        try {
+            gm.addPlayer(plyName);
+            gm.removePlayer(plyName);
+            fail();
+        }
+        catch (NotEnoughPlayersException ignored){
+            //test passed
+        }
+        catch (Exception e){
+            fail();
         }
     }
 
