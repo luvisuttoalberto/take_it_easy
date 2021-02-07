@@ -66,7 +66,7 @@ public final class Utility {
         return pairs;
     }
 
-    public static GameMatch SimulateCompleteGameMatch(GameMatch gm, String name, long tilePoolSeed) {
+    public static void SimulateCompleteGameMatch(GameMatch gm, String name, long tilePoolSeed) {
         try {
             ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
@@ -84,7 +84,6 @@ public final class Utility {
         catch(Exception ignored){
             fail();
         }
-        return gm;
     }
 
     public static void main(String[] args){

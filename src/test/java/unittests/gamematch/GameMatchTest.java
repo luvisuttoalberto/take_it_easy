@@ -75,7 +75,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         try{
-            gm = SimulateCompleteGameMatch(gm, name, tilePoolSeed);
+            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             gm.addPlayer(otherName);
             fail();
         }
@@ -114,18 +114,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
-            gm.addPlayer(oldName);
-            gm.setTilePoolSeed(tilePoolSeed);
-            gm.startMatch();
-
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(oldName, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(oldName, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
+            SimulateCompleteGameMatch(gm, oldName, tilePoolSeed);
             gm.setPlayerName(oldName, newName);
             fail();
         }
@@ -257,18 +246,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
-            gm.addPlayer(name);
-            gm.setTilePoolSeed(tilePoolSeed);
-            gm.startMatch();
-
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
+            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             gm.setTilePoolSeed(tilePoolSeed);
             fail();
         }
@@ -506,18 +484,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
-            gm.addPlayer(name);
-            gm.setTilePoolSeed(tilePoolSeed);
-            gm.startMatch();
-
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
+            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             gm.endMatch();
             fail();
         }
@@ -533,18 +500,9 @@ public class GameMatchTest {
     public void testEndMatch(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
-        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+        long tilePoolSeed = 11;
         try{
-            gm.addPlayer(name);
-            gm.setTilePoolSeed(11);
-            gm.startMatch();
-
-            for (int i=0;i<18;++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
+            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             assertEquals(IGameMatch.State.FINISH, gm.getState());
         }
         catch (Exception e){
@@ -594,19 +552,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
         Integer finalScore = 54;
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
-
-            gm.addPlayer(name);
-            gm.setTilePoolSeed(tilePoolSeed);
-            gm.startMatch();
-
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-
-            gm.endMatch();
+            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             Dictionary<String,Integer> playerScores = gm.computeScore();
             assertEquals(finalScore,playerScores.get(name));
         }
