@@ -1,12 +1,15 @@
 package unittests.utility;
 
 import takeiteasy.board.*;
+import takeiteasy.gamematch.GameMatch;
 import takeiteasy.tilepool.Tile;
 import takeiteasy.tilepool.TilePool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public final class Utility {
 
@@ -61,6 +64,27 @@ public final class Utility {
         }
 
         return pairs;
+    }
+
+    public static GameMatch SimulateCompleteGameMatch(GameMatch gm, String name, long tilePoolSeed) {
+        try {
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+
+            gm.addPlayer(name);
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+
+            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+            gm.endMatch();
+        }
+        catch(Exception ignored){
+            fail();
+        }
+        return gm;
     }
 
     public static void main(String[] args){

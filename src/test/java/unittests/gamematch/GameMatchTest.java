@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Dictionary;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static unittests.utility.Utility.SimulateCompleteGameMatch;
 import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;
 
 public class GameMatchTest {
@@ -65,6 +66,7 @@ public class GameMatchTest {
         }
     }
 
+
     @Test
     public void testAddPlayerDuringFinish(){
         GameMatch gm = new GameMatch();
@@ -73,18 +75,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
-            gm.addPlayer(name);
-            gm.setTilePoolSeed(tilePoolSeed);
-            gm.startMatch();
-
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
+            gm = SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             gm.addPlayer(otherName);
             fail();
         }
