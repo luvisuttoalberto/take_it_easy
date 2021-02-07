@@ -28,7 +28,10 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void setTilePoolSeed(long seed){
+    public void setTilePoolSeed(long seed) throws InvalidMatchStateException {
+        if(state != State.SETUP) {
+            throw new InvalidMatchStateException();
+        }
         tilePool.reset(seed);
     }
 

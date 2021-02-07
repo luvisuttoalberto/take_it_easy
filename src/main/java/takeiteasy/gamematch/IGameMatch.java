@@ -27,7 +27,7 @@ public interface IGameMatch {
 
     void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException;
-    void setTilePoolSeed(long seed);
+    void setTilePoolSeed(long seed) throws InvalidMatchStateException;
     void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException;
 
     void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException;

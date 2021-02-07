@@ -102,9 +102,62 @@ public class GameMatchTest {
     public void testGetCurrentTile(){
         GameMatch gm = new GameMatch();
         long seed = 666;
-        gm.setTilePoolSeed(seed);
+        try {
+            gm.setTilePoolSeed(seed);
+        }
+        catch(InvalidMatchStateException e){
+            fail();
+        }
         TilePool tilePool = new TilePool(seed);
         assertEquals(tilePool.getTile(0), gm.getCurrentTile());
+    }
+
+    @Test
+    public void testSetSeedDuringPlay(){
+        GameMatch gm = new GameMatch();
+        long seed = 666;
+        try {
+            gm.addPlayer("Dario");
+            gm.startMatch();
+            gm.setTilePoolSeed(seed);
+            fail();
+        }
+        catch(InvalidMatchStateException ignored){
+            //test passed
+        }
+        catch(Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testSetSeedDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        Integer tilePoolSeed = 11;
+
+        try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+
+            gm.addPlayer(name);
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+
+            for (Integer i=0;i<tilesAndCoords.size()-1;++i) {
+                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
+                gm.dealNextTile();
+            }
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+            gm.endMatch();
+            gm.setTilePoolSeed(tilePoolSeed);
+            fail();
+        }
+        catch (InvalidMatchStateException ignored){
+            // test pass
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
