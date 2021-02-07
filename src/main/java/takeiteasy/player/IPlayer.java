@@ -19,9 +19,9 @@ public interface IPlayer {
     void endMatch() throws InvalidPlayerStateException;
     Integer computeScore();
 
-    public enum State {
+    enum State {
         PLACING,
         WAIT_OTHER,
-        WAIT_MATCH;
+        WAIT_MATCH
     }
 }

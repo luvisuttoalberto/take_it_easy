@@ -26,9 +26,9 @@ public class Tile {
     }
 
     public Tile(Integer top, Integer left, Integer right) throws IllegalArgumentException{
-        if(!(Arrays.stream(topValues).anyMatch(top::equals)
-                && Arrays.stream(leftValues).anyMatch(left::equals)
-                && Arrays.stream(rightValues).anyMatch(right::equals)) ){
+        if(!(Arrays.asList(topValues).contains(top)
+                && Arrays.asList(leftValues).contains(left)
+                && Arrays.asList(rightValues).contains(right)) ){
             throw new IllegalArgumentException();
         }
         this.top = top;

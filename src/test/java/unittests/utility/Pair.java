@@ -1,8 +1,5 @@
 package unittests.utility;
 
-import takeiteasy.board.HexCoordinates;
-import takeiteasy.tilepool.Tile;
-
 public class Pair<U, V> {
     public U tile;
     public V coordinate;

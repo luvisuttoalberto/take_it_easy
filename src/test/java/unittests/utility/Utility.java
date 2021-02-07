@@ -29,7 +29,7 @@ public final class Utility {
         };
         HexCoordinates[] coords = new HexCoordinates[19];
         try{
-            for (int i=0;i<19;i++){
+            for (int i=0; i<19; i++){
                 coords[i] = new HexCoordinates(coordinateSet[i][0],coordinateSet[i][1],coordinateSet[i][2]);
             }
         } catch(Exception ignored){
@@ -54,16 +54,16 @@ public final class Utility {
         else {
             coords = generateCoordinateSequence54();
         }
-        ArrayList<Pair<Tile, HexCoordinates>> pairs = new ArrayList<Pair<Tile, HexCoordinates>>();
+        ArrayList<Pair<Tile, HexCoordinates>> pairs = new ArrayList<>();
         for (int i = 0; i < 19; ++i) {
-            Pair<Tile, HexCoordinates> pair = new Pair<Tile, HexCoordinates>(tiles[i], coords[i]);
+            Pair<Tile, HexCoordinates> pair = new Pair<>(tiles[i], coords[i]);
             pairs.add(pair);
         }
 
         return pairs;
     }
 
-    public static void main(String[] args) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+    public static void main(String[] args){
         ArrayList<Pair<Tile, HexCoordinates>> pairs = getTilesAndCoordinatesBoard11(27);
         for(int i = 0; i < 19; ++i){
             System.out.println("tile:" + "("+pairs.get(i).tile.getTop()+" "+pairs.get(i).tile.getLeft()+" "+pairs.get(i).tile.getRight()+" )"+

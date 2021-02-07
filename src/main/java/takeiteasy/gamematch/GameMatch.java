@@ -5,13 +5,12 @@ import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
 import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
 public class GameMatch implements IGameMatch{
 
-    Vector<IPlayer> players = new Vector<IPlayer>();
+    Vector<IPlayer> players = new Vector<>();
     TilePool tilePool;
     State state;
     Integer currentTileIndex;
@@ -37,15 +36,13 @@ public class GameMatch implements IGameMatch{
 
     @Override
     public String[] getPlayerNames() {
-
-        String[] playerNames = players.stream().map(IPlayer::getName).toArray(String[]::new);
-        return playerNames;
+        return players.stream().map(IPlayer::getName).toArray(String[]::new);
     }
 
     private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
 
-        for (Integer i = 0; i< players.size();++i){
-            if (players.get(i).getName() == playerName){
+        for (int i = 0; i < players.size(); ++i){
+            if (players.get(i).getName().equals(playerName)){
                 return i;
             }
         }
@@ -124,16 +121,16 @@ public class GameMatch implements IGameMatch{
         if (state != State.PLAY){
             throw new InvalidMatchStateException();
         }
-        if (players.size()<1){
+        if (players.size() < 1){
             throw new NotEnoughPlayersException();
         }
         for (IPlayer p : players){
-            IPlayer.State pstate = p.getState();
-            if (pstate== IPlayer.State.PLACING){
+            IPlayer.State playerState = p.getState();
+            if (playerState == IPlayer.State.PLACING){
                 throw new PlayersNotReadyForNextTileException();
             }
         }
-        if (currentTileIndex >= tilePool.getSize()-1){
+        if (currentTileIndex >= tilePool.getSize() - 1){
             throw new TilePoolDepletedException();
         }
 
@@ -187,7 +184,7 @@ public class GameMatch implements IGameMatch{
             throw new InvalidMatchStateException();
         }
 
-        Dictionary<String, Integer> dict = new Hashtable<String, Integer>();
+        Dictionary<String, Integer> dict = new Hashtable<>();
         for (IPlayer p : players){
             dict.put(p.getName(),p.computeScore());
         }

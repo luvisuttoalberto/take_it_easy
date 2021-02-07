@@ -1,7 +1,6 @@
 package takeiteasy.gamematch;
 
 import takeiteasy.board.*;
-import takeiteasy.player.IPlayer;
 import takeiteasy.player.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
@@ -13,8 +12,7 @@ public interface IGameMatch {
         SETUP,
         PLAY,
         PAUSE,
-        FINISH;
-
+        FINISH
     }
     State getState();
 

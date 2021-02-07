@@ -15,7 +15,7 @@ public class BoardVanilla implements IBoard {
                (-3<coordinates.getZ() && coordinates.getZ()<3);
     }
 
-    private Integer[] getStorageIdxsFromCoordinates(HexCoordinates coordinates){
+    private Integer[] getStorageIndicesFromCoordinates(HexCoordinates coordinates){
         return new Integer[]{coordinates.getX()+2,coordinates.getY()+2};
     }
 
@@ -25,7 +25,7 @@ public class BoardVanilla implements IBoard {
             throw new OutOfBoardCoordinatesException();
         }
 
-        Integer[] storageIdx = this.getStorageIdxsFromCoordinates(coordinates);
+        Integer[] storageIdx = this.getStorageIndicesFromCoordinates(coordinates);
         if(this.tileStorage[storageIdx[0]][storageIdx[1]] != null){
             throw new CoordinatesOccupidedException();
         }
@@ -39,7 +39,7 @@ public class BoardVanilla implements IBoard {
         if (!this.areCoordinatesInRange(coordinates)) {
             throw new OutOfBoardCoordinatesException();
         }
-        Integer[] storageIdx = this.getStorageIdxsFromCoordinates(coordinates);
+        Integer[] storageIdx = this.getStorageIndicesFromCoordinates(coordinates);
         return this.tileStorage[storageIdx[0]][storageIdx[1]];
     }
 
@@ -100,7 +100,7 @@ public class BoardVanilla implements IBoard {
                 tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y, z), rowOrientation);
                 Integer cellValue = this.getTileNumberAtOrientation(tile,rowOrientation);
 
-                if (cellValue != rowNumber) {
+                if (!cellValue.equals(rowNumber)) {
                     // Differing value, no points
                     return 0;
                 }
@@ -118,7 +118,7 @@ public class BoardVanilla implements IBoard {
     public Integer computeScore() {
         Integer score = 0;
         for (RowOrientation orientation : RowOrientation.values()) {
-            for (Integer i=-2;i<3;++i){
+            for (int i=-2;i<3;++i){
                 score += computeRowScore(i,orientation);
             }
         }

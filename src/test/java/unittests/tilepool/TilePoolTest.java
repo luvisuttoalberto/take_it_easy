@@ -76,6 +76,7 @@ public class TilePoolTest {
             fail();
         }
         catch (IllegalArgumentException E){
+            //test passed
         }
         catch (Exception e){
             fail();
