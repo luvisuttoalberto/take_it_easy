@@ -14,17 +14,12 @@ public class Game implements IGame{
     }
 
     @Override
-    public void exitGame() {
-        //TODO: Remove???
-    }
-
-    @Override
     public void addPlayer(String name) {
         try {
             gameMatch.addPlayer(name);
         }
         catch (PlayerWithSameNameCannotBeAddedException | InvalidMatchStateException ignored) {
-            //TODO: Do we need to handle the exception???
+            //TODO: Display message on JSONObject
         }
     }
 
@@ -35,13 +30,8 @@ public class Game implements IGame{
         }
         catch (PlayerNameNotFoundException ignored){
         }
-        catch (NotEnoughPlayersException e){
-            try {
-                gameMatch.backToSetup();
-            }
-            catch(InvalidMatchStateException ignored){
-                //TODO: check if this is good practice
-            }
+        catch (NotEnoughPlayersException ignored){
+            //TODO: maybe display a message on the JsonObject
         }
     }
 
@@ -50,8 +40,8 @@ public class Game implements IGame{
         try{
             gameMatch.setPlayerName(oldName, newName);
         }
-        catch(PlayerNameNotFoundException | InvalidMatchStateException ingored){
-            //TODO: Do we need to handle the exception???
+        catch(PlayerNameNotFoundException | InvalidMatchStateException ignored){
+            //TODO: Display message on JSONObject
         }
     }
 
@@ -61,7 +51,6 @@ public class Game implements IGame{
             gameMatch.startMatch();
         }
         catch(InvalidMatchStateException | NotEnoughPlayersException | InvalidPlayerStateException ignored){
-            //TODO: Do we need to handle the exception (InvalidPlayerStateException)???
         }
     }
 

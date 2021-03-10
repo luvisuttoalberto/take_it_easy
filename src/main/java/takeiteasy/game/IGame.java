@@ -4,9 +4,25 @@ import takeiteasy.board.HexCoordinates;
 import org.json.JSONObject;
 
 public interface IGame {
+
+    enum State{
+        MAIN_MENU,
+        LOCAL_LOBBY,
+        LOCAL_MATCH
+    }
+
+    /*
+     REMOVE:
+     Since we don't want to verify the state of the Game
+     from the GUI, we don't implement a getter for the
+     state; instead, the state will be written in the
+     JSONObject, requested by the GUI to understand
+     what it needs to display. The states are still public
+     in order to have them available from the GUI (==)
+    */
+
     //main menu
     void createLocalGame();
-    void exitGame();
 
     //local game setup
     void addPlayer(String name);
@@ -22,5 +38,4 @@ public interface IGame {
 
     JSONObject getData();
 
-    //TODO: States needed???
 }
