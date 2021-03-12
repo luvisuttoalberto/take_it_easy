@@ -35,8 +35,8 @@ public final class Utility {
             for (int i=0; i<19; i++){
                 coords[i] = new HexCoordinates(coordinateSet[i][0],coordinateSet[i][1],coordinateSet[i][2]);
             }
-        } catch(Exception ignored){
-
+        }
+        catch(Exception ignored){
         }
         return coords;
     }

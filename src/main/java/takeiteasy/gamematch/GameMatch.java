@@ -55,6 +55,11 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
+    public IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException {
+        return players.get(retrievePlayerIndexFromName(playerName)).getState();
+    }
+
+    @Override
     public void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException {
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
@@ -184,7 +189,7 @@ public class GameMatch implements IGameMatch{
 
     @Override
     public Dictionary<String,Integer> computeScore() throws InvalidMatchStateException{
-
+        //TODO: Do we need to order the scores???
         if(state != State.FINISH){
             throw new InvalidMatchStateException();
         }

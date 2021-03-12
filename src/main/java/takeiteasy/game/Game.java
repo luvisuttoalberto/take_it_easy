@@ -2,8 +2,11 @@ package takeiteasy.game;
 
 import org.json.JSONObject;
 import takeiteasy.board.HexCoordinates;
+import takeiteasy.board.IBoard;
+import takeiteasy.board.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
+import takeiteasy.tilepool.Tile;
 
 public class Game implements IGame{
     private GameMatch gameMatch;
@@ -88,6 +91,77 @@ public class Game implements IGame{
 
     @Override
     public JSONObject getData() {
-        return null;
+        if(state == State.MAIN_MENU){
+            //TODO: Verify if this is a good practice: we do not want to throw an exception to GUI
+            //      this method should not be called in the MAIN MENU
+            return null;
+        }
+        JSONObject data = new JSONObject();
+        if(!message.isBlank()){
+            data.put("message", message);
+            message = "";
+        }
+        JSONObject playersData = new JSONObject();
+        String[] playerNames = gameMatch.getPlayerNames();
+        JSONObject playerData = new JSONObject();
+        for( int i = 0; i < playerNames.length; ++i ){
+            try {
+                String playerState = gameMatch.getPlayerStateFromPlayerName(playerNames[i]).name();
+                playerData.put("playerState", playerState);
+            }
+            catch(PlayerNameNotFoundException ignored){
+            }
+            JSONObject boardData = new JSONObject();
+            //TODO: remove duplication generateCoordinateSequence54 -> generateStarndardCoordinateSequence
+            int[][] coordinateSet = {
+                    {-2, 2, 0}, {-2, 1, 1}, {-2, 0, 2},
+                    {-1, 2, -1}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
+                    {0, 2, -2}, {0, 1, -1}, {0, 0, 0}, {0, -1, 1}, {0, -2, 2},
+                    {1, 1, -2}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
+                    {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
+            };
+            HexCoordinates[] coords = new HexCoordinates[19];
+            try{
+                for (int j = 0; j < 19; ++j){
+                    coords[j] = new HexCoordinates(coordinateSet[j][0],coordinateSet[j][1],coordinateSet[j][2]);
+                }
+            } catch(Exception ignored){
+            }
+
+            try {
+                IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerNames[i]);
+                for( HexCoordinates c : coords ){
+                    Tile tile = playerBoard.getTile(c);
+                    if(!tile.equals(null)){
+                        JSONObject tileData = new JSONObject();
+                        tileData.put("top",tile.getTop());
+                        tileData.put("left",tile.getLeft());
+                        tileData.put("right",tile.getRight());
+                        boardData.put(c.getX() + " " + c.getY() + " " + c.getZ() , tileData);
+                    }
+                }
+            }
+            catch(PlayerNameNotFoundException | OutOfBoardCoordinatesException ignored){
+            }
+            playerData.put("playerBoard", boardData);
+            playersData.put(playerNames[i], playerData);
+        }
+        data.put("player", playersData);
+
+        JSONObject currentTileData = new JSONObject();
+        Tile currentTile = gameMatch.getCurrentTile();
+        currentTileData.put("top", currentTile.getTop());
+        currentTileData.put("left", currentTile.getLeft());
+        currentTileData.put("right", currentTile.getRight());
+        data.put("currentTile", currentTileData);
+
+        data.put("gameState", state.name());
+        try{
+            JSONObject scoresData = new JSONObject(gameMatch.computeScore());
+            data.put("scores", scoresData);
+        }
+        catch (InvalidMatchStateException e){
+        }
+        return data;
     }
 }
