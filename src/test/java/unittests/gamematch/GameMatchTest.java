@@ -39,7 +39,7 @@ public class GameMatchTest {
             gm.addPlayer(plyName);
             fail();
         }
-        catch (PlayerWithSameNameCannotBeAddedException ignored){
+        catch (PlayersWithSameNameNotAllowedException ignored){
             // test passed
         }
         catch (Exception e){
@@ -186,6 +186,23 @@ public class GameMatchTest {
             assertFalse(Arrays.asList(gm.getPlayerNames()).contains(oldName));
         }
         catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testSetAlreadyPresentPlayerName(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        try{
+            gm.addPlayer(oldName);
+            gm.addPlayer(newName);
+            gm.setPlayerName(newName, oldName);
+            fail();
+        } catch (PlayersWithSameNameNotAllowedException ignored){
+            // test passed
+        }catch (Exception e) {
             fail();
         }
     }

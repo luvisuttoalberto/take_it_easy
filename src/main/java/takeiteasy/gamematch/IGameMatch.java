@@ -21,9 +21,9 @@ public interface IGameMatch {
     Tile getCurrentTile();
     IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException;
 
-    void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException, InvalidMatchStateException;
+    void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException;
 
-    void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException;
+    void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException, PlayersWithSameNameNotAllowedException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException;
     void setTilePoolSeed(long seed) throws InvalidMatchStateException;
     void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException;

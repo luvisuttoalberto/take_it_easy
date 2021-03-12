@@ -55,13 +55,13 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void addPlayer(String playerName) throws PlayerWithSameNameCannotBeAddedException, InvalidMatchStateException {
+    public void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException {
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
         }
         try{
             retrievePlayerIndexFromName(playerName);
-            throw new PlayerWithSameNameCannotBeAddedException(playerName);
+            throw new PlayersWithSameNameNotAllowedException(playerName);
         }
         catch (PlayerNameNotFoundException e){
             players.add(new Player(playerName));
@@ -69,12 +69,17 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException {
+    public void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException, PlayersWithSameNameNotAllowedException {
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
         }
         Integer playerIndex = retrievePlayerIndexFromName(oldName);
-        players.get(playerIndex).setName(newName);
+        try {
+            Integer tmpIndex = retrievePlayerIndexFromName(newName);
+            throw new PlayersWithSameNameNotAllowedException(newName);
+        } catch (PlayerNameNotFoundException ignored){
+            players.get(playerIndex).setName(newName);
+        }
     }
 
     @Override

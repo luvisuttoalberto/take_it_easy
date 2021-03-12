@@ -20,7 +20,7 @@ public class Game implements IGame{
         try {
             gameMatch.addPlayer(name);
         }
-        catch (PlayerWithSameNameCannotBeAddedException | InvalidMatchStateException ignored) {
+        catch (PlayersWithSameNameNotAllowedException | InvalidMatchStateException ignored) {
             message = "Player not added, a player with this name is already present";
         }
     }
@@ -42,7 +42,7 @@ public class Game implements IGame{
         try{
             gameMatch.setPlayerName(oldName, newName);
         }
-        catch(PlayerNameNotFoundException | InvalidMatchStateException ignored){
+        catch(PlayerNameNotFoundException | InvalidMatchStateException |  PlayersWithSameNameNotAllowedException ignored){
             //TODO: Display message on JSONObject
         }
     }
