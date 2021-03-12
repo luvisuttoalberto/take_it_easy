@@ -7,6 +7,8 @@ import takeiteasy.player.InvalidPlayerStateException;
 
 public class Game implements IGame{
     private GameMatch gameMatch;
+    private String message;
+    // insert state
 
     @Override
     public void createLocalGame() {
@@ -19,7 +21,7 @@ public class Game implements IGame{
             gameMatch.addPlayer(name);
         }
         catch (PlayerWithSameNameCannotBeAddedException | InvalidMatchStateException ignored) {
-            //TODO: Display message on JSONObject
+            message = "Player not added, a player with this name is already present";
         }
     }
 
