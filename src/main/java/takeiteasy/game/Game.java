@@ -20,8 +20,10 @@ public class Game implements IGame{
         try {
             gameMatch.addPlayer(name);
         }
-        catch (PlayersWithSameNameNotAllowedException | InvalidMatchStateException ignored) {
+        catch (PlayersWithSameNameNotAllowedException e) {
             message = "Player not added, a player with this name is already present";
+        }
+        catch (InvalidMatchStateException ignored){
         }
     }
 
@@ -42,8 +44,10 @@ public class Game implements IGame{
         try{
             gameMatch.setPlayerName(oldName, newName);
         }
-        catch(PlayerNameNotFoundException | InvalidMatchStateException |  PlayersWithSameNameNotAllowedException ignored){
-            //TODO: Display message on JSONObject
+        catch(PlayerNameNotFoundException | InvalidMatchStateException ignored){
+        }
+        catch(PlayersWithSameNameNotAllowedException e){
+            message = "Player name not changed, a player with this name is already present";
         }
     }
 
@@ -62,7 +66,6 @@ public class Game implements IGame{
             gameMatch.setTilePoolSeed(seed);
         }
         catch (InvalidMatchStateException ignored){
-            
         }
     }
 
