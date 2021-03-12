@@ -8,11 +8,12 @@ import takeiteasy.player.InvalidPlayerStateException;
 public class Game implements IGame{
     private GameMatch gameMatch;
     private String message;
-    // insert state
+    private State state = State.MAIN_MENU; // TODO: Do we need a ctor to initialize this variable
 
     @Override
     public void createLocalGame() {
         gameMatch = new GameMatch();
+        state = State.LOCAL_LOBBY;
     }
 
     @Override
@@ -55,6 +56,7 @@ public class Game implements IGame{
     public void startLocalMatch() {
         try {
             gameMatch.startMatch();
+            state = State.LOCAL_MATCH;
         }
         catch(InvalidMatchStateException | NotEnoughPlayersException | InvalidPlayerStateException ignored){
         }
