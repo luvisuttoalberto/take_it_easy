@@ -111,5 +111,24 @@ public class GameTest {
         assertFalse(playerNames.contains(oldName));
     }
 
-    
+    @Test
+    public void testRenamePlayerWithAlreadyPresentName(){
+        Game game = new Game();
+        game.createLocalGame();
+        String name = "Dario";
+        String otherName = "Carlos";
+        game.addPlayer(name);
+        game.addPlayer(otherName);
+
+        game.renamePlayer(name, otherName);
+
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("players");
+        List<String> playerNames = new ArrayList<>(players.keySet());
+
+        assertEquals(name, playerNames.get(0));
+        assertEquals(otherName, playerNames.get(1));
+        assertEquals(2, playerNames.size());
+        assertEquals("Player name not changed, a player with this name is already present", data.opt("message"));
+    }
 }
