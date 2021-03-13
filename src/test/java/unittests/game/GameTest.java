@@ -85,4 +85,31 @@ public class GameTest {
         assertFalse(playerNames.contains(name));
     }
 
+    @Test
+    public void testRenamePlayer(){
+        Game game = new Game();
+        game.createLocalGame();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        game.addPlayer(oldName);
+
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("players");
+        List<String> playerNames = new ArrayList<>(players.keySet());
+
+        assertEquals(oldName, playerNames.get(0));
+
+        game.renamePlayer(oldName, newName);
+
+        data = game.getData();
+        players = data.getJSONObject("players");
+        playerNames = new ArrayList<>(players.keySet());
+
+        assertEquals(newName, playerNames.get(0));
+        assertEquals(1, playerNames.size());
+        assertTrue(playerNames.contains(newName));
+        assertFalse(playerNames.contains(oldName));
+    }
+
+    
 }
