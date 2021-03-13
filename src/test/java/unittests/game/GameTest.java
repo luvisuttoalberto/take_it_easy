@@ -40,9 +40,25 @@ public class GameTest {
         JSONObject players = data.getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
         JSONObject firstPlayerData = players.getJSONObject(playerNames.get(0));
+
         assertTrue(playerNames.contains(name));
         assertEquals(firstPlayerData.get("playerState"), "WAIT_MATCH");
         assertNull(data.opt("message"));
+    }
+
+    @Test
+    public void testAddAlreadyPresentPlayer(){
+        Game game = new Game();
+        game.createLocalGame();
+        String name = "Dario";
+        game.addPlayer(name);
+        game.addPlayer(name);
+
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("players");
+        List<String> playerNames = new ArrayList<>(players.keySet());
+        assertEquals(1, playerNames.size());
+        assertEquals("Player not added, a player with this name is already present", data.opt("message"));
     }
 
 }
