@@ -157,6 +157,7 @@ public class Game implements IGame{
         data.put("currentTile", currentTileData);
 
         data.put("gameState", state.name());
+        data.put("seed", gameMatch.getSeed());
         try{
             JSONObject scoresData = new JSONObject(gameMatch.computeScore());
             data.put("scores", scoresData);

@@ -31,6 +31,7 @@ public class TilePool implements ITilePool {
     @Override
     public void reset(long seed) {
         Tile[] tileset = createFullTileSet();
+        this.seed = seed;
         Random rand = new Random(seed);
         Collections.shuffle(Arrays.asList(tileset), rand);
         System.arraycopy(tileset, 0, extractedTiles, 0, size);

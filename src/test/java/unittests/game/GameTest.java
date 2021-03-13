@@ -3,6 +3,7 @@ package unittests.game;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import takeiteasy.game.Game;
+import takeiteasy.tilepool.Tile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,5 +131,20 @@ public class GameTest {
         assertEquals(otherName, playerNames.get(1));
         assertEquals(2, playerNames.size());
         assertEquals("Player name not changed, a player with this name is already present", data.opt("message"));
+    }
+
+    @Test
+    public void testSetMatchSeed(){
+        Game game = new Game();
+        game.createLocalGame();
+        JSONObject data = game.getData();
+
+        long initialSeed = (long) data.get("seed");
+        long newSeed = initialSeed + 1;
+        game.setMatchSeed(newSeed);
+        data = game.getData();
+
+        assertNotEquals(initialSeed, data.get("seed"));
+        assertEquals(newSeed, data.get("seed"));
     }
 }

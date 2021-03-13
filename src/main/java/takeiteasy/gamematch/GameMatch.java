@@ -122,6 +122,11 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
+    public long getSeed() {
+        return tilePool.getSeed();
+    }
+
+    @Override
     public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
         players.get(retrievePlayerIndexFromName(playerName)).placeTile(getCurrentTile(), coordinates);
     }
