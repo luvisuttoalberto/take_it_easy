@@ -10,7 +10,7 @@ import takeiteasy.tilepool.Tile;
 
 public class Game implements IGame{
     private GameMatch gameMatch;
-    private String message;
+    private String message = "";
     private State state = State.MAIN_MENU; // TODO: Do we need a ctor to initialize this variable
 
     @Override
@@ -56,21 +56,21 @@ public class Game implements IGame{
     }
 
     @Override
+    public void setMatchSeed(long seed) {
+        try {
+            gameMatch.setTilePoolSeed(seed);
+        }
+        catch (InvalidMatchStateException ignored){
+        }
+    }
+
+    @Override
     public void startLocalMatch() {
         try {
             gameMatch.startMatch();
             state = State.LOCAL_MATCH;
         }
         catch(InvalidMatchStateException | NotEnoughPlayersException | InvalidPlayerStateException ignored){
-        }
-    }
-
-    @Override
-    public void setMatchSeed(long seed) {
-        try {
-            gameMatch.setTilePoolSeed(seed);
-        }
-        catch (InvalidMatchStateException ignored){
         }
     }
 
@@ -112,7 +112,7 @@ public class Game implements IGame{
             catch(PlayerNameNotFoundException ignored){
             }
             JSONObject boardData = new JSONObject();
-            //TODO: remove duplication generateCoordinateSequence54 -> generateStarndardCoordinateSequence
+            //TODO: remove duplication generateCoordinateSequence54 -> generateStandardCoordinateSequence
             int[][] coordinateSet = {
                     {-2, 2, 0}, {-2, 1, 1}, {-2, 0, 2},
                     {-1, 2, -1}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
@@ -132,7 +132,8 @@ public class Game implements IGame{
                 IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerNames[i]);
                 for( HexCoordinates c : coords ){
                     Tile tile = playerBoard.getTile(c);
-                    if(!tile.equals(null)){
+                    //if(!tile.equals(null)){
+                    if(tile != null){
                         JSONObject tileData = new JSONObject();
                         tileData.put("top",tile.getTop());
                         tileData.put("left",tile.getLeft());
@@ -146,7 +147,7 @@ public class Game implements IGame{
             playerData.put("playerBoard", boardData);
             playersData.put(playerNames[i], playerData);
         }
-        data.put("player", playersData);
+        data.put("players", playersData);
 
         JSONObject currentTileData = new JSONObject();
         Tile currentTile = gameMatch.getCurrentTile();
@@ -160,7 +161,7 @@ public class Game implements IGame{
             JSONObject scoresData = new JSONObject(gameMatch.computeScore());
             data.put("scores", scoresData);
         }
-        catch (InvalidMatchStateException e){
+        catch (InvalidMatchStateException ignored){
         }
         return data;
     }
