@@ -59,6 +59,8 @@ public class GameTest {
         List<String> playerNames = new ArrayList<>(players.keySet());
         assertEquals(1, playerNames.size());
         assertEquals("Player not added, a player with this name is already present", data.opt("message"));
+        data = game.getData();
+        assertNull(data.opt("message"));
     }
 
 }
