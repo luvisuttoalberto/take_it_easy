@@ -63,4 +63,26 @@ public class GameTest {
         assertNull(data.opt("message"));
     }
 
+    @Test
+    public void testRemovePlayer(){
+        Game game = new Game();
+        game.createLocalGame();
+        String name = "Dario";
+        String otherName = "Carlos";
+        game.addPlayer(name);
+        game.addPlayer(otherName);
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("players");
+        List<String> playerNames = new ArrayList<>(players.keySet());
+        assertEquals(2, playerNames.size());
+
+        game.removePlayer(name);
+        data = game.getData();
+        players = data.getJSONObject("players");
+        playerNames = new ArrayList<>(players.keySet());
+        assertEquals(1, playerNames.size());
+        assertTrue(playerNames.contains(otherName));
+        assertFalse(playerNames.contains(name));
+    }
+
 }
