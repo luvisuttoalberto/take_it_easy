@@ -226,11 +226,24 @@ public class GameTest {
     public void testBackToLocalSetup(){
         Game game = new Game();
         game.createLocalGame();
-        game.addPlayer("Dario");
-        game.startLocalMatch();
-        //metti una tile ma controlla che le board siano vuote
-        game.backToLocalSetup();
-        JSONObject data = game.getData();
-        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
+        String name = "Dario";
+        try{
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+            game.setMatchSeed(11);
+            game.addPlayer(name);
+            game.startLocalMatch();
+            game.playerPlacesTileAt(name, tilesAndCoords.get(0).coordinate);
+            game.backToLocalSetup();
+            JSONObject data = game.getData();
+            JSONObject players = data.getJSONObject("players");
+            JSONObject player = players.getJSONObject(name);
+            JSONObject board = player.getJSONObject("playerBoard");
+            assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
+            assertEquals(data.get("gameState"), "LOCAL_LOBBY");
+        }
+        catch(Exception ignored){
+            fail();
+        }
+
     }
 }
