@@ -4,25 +4,22 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.Game;
-import takeiteasy.game.IGame;
 import takeiteasy.tilepool.Tile;
 import unittests.utility.Pair;
 
 import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
 
     @Test
-    public void testEmptyDataBeforeCreatingLocalLobby(){
+    public void testGetDataInMainMenu(){
         Game game = new Game();
-        assertNull(game.getData());
+        assertEquals("MAIN_MENU", game.getData().get("gameState"));
     }
 
     @Test
@@ -217,7 +214,7 @@ public class GameTest {
                 assertEquals(tilesAndCoords.get(i).tile.getRight(), tile.get("right"));
             }
         }
-        catch(Exception ignored){
+        catch(Exception e){
             fail();
         }
     }
@@ -241,7 +238,7 @@ public class GameTest {
             assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
             assertEquals(data.get("gameState"), "LOCAL_LOBBY");
         }
-        catch(Exception ignored){
+        catch(Exception e){
             fail();
         }
 
