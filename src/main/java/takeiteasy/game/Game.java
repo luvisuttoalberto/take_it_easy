@@ -84,7 +84,12 @@ public class Game implements IGame{
 
     @Override
     public void backToLocalSetup() {
-
+        try {
+            gameMatch.backToSetup();
+            state = State.LOCAL_LOBBY;
+        }
+        catch(InvalidMatchStateException ignored){
+        }
     }
 
     @Override

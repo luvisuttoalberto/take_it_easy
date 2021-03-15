@@ -174,6 +174,12 @@ public class GameTest {
 
     @Test
     public void testBackToLocalSetup(){
-        
+        Game game = new Game();
+        game.createLocalGame();
+        game.addPlayer("Dario");
+        game.startLocalMatch();
+        game.backToLocalSetup();
+        JSONObject data = game.getData();
+        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
     }
 }
