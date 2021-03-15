@@ -169,7 +169,35 @@ public class GameTest {
 
     @Test
     public void testPlayerPlacesTileAt(){
+        Game game = new Game();
+        game.createLocalGame();
+        String name = "Dario";
+        try {
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
+            game.addPlayer(name);
+            game.setMatchSeed(11);
+            game.startLocalMatch();
+
+            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
+                game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
+            }
+            game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
+            JSONObject data = game.getData();
+            assertEquals("Tilepool depleted", data.opt("message"));
+            JSONObject players = data.getJSONObject("players");
+            JSONObject player = players.getJSONObject(name);
+            JSONObject board = player.getJSONObject("playerBoard");
+            for(int i = 0; i < tilesAndCoords.size(); ++i){
+                JSONObject tile = board.getJSONObject(tilesAndCoords.get(i).coordinate.getX() + " " + tilesAndCoords.get(i).coordinate.getY() + " " + tilesAndCoords.get(i).coordinate.getZ());
+                assertEquals(tile.get("top"), tilesAndCoords.get(i).tile.getTop());
+                assertEquals(tile.get("left"), tilesAndCoords.get(i).tile.getLeft());
+                assertEquals(tile.get("right"), tilesAndCoords.get(i).tile.getRight());
+            }
+        }
+        catch(Exception ignored){
+            fail();
+        }
     }
 
     @Test

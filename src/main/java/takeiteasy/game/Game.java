@@ -79,7 +79,15 @@ public class Game implements IGame{
 
     @Override
     public void playerPlacesTileAt(String name, HexCoordinates coordinates) {
-
+        try {
+            gameMatch.positionCurrentTileOnPlayerBoard(name, coordinates);
+            gameMatch.dealNextTile();
+        }
+        catch(PlayerNameNotFoundException | BadHexCoordinatesException | OutOfBoardCoordinatesException | InvalidPlayerStateException | CoordinatesOccupidedException | InvalidMatchStateException | NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
+        }
+        catch(TilePoolDepletedException e){
+            message = "Tilepool depleted";
+        }
     }
 
     @Override
