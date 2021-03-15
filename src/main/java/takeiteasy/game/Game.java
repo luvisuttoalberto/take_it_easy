@@ -74,7 +74,12 @@ public class Game implements IGame{
 
     @Override
     public void backToTheMainMenu() {
-
+        try {
+            gameMatch.endMatch();
+            state = State.MAIN_MENU;
+        }
+        catch(PlayersNotReadyToEndMatchException | InvalidMatchStateException | TilePoolNotDepletedException ignored) {
+        }
     }
 
     @Override
@@ -103,9 +108,9 @@ public class Game implements IGame{
     @Override
     public JSONObject getData() {
         if(state == State.MAIN_MENU){
-            //TODO: Verify if this is a good practice: we do not want to throw an exception to GUI
-            //      this method should not be called in the MAIN MENU
-            return null;
+            JSONObject data = new JSONObject();
+            data.put("gameState", state.name());
+            return data;
         }
         JSONObject data = new JSONObject();
         if(!message.isBlank()){

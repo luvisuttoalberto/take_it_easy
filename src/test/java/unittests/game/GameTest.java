@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.Game;
+import takeiteasy.game.IGame;
 import takeiteasy.tilepool.Tile;
 import unittests.utility.Pair;
 
@@ -164,7 +165,27 @@ public class GameTest {
 
     @Test
     public void testBackToMainMenu(){
+        Game game = new Game();
+        game.createLocalGame();
+        String name = "Dario";
+        try {
+            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
+            game.addPlayer(name);
+            game.setMatchSeed(11);
+            game.startLocalMatch();
+
+            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
+                game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
+            }
+            game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
+        }
+        catch(Exception e){
+            fail();
+        }
+        game.backToTheMainMenu();
+        JSONObject data = game.getData();
+        assertEquals(data.get("gameState"), "MAIN_MENU");
     }
 
     @Test
@@ -183,6 +204,7 @@ public class GameTest {
                 game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
             }
             game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
+
             JSONObject data = game.getData();
             assertEquals("Tilepool depleted", data.opt("message"));
             JSONObject players = data.getJSONObject("players");
@@ -190,9 +212,9 @@ public class GameTest {
             JSONObject board = player.getJSONObject("playerBoard");
             for(int i = 0; i < tilesAndCoords.size(); ++i){
                 JSONObject tile = board.getJSONObject(tilesAndCoords.get(i).coordinate.getX() + " " + tilesAndCoords.get(i).coordinate.getY() + " " + tilesAndCoords.get(i).coordinate.getZ());
-                assertEquals(tile.get("top"), tilesAndCoords.get(i).tile.getTop());
-                assertEquals(tile.get("left"), tilesAndCoords.get(i).tile.getLeft());
-                assertEquals(tile.get("right"), tilesAndCoords.get(i).tile.getRight());
+                assertEquals(tilesAndCoords.get(i).tile.getTop(), tile.get("top"));
+                assertEquals(tilesAndCoords.get(i).tile.getLeft(), tile.get("left"));
+                assertEquals(tilesAndCoords.get(i).tile.getRight(), tile.get("right"));
             }
         }
         catch(Exception ignored){
@@ -206,6 +228,7 @@ public class GameTest {
         game.createLocalGame();
         game.addPlayer("Dario");
         game.startLocalMatch();
+        //metti una tile ma controlla che le board siano vuote
         game.backToLocalSetup();
         JSONObject data = game.getData();
         assertEquals(data.get("gameState"), "LOCAL_LOBBY");
