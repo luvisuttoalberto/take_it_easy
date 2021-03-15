@@ -165,21 +165,16 @@ public class GameTest {
         Game game = new Game();
         game.createLocalGame();
         String name = "Dario";
-        try {
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
-            game.addPlayer(name);
-            game.setMatchSeed(11);
-            game.startLocalMatch();
+        game.addPlayer(name);
+        game.setMatchSeed(11);
+        game.startLocalMatch();
 
-            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-                game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
-            }
-            game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
+        for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
+            game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
         }
-        catch(Exception e){
-            fail();
-        }
+        game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
         game.backToTheMainMenu();
         JSONObject data = game.getData();
         assertEquals(data.get("gameState"), "MAIN_MENU");
@@ -190,32 +185,27 @@ public class GameTest {
         Game game = new Game();
         game.createLocalGame();
         String name = "Dario";
-        try {
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
-            game.addPlayer(name);
-            game.setMatchSeed(11);
-            game.startLocalMatch();
+        game.addPlayer(name);
+        game.setMatchSeed(11);
+        game.startLocalMatch();
 
-            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-                game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
-            }
-            game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
-
-            JSONObject data = game.getData();
-            assertEquals("Tilepool depleted", data.opt("message"));
-            JSONObject players = data.getJSONObject("players");
-            JSONObject player = players.getJSONObject(name);
-            JSONObject board = player.getJSONObject("playerBoard");
-            for(int i = 0; i < tilesAndCoords.size(); ++i){
-                JSONObject tile = board.getJSONObject(tilesAndCoords.get(i).coordinate.getX() + " " + tilesAndCoords.get(i).coordinate.getY() + " " + tilesAndCoords.get(i).coordinate.getZ());
-                assertEquals(tilesAndCoords.get(i).tile.getTop(), tile.get("top"));
-                assertEquals(tilesAndCoords.get(i).tile.getLeft(), tile.get("left"));
-                assertEquals(tilesAndCoords.get(i).tile.getRight(), tile.get("right"));
-            }
+        for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
+            game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
         }
-        catch(Exception e){
-            fail();
+        game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
+
+        JSONObject data = game.getData();
+        assertEquals("Tilepool depleted", data.opt("message"));
+        JSONObject players = data.getJSONObject("players");
+        JSONObject player = players.getJSONObject(name);
+        JSONObject board = player.getJSONObject("playerBoard");
+        for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
+            JSONObject tile = board.getJSONObject(tilesAndCoord.coordinate.getX() + " " + tilesAndCoord.coordinate.getY() + " " + tilesAndCoord.coordinate.getZ());
+            assertEquals(tilesAndCoord.tile.getTop(), tile.get("top"));
+            assertEquals(tilesAndCoord.tile.getLeft(), tile.get("left"));
+            assertEquals(tilesAndCoord.tile.getRight(), tile.get("right"));
         }
     }
 
@@ -224,23 +214,17 @@ public class GameTest {
         Game game = new Game();
         game.createLocalGame();
         String name = "Dario";
-        try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-            game.setMatchSeed(11);
-            game.addPlayer(name);
-            game.startLocalMatch();
-            game.playerPlacesTileAt(name, tilesAndCoords.get(0).coordinate);
-            game.backToLocalSetup();
-            JSONObject data = game.getData();
-            JSONObject players = data.getJSONObject("players");
-            JSONObject player = players.getJSONObject(name);
-            JSONObject board = player.getJSONObject("playerBoard");
-            assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
-            assertEquals(data.get("gameState"), "LOCAL_LOBBY");
-        }
-        catch(Exception e){
-            fail();
-        }
-
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
+        game.setMatchSeed(11);
+        game.addPlayer(name);
+        game.startLocalMatch();
+        game.playerPlacesTileAt(name, tilesAndCoords.get(0).coordinate);
+        game.backToLocalSetup();
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("players");
+        JSONObject player = players.getJSONObject(name);
+        JSONObject board = player.getJSONObject("playerBoard");
+        assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
+        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
     }
 }

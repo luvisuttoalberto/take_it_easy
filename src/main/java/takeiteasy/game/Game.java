@@ -115,7 +115,8 @@ public class Game implements IGame{
         JSONObject data = new JSONObject();
         if(!message.isBlank()){
             data.put("message", message);
-            message = "";
+            message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
+
         }
         JSONObject playersData = new JSONObject();
         String[] playerNames = gameMatch.getPlayerNames();
