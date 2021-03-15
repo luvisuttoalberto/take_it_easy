@@ -2,8 +2,12 @@ package unittests.game;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.Game;
 import takeiteasy.tilepool.Tile;
+import unittests.utility.Pair;
+
+import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,5 +150,30 @@ public class GameTest {
 
         assertNotEquals(initialSeed, data.get("seed"));
         assertEquals(newSeed, data.get("seed"));
+    }
+
+    @Test
+    public void testStartLocalMatch(){
+        Game game = new Game();
+        game.createLocalGame();
+        game.addPlayer("Dario");
+        game.startLocalMatch();
+        JSONObject data = game.getData();
+        assertEquals(data.get("gameState"), "LOCAL_MATCH");
+    }
+
+    @Test
+    public void testBackToMainMenu(){
+
+    }
+
+    @Test
+    public void testPlayerPlacesTileAt(){
+
+    }
+
+    @Test
+    public void testBackToLocalSetup(){
+        
     }
 }

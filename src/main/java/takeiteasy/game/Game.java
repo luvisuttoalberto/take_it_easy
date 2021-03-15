@@ -1,9 +1,7 @@
 package takeiteasy.game;
 
 import org.json.JSONObject;
-import takeiteasy.board.HexCoordinates;
-import takeiteasy.board.IBoard;
-import takeiteasy.board.OutOfBoardCoordinatesException;
+import takeiteasy.board.*;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
