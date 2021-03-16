@@ -9,7 +9,7 @@ import takeiteasy.tilepool.Tile;
 public class Game implements IGame{
     private GameMatch gameMatch;
     private String message = "";
-    private State state = State.MAIN_MENU; // TODO: Do we need a ctor to initialize this variable
+    private State state = State.MAIN_MENU;
 
     @Override
     public void createLocalGame() {
@@ -88,7 +88,9 @@ public class Game implements IGame{
             gameMatch.positionCurrentTileOnPlayerBoard(name, coordinates);
             gameMatch.dealNextTile();
         }
-        catch(PlayerNameNotFoundException | BadHexCoordinatesException | OutOfBoardCoordinatesException | InvalidPlayerStateException | CoordinatesOccupidedException | InvalidMatchStateException | NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
+        catch(  PlayerNameNotFoundException | BadHexCoordinatesException | OutOfBoardCoordinatesException |
+                InvalidPlayerStateException | CoordinatesOccupidedException | InvalidMatchStateException |
+                NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){
             message = "Tilepool depleted";
