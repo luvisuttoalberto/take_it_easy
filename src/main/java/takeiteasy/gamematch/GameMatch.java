@@ -80,7 +80,7 @@ public class GameMatch implements IGameMatch{
         }
         Integer playerIndex = retrievePlayerIndexFromName(oldName);
         try {
-            Integer tmpIndex = retrievePlayerIndexFromName(newName);
+            retrievePlayerIndexFromName(newName);
             throw new PlayersWithSameNameNotAllowedException(newName);
         } catch (PlayerNameNotFoundException ignored){
             players.get(playerIndex).setName(newName);
