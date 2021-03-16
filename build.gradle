@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 group 'org.example'
@@ -13,8 +14,17 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'org.json:json:20201115'
+
+//    compile 'org.openjfx:javafx-controls:15.0.1'
+//    compile 'org.openjfx:javafx-fxml:15.0.1'
+//    compile 'org.openjfx:javafx-media:15.0.1'
 }
 
 test {
     useJUnitPlatform()
+}
+
+javafx {
+    version = "15.0.1"
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.media']
 }
