@@ -6,6 +6,8 @@ import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
+import static takeiteasy.utility.Utility.generateCoordinateStandard;
+
 public class Game implements IGame{
     private GameMatch gameMatch;
     private String message = "";
@@ -34,10 +36,7 @@ public class Game implements IGame{
         try{
             gameMatch.removePlayer(name);
         }
-        catch (PlayerNameNotFoundException ignored){
-        }
-        catch (NotEnoughPlayersException ignored){
-            //TODO: maybe display a message on the JsonObject
+        catch (PlayerNameNotFoundException | NotEnoughPlayersException ignored){
         }
     }
 
@@ -127,22 +126,7 @@ public class Game implements IGame{
             } catch (PlayerNameNotFoundException ignored) {
             }
             JSONObject boardData = new JSONObject();
-            //TODO: remove duplication generateCoordinateSequence54 -> generateStandardCoordinateSequence
-            int[][] coordinateSet = {
-                    {-2, 2, 0}, {-2, 1, 1}, {-2, 0, 2},
-                    {-1, 2, -1}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                    {0, 2, -2}, {0, 1, -1}, {0, 0, 0}, {0, -1, 1}, {0, -2, 2},
-                    {1, 1, -2}, {1, 0, -1}, {1, -1, 0}, {1, -2, 1},
-                    {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
-            };
-            HexCoordinates[] coords = new HexCoordinates[19];
-            try {
-                for (int j = 0; j < 19; ++j) {
-                    coords[j] = new HexCoordinates(coordinateSet[j][0], coordinateSet[j][1], coordinateSet[j][2]);
-                }
-            } catch (Exception ignored) {
-            }
-
+            HexCoordinates[] coords = generateCoordinateStandard();
             try {
                 IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerName);
                 for (HexCoordinates c : coords) {

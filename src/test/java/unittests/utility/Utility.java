@@ -4,6 +4,7 @@ import takeiteasy.board.*;
 import takeiteasy.gamematch.GameMatch;
 import takeiteasy.tilepool.Tile;
 import takeiteasy.tilepool.TilePool;
+import static takeiteasy.utility.Utility.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,27 +24,15 @@ public final class Utility {
     }
 
     private static HexCoordinates[] generateCoordinateSequence54(){
-        int[][] coordinateSet = {
-                {-2, 2, 0}, {-2, 1, 1}, {-2, 0, 2},
-                {-1, 2, -1}, {-1, 1, 0}, {-1, 0, 1}, {-1, -1, 2},
-                {0, -2, 2}, {0, 1, -1}, {0, 0, 0}, {0, -1, 1}, {0, 2, -2},
-                {1, 1, -2}, {2, -1, -1}, {1, -1, 0}, {1, -2, 1},
-                {2, 0, -2}, {1, 0, -1}, {2, -2, 0}
-        };
-        HexCoordinates[] coords = new HexCoordinates[19];
-        try{
-            for (int i=0; i<19; i++){
-                coords[i] = new HexCoordinates(coordinateSet[i][0],coordinateSet[i][1],coordinateSet[i][2]);
-            }
-        }
-        catch(Exception ignored){
-        }
+        HexCoordinates[] coords = generateCoordinateStandard();
+        Collections.swap(Arrays.asList(coords), 7,11);
+        Collections.swap(Arrays.asList(coords), 13,17);
         return coords;
     }
 
     private static HexCoordinates[] generateCoordinateSequence27(){
-        HexCoordinates[] coords = generateCoordinateSequence54();
-        Collections.swap(Arrays.asList(coords), 13,17);
+        HexCoordinates[] coords = generateCoordinateStandard();
+        Collections.swap(Arrays.asList(coords), 7,11);
         return coords;
     }
 
