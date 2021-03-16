@@ -107,26 +107,22 @@ public class Game implements IGame{
 
     @Override
     public JSONObject getData() {
-        if(state == State.MAIN_MENU){
-            JSONObject data = new JSONObject();
-            data.put("gameState", state.name());
-            return data;
-        }
         JSONObject data = new JSONObject();
+        data.put("gameState", state.name());
+        if(state == State.MAIN_MENU){
+             return data;
+        }
         if(!message.isBlank()){
             data.put("message", message);
             message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
-
         }
         JSONObject playersData = new JSONObject();
-        String[] playerNames = gameMatch.getPlayerNames();
         JSONObject playerData = new JSONObject();
-        for( int i = 0; i < playerNames.length; ++i ){
+        for (String playerName : gameMatch.getPlayerNames()) {
             try {
-                String playerState = gameMatch.getPlayerStateFromPlayerName(playerNames[i]).name();
+                String playerState = gameMatch.getPlayerStateFromPlayerName(playerName).name();
                 playerData.put("playerState", playerState);
-            }
-            catch(PlayerNameNotFoundException ignored){
+            } catch (PlayerNameNotFoundException ignored) {
             }
             JSONObject boardData = new JSONObject();
             //TODO: remove duplication generateCoordinateSequence54 -> generateStandardCoordinateSequence
@@ -138,31 +134,29 @@ public class Game implements IGame{
                     {2, 0, -2}, {2, -1, -1}, {2, -2, 0}
             };
             HexCoordinates[] coords = new HexCoordinates[19];
-            try{
-                for (int j = 0; j < 19; ++j){
-                    coords[j] = new HexCoordinates(coordinateSet[j][0],coordinateSet[j][1],coordinateSet[j][2]);
+            try {
+                for (int j = 0; j < 19; ++j) {
+                    coords[j] = new HexCoordinates(coordinateSet[j][0], coordinateSet[j][1], coordinateSet[j][2]);
                 }
-            } catch(Exception ignored){
+            } catch (Exception ignored) {
             }
 
             try {
-                IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerNames[i]);
-                for( HexCoordinates c : coords ){
+                IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerName);
+                for (HexCoordinates c : coords) {
                     Tile tile = playerBoard.getTile(c);
-                    //if(!tile.equals(null)){
-                    if(tile != null){
+                    if (tile != null) {
                         JSONObject tileData = new JSONObject();
-                        tileData.put("top",tile.getTop());
-                        tileData.put("left",tile.getLeft());
-                        tileData.put("right",tile.getRight());
-                        boardData.put(c.getX() + " " + c.getY() + " " + c.getZ() , tileData);
+                        tileData.put("top", tile.getTop());
+                        tileData.put("left", tile.getLeft());
+                        tileData.put("right", tile.getRight());
+                        boardData.put(c.getX() + " " + c.getY() + " " + c.getZ(), tileData);
                     }
                 }
-            }
-            catch(PlayerNameNotFoundException | OutOfBoardCoordinatesException ignored){
+            } catch (PlayerNameNotFoundException | OutOfBoardCoordinatesException ignored) {
             }
             playerData.put("playerBoard", boardData);
-            playersData.put(playerNames[i], playerData);
+            playersData.put(playerName, playerData);
         }
         data.put("players", playersData);
 
@@ -173,7 +167,6 @@ public class Game implements IGame{
         currentTileData.put("right", currentTile.getRight());
         data.put("currentTile", currentTileData);
 
-        data.put("gameState", state.name());
         data.put("seed", gameMatch.getSeed());
         try{
             JSONObject scoresData = new JSONObject(gameMatch.computeScore());
