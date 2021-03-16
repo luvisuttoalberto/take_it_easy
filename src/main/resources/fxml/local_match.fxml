@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="takeiteasy.GUI.Controller.LocalMatchCtrl"
-            prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.00" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="420.0">
+         <children>
+            <Pane prefHeight="50.0" prefWidth="420.0">
+               <children>
+                  <Text layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PLAYER:" />
+                  <Text layoutX="14.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STATUS:" />
+                  <Text layoutX="68.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PlayerNameWITHmanychars" />
+                  <Text layoutX="68.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Placing (1,2,3)" />
+               </children>
+            </Pane>
+            <Pane fx:id="boardPane"
+                  prefHeight="300.0" prefWidth="420.0" />
+            <Pane prefHeight="50.0" prefWidth="420.0">
+               <children>
+                  <Text layoutX="104.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Players are waiting for the game to start" textAlignment="CENTER" textOrigin="CENTER" />
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <VBox prefHeight="400.0" prefWidth="180.0">
+         <children>
+            <Button mnemonicParsing="false" text="Back to Lobby" />
+            <ListView prefHeight="300.0" prefWidth="180.0" />
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" text="PLACE TILE" textAlignment="CENTER" />
+         </children>
+      </VBox>
+   </children>
+</HBox>
