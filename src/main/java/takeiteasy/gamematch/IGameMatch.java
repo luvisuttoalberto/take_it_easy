@@ -37,7 +37,7 @@ public interface IGameMatch {
 
     void backToSetup() throws InvalidMatchStateException;
 
-    void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException;
+    void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException;
 
     Dictionary<String,Integer> computeScore() throws InvalidMatchStateException;
 

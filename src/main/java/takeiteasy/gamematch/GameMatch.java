@@ -173,7 +173,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException {
+    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException {
 
         if(state != State.PLAY){
             throw new InvalidMatchStateException();
@@ -187,6 +187,7 @@ public class GameMatch implements IGameMatch{
             if(p.getState() != IPlayer.State.WAIT_OTHER){
                 throw new PlayersNotReadyToEndMatchException();
             }
+            p.endMatch();
         }
 
         state = State.FINISH;

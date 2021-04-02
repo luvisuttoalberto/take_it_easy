@@ -77,7 +77,7 @@ public class Game implements IGame{
             gameMatch.endMatch();
             state = State.MAIN_MENU;
         }
-        catch(PlayersNotReadyToEndMatchException | InvalidMatchStateException | TilePoolNotDepletedException ignored) {
+        catch(PlayersNotReadyToEndMatchException | InvalidMatchStateException | TilePoolNotDepletedException | InvalidPlayerStateException ignored) {
         }
     }
 
