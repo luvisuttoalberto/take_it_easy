@@ -9,7 +9,7 @@ import takeiteasy.tilepool.Tile;
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class Game implements IGame{
-    private GameMatch gameMatch;
+    private IGameMatch gameMatch;
     private String message = "";
     private State state = State.MAIN_MENU;
 
@@ -109,57 +109,22 @@ public class Game implements IGame{
     @Override
     public JSONObject getData() {
         JSONObject data = new JSONObject();
-        data.put("gameState", state.name());
+
         if(state == State.MAIN_MENU){
-             return data;
+            data.put("gameState", state.name());
+            return data;
         }
+
+        data = gameMatch.getData();
+
+        data.put("gameState", state.name());
+
         if(!message.isBlank()){
             data.put("message", message);
             message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
         }
-        JSONObject playersData = new JSONObject();
-        JSONObject playerData = new JSONObject();
-        for (String playerName : gameMatch.getPlayerNames()) {
-            try {
-                String playerState = gameMatch.getPlayerStateFromPlayerName(playerName).name();
-                playerData.put("playerState", playerState);
-            } catch (PlayerNameNotFoundException ignored) {
-            }
-            JSONObject boardData = new JSONObject();
-            HexCoordinates[] coords = generateCoordinateStandard();
-            try {
-                IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerName);
-                for (HexCoordinates c : coords) {
-                    Tile tile = playerBoard.getTile(c);
-                    if (tile != null) {
-                        JSONObject tileData = new JSONObject();
-                        tileData.put("top", tile.getTop());
-                        tileData.put("left", tile.getLeft());
-                        tileData.put("right", tile.getRight());
-                        boardData.put(c.getX() + " " + c.getY() + " " + c.getZ(), tileData);
-                    }
-                }
-            } catch (PlayerNameNotFoundException | OutOfBoardCoordinatesException ignored) {
-            }
-            playerData.put("playerBoard", boardData);
-            playersData.put(playerName, playerData);
-        }
-        data.put("players", playersData);
 
-        JSONObject currentTileData = new JSONObject();
-        Tile currentTile = gameMatch.getCurrentTile();
-        currentTileData.put("top", currentTile.getTop());
-        currentTileData.put("left", currentTile.getLeft());
-        currentTileData.put("right", currentTile.getRight());
-        data.put("currentTile", currentTileData);
-
-        data.put("seed", gameMatch.getSeed());
-        try{
-            JSONObject scoresData = new JSONObject(gameMatch.computeScore());
-            data.put("scores", scoresData);
-        }
-        catch (InvalidMatchStateException ignored){
-        }
         return data;
     }
+
 }

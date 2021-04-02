@@ -1,9 +1,12 @@
 package takeiteasy.player;
 
+import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
 
 import java.util.Scanner;
+
+import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class Player implements IPlayer{
 
@@ -88,6 +91,35 @@ public class Player implements IPlayer{
     @Override
     public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
         return playerBoard.getTile(coordinates);
+    }
+
+    @Override
+    public JSONObject getData() {
+        JSONObject data = new JSONObject();
+
+        data.put("playerState", playerState.name());
+        // TODO: should this be inside BoardVanilla???
+        JSONObject boardData = new JSONObject();
+        HexCoordinates[] coords = generateCoordinateStandard();
+        for(HexCoordinates c : coords){
+            try{
+                Tile tile = playerBoard.getTile(c);
+                if(tile != null){
+                    JSONObject tileData = new JSONObject();
+                    tileData.put("top", tile.getTop());
+                    tileData.put("left", tile.getLeft());
+                    tileData.put("right", tile.getRight());
+                    boardData.put(c.getX() + " " + c.getY() + " " + c.getZ(), tileData);
+                }
+            }
+            catch (OutOfBoardCoordinatesException ignored){
+            }
+        }
+        data.put("playerBoard", boardData);
+
+        data.put("playerScore", playerBoard.computeScore());
+
+        return data;
     }
 
     //TODO: Remove?

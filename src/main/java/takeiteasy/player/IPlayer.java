@@ -1,4 +1,5 @@
 package takeiteasy.player;
+import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
 
@@ -18,6 +19,8 @@ public interface IPlayer {
 
     void endMatch() throws InvalidPlayerStateException;
     Integer computeScore();
+
+    JSONObject getData();
 
     enum State {
         PLACING,

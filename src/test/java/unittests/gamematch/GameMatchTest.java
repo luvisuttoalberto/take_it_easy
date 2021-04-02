@@ -612,4 +612,13 @@ public class GameMatchTest {
             fail();
         }
     }
+
+    @Test
+    public void testGetData(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        Integer finalScore = 54;
+        long tilePoolSeed = 11;
+
+    }
 }

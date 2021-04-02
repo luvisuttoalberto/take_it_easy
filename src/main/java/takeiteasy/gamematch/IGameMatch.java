@@ -1,5 +1,6 @@
 package takeiteasy.gamematch;
 
+import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.player.IPlayer;
 import takeiteasy.player.InvalidPlayerStateException;
@@ -38,6 +39,8 @@ public interface IGameMatch {
     void backToSetup() throws InvalidMatchStateException;
 
     void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException;
+
+    JSONObject getData();
 
     Dictionary<String,Integer> computeScore() throws InvalidMatchStateException;
 
