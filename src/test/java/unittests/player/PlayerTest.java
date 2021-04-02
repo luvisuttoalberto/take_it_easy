@@ -1,5 +1,6 @@
 package unittests.player;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.*;
@@ -9,6 +10,7 @@ import unittests.utility.Pair;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static unittests.utility.Utility.*;
 
@@ -19,6 +21,8 @@ public class PlayerTest {
         Player player = new Player("Sadr");
         try {
             player.startMatch();
+            JSONObject playerData = player.getData();
+            assertEquals("PLACING", playerData.get("playerState"));
             Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
         }
         catch (Exception e) {
@@ -71,6 +75,8 @@ public class PlayerTest {
             }
             player.computeScore();
             player.endMatch();
+            JSONObject playerData = player.getData();
+            assertEquals("WAIT_MATCH", playerData.get("playerState"));
             Assertions.assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
         catch (Exception e) {
@@ -108,6 +114,8 @@ public class PlayerTest {
                 player.transitionFromWaitingPlayersToPlacing();
             }
             IBoard board = player.getBoard();
+            JSONObject playerData = player.getData();
+            assertEquals(score, playerData.get("playerScore"));
             Assertions.assertEquals(score, board.computeScore());
         }
         catch(Exception e){
