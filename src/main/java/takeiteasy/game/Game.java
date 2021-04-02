@@ -73,12 +73,7 @@ public class Game implements IGame{
 
     @Override
     public void backToTheMainMenu() {
-        try {
-            gameMatch.endMatch();
-            state = State.MAIN_MENU;
-        }
-        catch(PlayersNotReadyToEndMatchException | InvalidMatchStateException | TilePoolNotDepletedException | InvalidPlayerStateException ignored) {
-        }
+        state = State.MAIN_MENU;
     }
 
     @Override
@@ -103,6 +98,15 @@ public class Game implements IGame{
             state = State.LOCAL_LOBBY;
         }
         catch(InvalidMatchStateException ignored){
+        }
+    }
+
+    @Override
+    public void endMatch() {
+        try{
+            gameMatch.endMatch();
+        }
+        catch (PlayersNotReadyToEndMatchException | InvalidPlayerStateException | TilePoolNotDepletedException | InvalidMatchStateException ignored) {
         }
     }
 
