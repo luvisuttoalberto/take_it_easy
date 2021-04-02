@@ -187,6 +187,9 @@ public class GameMatch implements IGameMatch{
             if(p.getState() != IPlayer.State.WAIT_OTHER){
                 throw new PlayersNotReadyToEndMatchException();
             }
+        }
+
+        for(IPlayer p : players){
             p.endMatch();
         }
 
