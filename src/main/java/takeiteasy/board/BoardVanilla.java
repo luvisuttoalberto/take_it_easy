@@ -1,6 +1,9 @@
 package takeiteasy.board;
 
+import org.json.JSONObject;
 import takeiteasy.tilepool.Tile;
+
+import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class BoardVanilla implements IBoard {
 
@@ -123,6 +126,24 @@ public class BoardVanilla implements IBoard {
             }
         }
         return score;
+    }
+
+    @Override
+    public JSONObject getData() {
+        JSONObject boardData = new JSONObject();
+        HexCoordinates[] coords = generateCoordinateStandard();
+        for(HexCoordinates c : coords){
+            try{
+                Tile tile = getTile(c);
+                if(tile != null){
+                    JSONObject tileData = tile.getData();
+                    boardData.put(c.getX() + " " + c.getY() + " " + c.getZ(), tileData);
+                }
+            }
+            catch (OutOfBoardCoordinatesException ignored){
+            }
+        }
+        return boardData;
     }
 
     private String stringifyTileContentAtStorageCoordinates(int i, int j){

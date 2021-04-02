@@ -29,7 +29,7 @@ public class GameTest {
         JSONObject data = game.getData();
         JSONObject players = data.getJSONObject("players");
         assertNull(data.opt("message"));
-        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
+        assertEquals("LOCAL_LOBBY", data.get("gameState"));
         assertTrue(players.keySet().isEmpty());
         assertEquals("SETUP", data.get("matchState"));
     }
@@ -46,7 +46,7 @@ public class GameTest {
         JSONObject firstPlayerData = players.getJSONObject(playerNames.get(0));
 
         assertTrue(playerNames.contains(name));
-        assertEquals(firstPlayerData.get("playerState"), "WAIT_MATCH");
+        assertEquals("WAIT_MATCH", firstPlayerData.get("playerState"));
         assertNull(data.opt("message"));
     }
 
@@ -158,7 +158,7 @@ public class GameTest {
         game.addPlayer("Dario");
         game.startLocalMatch();
         JSONObject data = game.getData();
-        assertEquals(data.get("gameState"), "LOCAL_MATCH");
+        assertEquals("LOCAL_MATCH", data.get("gameState"));
         assertEquals("PLAY", data.get("matchState"));
     }
 
@@ -200,7 +200,7 @@ public class GameTest {
         game.endMatch();
         game.backToTheMainMenu();
         JSONObject data = game.getData();
-        assertEquals(data.get("gameState"), "MAIN_MENU");
+        assertEquals("MAIN_MENU", data.get("gameState"));
     }
 
     @Test
@@ -226,6 +226,7 @@ public class GameTest {
         JSONObject players = data.getJSONObject("players");
         JSONObject player = players.getJSONObject(name);
         JSONObject board = player.getJSONObject("playerBoard");
+        //TODO: To remove, tested in BoardVanillaTest
         for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
             JSONObject tile = board.getJSONObject(tilesAndCoord.coordinate.getX() + " " + tilesAndCoord.coordinate.getY() + " " + tilesAndCoord.coordinate.getZ());
             assertEquals(tilesAndCoord.tile.getTop(), tile.get("top"));
@@ -250,7 +251,7 @@ public class GameTest {
         JSONObject player = players.getJSONObject(name);
         JSONObject board = player.getJSONObject("playerBoard");
         assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
-        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
+        assertEquals("LOCAL_LOBBY", data.get("gameState"));
         assertEquals("SETUP", data.get("matchState"));
     }
 

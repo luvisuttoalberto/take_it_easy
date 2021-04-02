@@ -1,5 +1,7 @@
 package takeiteasy.tilepool;
 
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -52,5 +54,14 @@ public class Tile {
     @Override
     public String toString() {
         return ""+left+","+top+","+right;
+    }
+
+    //TODO: should we create "TileTest" to test this function?
+    public JSONObject getData(){
+        JSONObject tileData = new JSONObject();
+        tileData.put("top", top);
+        tileData.put("left", left);
+        tileData.put("right", right);
+        return tileData;
     }
 }
