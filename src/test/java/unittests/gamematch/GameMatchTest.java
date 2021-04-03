@@ -329,10 +329,11 @@ public class GameMatchTest {
             JSONObject playerData = playersData.getJSONObject(name);
             JSONObject boardData = playerData.getJSONObject("playerBoard");
             String coordsString = coords.getX() + " " +coords.getY() + " " +coords.getZ();
-            Tile insertedTile = new Tile(boardData.getJSONObject(coordsString).getInt("top"),
-                    boardData.getJSONObject(coordsString).getInt("left"),
-                    boardData.getJSONObject(coordsString).getInt("right")
-                    );
+            JSONObject insertedTileData = boardData.getJSONObject(coordsString);
+            Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
+                                            insertedTileData.getInt("left"),
+                                            insertedTileData.getInt("right")
+                                        );
             assertEquals(gm.getCurrentTile(), insertedTile);
             System.out.println(insertedTile);
 //            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));

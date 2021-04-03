@@ -12,7 +12,7 @@ public interface IPlayer {
     void reset();
     void startMatch() throws InvalidPlayerStateException;
 
-    Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException;
+//    Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException;
     void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException;
 
     void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException;

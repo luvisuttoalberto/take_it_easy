@@ -1,6 +1,6 @@
 package unittests.player;
 
-import org.junit.jupiter.api.Assertions;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.*;
 import takeiteasy.player.*;
@@ -9,7 +9,7 @@ import unittests.utility.Pair;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static unittests.utility.Utility.*;
 
@@ -34,12 +34,21 @@ public class PlayerTest {
         try {
             player.startMatch();
             Tile expectedTile = new Tile(1, 2, 3);
-            HexCoordinates coordinates = new HexCoordinates(0,0,0);
-            player.placeTile(expectedTile, coordinates);
-            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
+            HexCoordinates coords = new HexCoordinates(0,0,0);
+            player.placeTile(expectedTile, coords);
+
+            String coordsString = coords.getX() + " " +coords.getY() + " " +coords.getZ();
+            JSONObject data = player.getData();
+            JSONObject boardData = data.getJSONObject("playerBoard");
+            JSONObject insertedTileData = boardData.getJSONObject(coordsString);
+            Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
+                                            insertedTileData.getInt("left"),
+                                            insertedTileData.getInt("right")
+                                        );
+//            Tile realTile = player.showTileFromBoardAtCoordinates(coords);
             assertEquals("WAIT_OTHER", player.getData().get("playerState"));
             assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
-            assertEquals(expectedTile,realTile);
+            assertEquals(expectedTile, insertedTile);
         }
         catch (Exception e){
             fail();
@@ -93,10 +102,12 @@ public class PlayerTest {
             player.startMatch();
             player.placeTile(tile, coordinates);
             player.reset();
-            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
-            assertEquals("WAIT_MATCH", player.getData().get("playerState"));
+//            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
+            JSONObject data = player.getData();
+            assertEquals("WAIT_MATCH", data.get("playerState"));
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
-            Assertions.assertNull(realTile);
+            assertTrue(data.getJSONObject("playerBoard").isEmpty());
+//            Assertions.assertNull(realTile);
         }
         catch (Exception e) {
             fail();

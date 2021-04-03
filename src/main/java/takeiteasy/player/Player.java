@@ -84,10 +84,10 @@ public class Player implements IPlayer{
 //        return playerBoard.computeScore();
 //    }
 
-    @Override
-    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
-        return playerBoard.getTile(coordinates);
-    }
+//    @Override
+//    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
+//        return playerBoard.getTile(coordinates);
+//    }
 
     @Override
     public JSONObject getData(){
