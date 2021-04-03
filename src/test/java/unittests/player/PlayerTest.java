@@ -18,12 +18,11 @@ public class PlayerTest {
 
     @Test
     public void testStartMatch(){
-        Player player = new Player("Sadr");
+        Player player = new Player("Dario");
         try {
             player.startMatch();
-            JSONObject playerData = player.getData();
-            assertEquals("PLACING", playerData.get("playerState"));
-            Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
+            assertEquals("PLACING", player.getData().get("playerState"));
+            assertEquals(IPlayer.State.PLACING, player.getState());
         }
         catch (Exception e) {
             fail();
@@ -32,14 +31,16 @@ public class PlayerTest {
 
     @Test
     public void testPlaceTile() {
-        Player player = new Player("Sadr");
+        Player player = new Player("Dario");
         try {
             player.startMatch();
             Tile expectedTile = new Tile(1, 2, 3);
             HexCoordinates coordinates = new HexCoordinates(0,0,0);
             player.placeTile(expectedTile, coordinates);
             Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
-            Assertions.assertEquals(expectedTile,realTile);
+            assertEquals("WAIT_OTHER", player.getData().get("playerState"));
+            assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
+            assertEquals(expectedTile,realTile);
         }
         catch (Exception e){
             fail();
@@ -48,14 +49,15 @@ public class PlayerTest {
 
     @Test
     public void testTransitionFromWaitingPlayersToPlacing() {
-        Player player = new Player("Sadr");
+        Player player = new Player("Dario");
         try {
             Tile tile = new Tile(1, 2, 3);
             HexCoordinates coordinates = new HexCoordinates(0,0,0);
             player.startMatch();
             player.placeTile(tile, coordinates);
             player.transitionFromWaitingPlayersToPlacing();
-            Assertions.assertEquals(IPlayer.State.PLACING, player.getState());
+            assertEquals("PLACING", player.getData().get("playerState"));
+            assertEquals(IPlayer.State.PLACING, player.getState());
         }
         catch (Exception e) {
             fail();
@@ -64,7 +66,7 @@ public class PlayerTest {
 
     @Test
     public void testEndMatch() {
-        Player player = new Player("Sadr");
+        Player player = new Player("Dario");
         try {
             ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(54);
             player.startMatch();
@@ -75,9 +77,8 @@ public class PlayerTest {
             }
             player.computeScore();
             player.endMatch();
-            JSONObject playerData = player.getData();
-            assertEquals("WAIT_MATCH", playerData.get("playerState"));
-            Assertions.assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
+            assertEquals("WAIT_MATCH", player.getData().get("playerState"));
+            assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
         catch (Exception e) {
             fail();
@@ -87,13 +88,15 @@ public class PlayerTest {
     @Test
     public void testResetBoard() {
         try {
-            Player player = new Player("Sadr");
+            Player player = new Player("Dario");
             Tile tile = new Tile(1, 2, 3);
             HexCoordinates coordinates = new HexCoordinates(0, 0, 0);
             player.startMatch();
             player.placeTile(tile, coordinates);
             player.reset();
             Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
+            assertEquals("WAIT_MATCH", player.getData().get("playerState"));
+            assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
             Assertions.assertNull(realTile);
         }
         catch (Exception e) {
@@ -105,7 +108,7 @@ public class PlayerTest {
     public void testComputeScore() {
         Integer score = 54;
         try {
-            Player player = new Player("Sadr");
+            Player player = new Player("Dario");
             ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
             player.startMatch();
             for (int i = 0; i < list.size(); ++i) {
@@ -116,7 +119,7 @@ public class PlayerTest {
             IBoard board = player.getBoard();
             JSONObject playerData = player.getData();
             assertEquals(score, playerData.get("playerScore"));
-            Assertions.assertEquals(score, board.computeScore());
+            assertEquals(score, board.computeScore());
         }
         catch(Exception e){
            fail();

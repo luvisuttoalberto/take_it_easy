@@ -12,6 +12,7 @@ import takeiteasy.tilepool.Tile;
 import unittests.utility.Pair;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import static unittests.utility.Utility.*;
 
@@ -103,16 +104,16 @@ public class BoardVanillaTest {
         Integer score = 54;
         try {
             ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-            for (int i = 0; i < 19; ++i) {
+            for (int i = 0; i < list.size(); ++i) {
                 board.placeTile(list.get(i).tile, list.get(i).coordinate);
             }
             JSONObject boardData = board.getData();
-            for(int i = 0; i < 19; ++i){
+            IntStream.range(0, list.size()).forEach(i -> {
                 JSONObject tile = boardData.getJSONObject(list.get(i).coordinate.getX() + " " + list.get(i).coordinate.getY() + " " + list.get(i).coordinate.getZ());
                 assertEquals(list.get(i).tile.getTop(), tile.get("top"));
                 assertEquals(list.get(i).tile.getLeft(), tile.get("left"));
                 assertEquals(list.get(i).tile.getRight(), tile.get("right"));
-            }
+            });
             Assertions.assertEquals(score, board.computeScore());
         }
         catch(Exception e){
