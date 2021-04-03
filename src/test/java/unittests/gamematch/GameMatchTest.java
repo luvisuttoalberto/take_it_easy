@@ -26,7 +26,7 @@ public class GameMatchTest {
         catch (Exception e){
             fail("player add failed");
         }
-
+        assertEquals("SETUP", gm.getData().get("matchState"));
         assertTrue(Arrays.asList(gm.getPlayerNames()).contains(plyName));
     }
 
@@ -227,13 +227,19 @@ public class GameMatchTest {
     @Test
     public void testGetCurrentTile(){
         GameMatch gm = new GameMatch();
-        long seed = 666;
+        long seed = 11;
         try {
             gm.setTilePoolSeed(seed);
         }
         catch(InvalidMatchStateException e){
             fail();
         }
+        assertEquals(seed, gm.getData().get("seed"));
+        assertTrue(
+        gm.getCurrentTile().getData().get("top") == gm.getData().getJSONObject("currentTile").get("top") &&
+        gm.getCurrentTile().getData().get("left") == gm.getData().getJSONObject("currentTile").get("left") &&
+        gm.getCurrentTile().getData().get("right") == gm.getData().getJSONObject("currentTile").get("right")
+        );
         TilePool tilePool = new TilePool(seed);
         assertEquals(tilePool.getTile(0), gm.getCurrentTile());
     }
@@ -241,7 +247,7 @@ public class GameMatchTest {
     @Test
     public void testSetSeedDuringPlay(){
         GameMatch gm = new GameMatch();
-        long seed = 666;
+        long seed = 11;
         try {
             gm.addPlayer("Dario");
             gm.startMatch();
@@ -297,6 +303,7 @@ public class GameMatchTest {
         try{
             gm.addPlayer(playerName);
             gm.startMatch();
+            assertEquals("PLAY", gm.getData().get("matchState"));
             assertEquals(IGameMatch.State.PLAY, gm.getState());
         }
         catch (Exception e){
@@ -405,6 +412,7 @@ public class GameMatchTest {
 
             gm.backToSetup();
 
+            assertEquals("SETUP", gm.getData().get("matchState"));
             assertEquals(IGameMatch.State.SETUP, gm.getState());
             assertEquals(0, gm.getCurrentTileIndex());
             assertNull(gm.getBoardFromPlayerName(name).getTile(coords));
@@ -520,6 +528,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
         try{
             SimulateCompleteGameMatch(gm, name, tilePoolSeed);
+            assertEquals("FINISH", gm.getData().get("matchState"));
             assertEquals(IGameMatch.State.FINISH, gm.getState());
         }
         catch (Exception e){
@@ -611,14 +620,5 @@ public class GameMatchTest {
         catch (Exception e){
             fail();
         }
-    }
-
-    @Test
-    public void testGetData(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        Integer finalScore = 54;
-        long tilePoolSeed = 11;
-
     }
 }
