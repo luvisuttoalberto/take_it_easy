@@ -83,10 +83,10 @@ public class Player implements IPlayer{
         }
     }
 
-    @Override
-    public Integer computeScore() {
-        return playerBoard.computeScore();
-    }
+//    @Override
+//    public Integer computeScore() {
+//        return playerBoard.computeScore();
+//    }
 
     @Override
     public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {

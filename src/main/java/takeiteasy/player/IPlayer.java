@@ -18,7 +18,7 @@ public interface IPlayer {
     void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException;
 
     void endMatch() throws InvalidPlayerStateException;
-    Integer computeScore();
+//    Integer computeScore();
 
     JSONObject getData();
 

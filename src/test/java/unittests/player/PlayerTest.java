@@ -75,7 +75,7 @@ public class PlayerTest {
                 if (i == 18) break;
                 player.transitionFromWaitingPlayersToPlacing();
             }
-            player.computeScore();
+//            player.computeScore();
             player.endMatch();
             assertEquals("WAIT_MATCH", player.getData().get("playerState"));
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
