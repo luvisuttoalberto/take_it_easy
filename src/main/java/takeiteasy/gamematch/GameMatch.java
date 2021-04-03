@@ -206,12 +206,7 @@ public class GameMatch implements IGameMatch{
         }
         data.put("players", playersData);
 
-        JSONObject currentTileData = new JSONObject();
-        Tile currentTile = tilePool.getTile(currentTileIndex);
-        currentTileData.put("top", currentTile.getTop());
-        currentTileData.put("left", currentTile.getLeft());
-        currentTileData.put("right", currentTile.getRight());
-        data.put("currentTile", currentTileData);
+        data.put("currentTile", tilePool.getTile(currentTileIndex).getData());
 
         data.put("seed", tilePool.getSeed());
 
