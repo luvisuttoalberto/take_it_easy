@@ -31,7 +31,6 @@ public class GameTest {
         assertNull(data.opt("message"));
         assertEquals("LOCAL_LOBBY", data.get("gameState"));
         assertTrue(players.keySet().isEmpty());
-        assertEquals("SETUP", data.get("matchState"));
     }
 
     @Test
@@ -147,7 +146,6 @@ public class GameTest {
         game.setMatchSeed(newSeed);
         data = game.getData();
 
-        assertNotEquals(initialSeed, data.get("seed"));
         assertEquals(newSeed, data.get("seed"));
     }
 
@@ -157,11 +155,14 @@ public class GameTest {
         game.createLocalGame();
         game.addPlayer("Dario");
         game.startLocalMatch();
+
         JSONObject data = game.getData();
+
         assertEquals("LOCAL_MATCH", data.get("gameState"));
-        assertEquals("PLAY", data.get("matchState"));
     }
 
+    //TODO: we are testing a behaviour of GameMatch, not Game!
+    //      should we avoid this?
     @Test
     public void testEndMatch(){
         Game game = new Game();
@@ -178,10 +179,14 @@ public class GameTest {
         }
         game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
         game.endMatch();
+
         JSONObject data = game.getData();
+
         assertEquals("FINISH", data.get("matchState"));
     }
 
+    //TODO: actually, the backToMainMenu can be called at any point, no need to finish the game.
+    //      should we change this test?
     @Test
     public void testBackToMainMenu(){
         Game game = new Game();
@@ -203,6 +208,8 @@ public class GameTest {
         assertEquals("MAIN_MENU", data.get("gameState"));
     }
 
+    //TODO: as before, is the whole test to be removed? the only thing we tested is if the
+    //      tiles are all positioned in the right place, but this is done in the BoardVanillaTest
     @Test
     public void testPlayerPlacesTileAt(){
         Game game = new Game();
@@ -246,13 +253,13 @@ public class GameTest {
         game.startLocalMatch();
         game.playerPlacesTileAt(name, tilesAndCoords.get(0).coordinate);
         game.backToLocalSetup();
+
         JSONObject data = game.getData();
         JSONObject players = data.getJSONObject("players");
         JSONObject player = players.getJSONObject(name);
         JSONObject board = player.getJSONObject("playerBoard");
-        assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
-        assertEquals("LOCAL_LOBBY", data.get("gameState"));
-        assertEquals("SETUP", data.get("matchState"));
-    }
 
+        assertNull(board.opt(tilesAndCoords.get(0).coordinate.getX() + " " + tilesAndCoords.get(0).coordinate.getY() + " " + tilesAndCoords.get(0).coordinate.getZ()));
+        assertEquals("LOCAL_LOBBY", data.get("gameState"));
+    }
 }
