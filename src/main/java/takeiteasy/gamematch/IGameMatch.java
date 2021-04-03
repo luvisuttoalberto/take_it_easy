@@ -21,7 +21,7 @@ public interface IGameMatch {
 //    String[] getPlayerNames();
     Tile getCurrentTile();
 //    long getSeed();
-    IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException;
+//    IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException;
 //    IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException;
 
     void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException;

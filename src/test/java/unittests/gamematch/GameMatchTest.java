@@ -324,7 +324,19 @@ public class GameMatchTest {
             gm.startMatch();
             HexCoordinates coords = new HexCoordinates(0,0,0);
             gm.positionCurrentTileOnPlayerBoard(name, coords);
-            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));
+
+            JSONObject data = gm.getData();
+            JSONObject playersData = data.getJSONObject("players");
+            JSONObject playerData = playersData.getJSONObject(name);
+            JSONObject boardData = playerData.getJSONObject("playerBoard");
+            String coordsString = coords.getX() + " " +coords.getY() + " " +coords.getZ();
+            Tile insertedTile = new Tile(boardData.getJSONObject(coordsString).getInt("top"),
+                    boardData.getJSONObject(coordsString).getInt("left"),
+                    boardData.getJSONObject(coordsString).getInt("right")
+                    );
+            assertEquals(gm.getCurrentTile(), insertedTile);
+            System.out.println(insertedTile);
+//            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));
         }
         catch (Exception e){
             fail();
@@ -419,7 +431,9 @@ public class GameMatchTest {
             assertEquals("SETUP", gm.getData().get("matchState"));
 //            assertEquals(IGameMatch.State.SETUP, gm.getState());
 //            assertEquals(0, gm.getCurrentTileIndex());
-            assertNull(gm.getBoardFromPlayerName(name).getTile(coords));
+            JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
+            assertTrue(boardData.isEmpty());
+//            assertNull(gm.getBoardFromPlayerName(name).getTile(coords));
         }catch (Exception e){
             fail();
         }

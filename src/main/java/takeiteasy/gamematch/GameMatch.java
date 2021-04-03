@@ -50,10 +50,10 @@ public class GameMatch implements IGameMatch{
         throw new PlayerNameNotFoundException(playerName);
     }
 
-    @Override
-    public IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException {
-        return players.get(retrievePlayerIndexFromName(playerName)).getBoard();
-    }
+//    @Override
+//    public IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException {
+//        return players.get(retrievePlayerIndexFromName(playerName)).getBoard();
+//    }
 
 //    @Override
 //    public IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException {
