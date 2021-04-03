@@ -1,6 +1,5 @@
 package unittests.player;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.*;
@@ -104,25 +103,26 @@ public class PlayerTest {
         }
     }
 
-    @Test
-    public void testComputeScore() {
-        Integer score = 54;
-        try {
-            Player player = new Player("Dario");
-            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-            player.startMatch();
-            for (int i = 0; i < list.size(); ++i) {
-                player.placeTile(list.get(i).tile, list.get(i).coordinate);
-                if (i == 18) break;
-                player.transitionFromWaitingPlayersToPlacing();
-            }
-            IBoard board = player.getBoard();
-            JSONObject playerData = player.getData();
-            assertEquals(score, playerData.get("playerScore"));
-            assertEquals(score, board.computeScore());
-        }
-        catch(Exception e){
-           fail();
-        }
-    }
+    //TODO:should we remove this? player doesn't have a computeScore method anymore
+//    @Test
+//    public void testComputeScore() {
+//        Integer score = 54;
+//        try {
+//            Player player = new Player("Dario");
+//            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
+//            player.startMatch();
+//            for (int i = 0; i < list.size(); ++i) {
+//                player.placeTile(list.get(i).tile, list.get(i).coordinate);
+//                if (i == 18) break;
+//                player.transitionFromWaitingPlayersToPlacing();
+//            }
+//            IBoard board = player.getBoard();
+//            JSONObject playerData = player.getData();
+//            assertEquals(score, playerData.get("playerScore"));
+//            assertEquals(score, board.computeScore());
+//        }
+//        catch(Exception e){
+//           fail();
+//        }
+//    }
 }

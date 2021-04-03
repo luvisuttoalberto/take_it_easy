@@ -7,7 +7,7 @@ public interface IPlayer {
     State getState();
     void setName(String name);
     String getName();
-    IBoard getBoard();
+//    IBoard getBoard();
 
     void reset();
     void startMatch() throws InvalidPlayerStateException;
