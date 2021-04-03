@@ -328,8 +328,7 @@ public class GameMatchTest {
             JSONObject playersData = data.getJSONObject("players");
             JSONObject playerData = playersData.getJSONObject(name);
             JSONObject boardData = playerData.getJSONObject("playerBoard");
-            String coordsString = coords.getX() + " " +coords.getY() + " " +coords.getZ();
-            JSONObject insertedTileData = boardData.getJSONObject(coordsString);
+            JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
             Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
                                             insertedTileData.getInt("left"),
                                             insertedTileData.getInt("right")

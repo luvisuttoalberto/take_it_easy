@@ -37,10 +37,9 @@ public class PlayerTest {
             HexCoordinates coords = new HexCoordinates(0,0,0);
             player.placeTile(expectedTile, coords);
 
-            String coordsString = coords.getX() + " " +coords.getY() + " " +coords.getZ();
             JSONObject data = player.getData();
             JSONObject boardData = data.getJSONObject("playerBoard");
-            JSONObject insertedTileData = boardData.getJSONObject(coordsString);
+            JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
             Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
                                             insertedTileData.getInt("left"),
                                             insertedTileData.getInt("right")

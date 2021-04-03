@@ -137,7 +137,7 @@ public class BoardVanilla implements IBoard {
                 Tile tile = getTile(c);
                 if(tile != null){
                     JSONObject tileData = tile.getData();
-                    boardData.put(c.getX() + " " + c.getY() + " " + c.getZ(), tileData);
+                    boardData.put(c.toString(), tileData);
                 }
             }
             catch (OutOfBoardCoordinatesException ignored){
@@ -154,6 +154,7 @@ public class BoardVanilla implements IBoard {
         return res.toString();
     }
 
+    //TODO: remove?
     public void printBoard(){
         System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,0) + "|");
         for(int i = 0; i < 4; ++i){
