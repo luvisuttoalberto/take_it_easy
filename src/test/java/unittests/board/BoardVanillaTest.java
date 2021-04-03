@@ -3,7 +3,7 @@ package unittests.board;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.*;
@@ -104,15 +104,18 @@ public class BoardVanillaTest {
         Integer score = 54;
         try {
             ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-            for (int i = 0; i < list.size(); ++i) {
-                board.placeTile(list.get(i).tile, list.get(i).coordinate);
+            for (Pair<Tile, HexCoordinates> tileHexCoordinatesPair : list) {
+                board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
             }
             JSONObject boardData = board.getData();
+            //TODO: check if this functional programming makes sense
             IntStream.range(0, list.size()).forEach(i -> {
                 JSONObject tile = boardData.getJSONObject(list.get(i).coordinate.getX() + " " + list.get(i).coordinate.getY() + " " + list.get(i).coordinate.getZ());
-                assertEquals(list.get(i).tile.getTop(), tile.get("top"));
-                assertEquals(list.get(i).tile.getLeft(), tile.get("left"));
-                assertEquals(list.get(i).tile.getRight(), tile.get("right"));
+                assertTrue(
+                list.get(i).tile.getTop() == tile.get("top")
+                && list.get(i).tile.getLeft() == tile.get("left")
+                && list.get(i).tile.getRight() == tile.get("right")
+                );
             });
             Assertions.assertEquals(score, board.computeScore());
         }
