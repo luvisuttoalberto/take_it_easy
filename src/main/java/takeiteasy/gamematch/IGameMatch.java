@@ -2,7 +2,6 @@ package takeiteasy.gamematch;
 
 import org.json.JSONObject;
 import takeiteasy.board.*;
-import takeiteasy.player.IPlayer;
 import takeiteasy.player.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
@@ -16,14 +15,14 @@ public interface IGameMatch {
         PAUSE,
         FINISH
     }
-    State getState();
+//    State getState();
 
-    Integer getCurrentTileIndex();
-    String[] getPlayerNames();
+//    Integer getCurrentTileIndex();
+//    String[] getPlayerNames();
     Tile getCurrentTile();
-    long getSeed();
+//    long getSeed();
     IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException;
-    IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException;
+//    IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException;
 
     void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException;
 

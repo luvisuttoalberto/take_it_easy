@@ -1,5 +1,6 @@
 package unittests.gamematch;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
@@ -7,8 +8,8 @@ import takeiteasy.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Dictionary;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unittests.utility.Utility.SimulateCompleteGameMatch;
@@ -26,8 +27,9 @@ public class GameMatchTest {
         catch (Exception e){
             fail("player add failed");
         }
-        assertEquals("SETUP", gm.getData().get("matchState"));
-        assertTrue(Arrays.asList(gm.getPlayerNames()).contains(plyName));
+        JSONObject data = gm.getData();
+        assertEquals("SETUP", data.get("matchState"));
+        assertTrue(data.getJSONObject("players").keySet().contains(plyName));
     }
 
     @Test
@@ -182,8 +184,9 @@ public class GameMatchTest {
         try{
             gm.addPlayer(oldName);
             gm.setPlayerName(oldName, newName);
-            assertTrue(Arrays.asList(gm.getPlayerNames()).contains(newName));
-            assertFalse(Arrays.asList(gm.getPlayerNames()).contains(oldName));
+            List<String> playerNames = new ArrayList<>(gm.getData().getJSONObject("players").keySet());
+            assertTrue(playerNames.contains(newName));
+            assertFalse(playerNames.contains(oldName));
         }
         catch (Exception e){
             fail();
@@ -289,7 +292,8 @@ public class GameMatchTest {
             fail();
         }
         catch (NotEnoughPlayersException ignored){
-            assertEquals(IGameMatch.State.SETUP, gm.getState());
+            assertEquals("SETUP", gm.getData().get("matchState"));
+            //assertEquals(IGameMatch.State.SETUP, gm.getState());
         }
         catch (Exception e){
             fail();
@@ -304,7 +308,7 @@ public class GameMatchTest {
             gm.addPlayer(playerName);
             gm.startMatch();
             assertEquals("PLAY", gm.getData().get("matchState"));
-            assertEquals(IGameMatch.State.PLAY, gm.getState());
+            //assertEquals(IGameMatch.State.PLAY, gm.getState());
         }
         catch (Exception e){
             fail();
@@ -413,8 +417,8 @@ public class GameMatchTest {
             gm.backToSetup();
 
             assertEquals("SETUP", gm.getData().get("matchState"));
-            assertEquals(IGameMatch.State.SETUP, gm.getState());
-            assertEquals(0, gm.getCurrentTileIndex());
+//            assertEquals(IGameMatch.State.SETUP, gm.getState());
+//            assertEquals(0, gm.getCurrentTileIndex());
             assertNull(gm.getBoardFromPlayerName(name).getTile(coords));
         }catch (Exception e){
             fail();
@@ -529,7 +533,7 @@ public class GameMatchTest {
         try{
             SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             assertEquals("FINISH", gm.getData().get("matchState"));
-            assertEquals(IGameMatch.State.FINISH, gm.getState());
+            //assertEquals(IGameMatch.State.FINISH, gm.getState());
         }
         catch (Exception e){
             fail();

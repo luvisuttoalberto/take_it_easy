@@ -22,10 +22,10 @@ public class GameMatch implements IGameMatch{
         currentTileIndex = 0;
     }
 
-    @Override
-    public State getState() {
-        return state;
-    }
+//    @Override
+//    public State getState() {
+//        return state;
+//    }
 
     @Override
     public void setTilePoolSeed(long seed) throws InvalidMatchStateException {
@@ -35,10 +35,10 @@ public class GameMatch implements IGameMatch{
         tilePool.reset(seed);
     }
 
-    @Override
-    public String[] getPlayerNames() {
-        return players.stream().map(IPlayer::getName).toArray(String[]::new);
-    }
+//    @Override
+//    public String[] getPlayerNames() {
+//        return players.stream().map(IPlayer::getName).toArray(String[]::new);
+//    }
 
     private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
 
@@ -55,10 +55,10 @@ public class GameMatch implements IGameMatch{
         return players.get(retrievePlayerIndexFromName(playerName)).getBoard();
     }
 
-    @Override
-    public IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException {
-        return players.get(retrievePlayerIndexFromName(playerName)).getState();
-    }
+//    @Override
+//    public IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException {
+//        return players.get(retrievePlayerIndexFromName(playerName)).getState();
+//    }
 
     @Override
     public void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException {
@@ -112,20 +112,20 @@ public class GameMatch implements IGameMatch{
         state = State.PLAY;
     }
 
-    @Override
-    public Integer getCurrentTileIndex() {
-        return currentTileIndex;
-    }
+//    @Override
+//    public Integer getCurrentTileIndex() {
+//        return currentTileIndex;
+//    }
 
     @Override
     public Tile getCurrentTile() {
         return tilePool.getTile(currentTileIndex);
     }
 
-    @Override
-    public long getSeed() {
-        return tilePool.getSeed();
-    }
+//    @Override
+//    public long getSeed() {
+//        return tilePool.getSeed();
+//    }
 
     @Override
     public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
