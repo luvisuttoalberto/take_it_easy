@@ -5,8 +5,6 @@ import takeiteasy.board.*;
 import takeiteasy.player.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
-import java.util.Dictionary;
-
 public interface IGameMatch {
 
     enum State{
@@ -41,6 +39,6 @@ public interface IGameMatch {
 
     JSONObject getData();
 
-    Dictionary<String,Integer> computeScore() throws InvalidMatchStateException;
+//    Dictionary<String,Integer> computeScore() throws InvalidMatchStateException;
 
 }

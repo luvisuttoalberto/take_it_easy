@@ -5,8 +5,6 @@ import takeiteasy.board.*;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.Vector;
 
 public class GameMatch implements IGameMatch{
@@ -215,17 +213,16 @@ public class GameMatch implements IGameMatch{
         return data;
     }
 
-    @Override
-    public Dictionary<String,Integer> computeScore() throws InvalidMatchStateException{
-        //TODO: Do we need to order the scores???
-        if(state != State.FINISH){
-            throw new InvalidMatchStateException();
-        }
-
-        Dictionary<String, Integer> dict = new Hashtable<>();
-        for (IPlayer p : players){
-            dict.put(p.getName(),p.computeScore());
-        }
-        return dict;
-    }
+//    @Override
+//    public Dictionary<String,Integer> computeScore() throws InvalidMatchStateException{
+//        if(state != State.FINISH){
+//            throw new InvalidMatchStateException();
+//        }
+//
+//        Dictionary<String, Integer> dict = new Hashtable<>();
+//        for (IPlayer p : players){
+//            dict.put(p.getName(),p.computeScore());
+//        }
+//        return dict;
+//    }
 }

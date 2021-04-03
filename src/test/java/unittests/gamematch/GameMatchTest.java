@@ -8,7 +8,6 @@ import takeiteasy.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -555,39 +554,39 @@ public class GameMatchTest {
 
     }
 
-    @Test
-    public void testComputeScoreDuringSetup(){
-        GameMatch gm = new GameMatch();
-        try{
-            gm.computeScore();
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
+//    @Test
+//    public void testComputeScoreDuringSetup(){
+//        GameMatch gm = new GameMatch();
+//        try{
+//            gm.computeScore();
+//            fail();
+//        }
+//        catch (InvalidMatchStateException ignored){
+//            // test passed
+//        }
+//        catch (Exception e){
+//            fail();
+//        }
+//    }
 
-    @Test
-    public void testComputeScoreDuringPlay(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-
-        try{
-            gm.addPlayer(name);
-            gm.startMatch();
-            gm.computeScore();
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
+//    @Test
+//    public void testComputeScoreDuringPlay(){
+//        GameMatch gm = new GameMatch();
+//        String name = "Dario";
+//
+//        try{
+//            gm.addPlayer(name);
+//            gm.startMatch();
+//            gm.computeScore();
+//            fail();
+//        }
+//        catch (InvalidMatchStateException ignored){
+//            // test passed
+//        }
+//        catch (Exception e){
+//            fail();
+//        }
+//    }
 
     @Test
     public void testComputeScore(){
@@ -597,8 +596,9 @@ public class GameMatchTest {
         Integer finalScore = 54;
         try{
             SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            Dictionary<String,Integer> playerScores = gm.computeScore();
-            assertEquals(finalScore,playerScores.get(name));
+//            Dictionary<String,Integer> playerScores = gm.computeScore();
+            JSONObject playerData = gm.getData().getJSONObject("players").getJSONObject(name);
+            assertEquals(finalScore, playerData.getInt("playerScore"));
         }
         catch (Exception e){
             fail();
@@ -631,9 +631,9 @@ public class GameMatchTest {
             gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(18).coordinate);
 
             gm.endMatch();
-            Dictionary<String,Integer> playerScores = gm.computeScore();
-            assertEquals(finalScore,playerScores.get(name));
-            assertEquals(otherFinalScore,playerScores.get(otherName));
+            JSONObject playersData = gm.getData().getJSONObject("players");
+            assertEquals(finalScore, playersData.getJSONObject(name).getInt("playerScore"));
+            assertEquals(otherFinalScore, playersData.getJSONObject(otherName).getInt("playerScore"));
         }
         catch (Exception e){
             fail();
