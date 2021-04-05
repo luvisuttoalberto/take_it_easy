@@ -4,9 +4,6 @@ import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
-import takeiteasy.tilepool.Tile;
-
-import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class Game implements IGame{
     private IGameMatch gameMatch;
