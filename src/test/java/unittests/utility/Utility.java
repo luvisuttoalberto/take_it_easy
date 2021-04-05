@@ -75,6 +75,7 @@ public final class Utility {
         }
     }
 
+    //TODO: To we need it?
     public static void main(String[] args){
         ArrayList<Pair<Tile, HexCoordinates>> pairs = getTilesAndCoordinatesBoard11(27);
         for(int i = 0; i < 19; ++i){

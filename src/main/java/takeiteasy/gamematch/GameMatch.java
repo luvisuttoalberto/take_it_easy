@@ -115,6 +115,7 @@ public class GameMatch implements IGameMatch{
 //        return currentTileIndex;
 //    }
 
+    //TODO: should this method be private?
     @Override
     public Tile getCurrentTile() {
         return tilePool.getTile(currentTileIndex);

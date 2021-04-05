@@ -9,6 +9,7 @@ public class BoardVanilla implements IBoard {
 
     private Tile[][] tileStorage = new Tile[5][5];
 
+    //TODO: PErché???
     public BoardVanilla() {
     }
 
@@ -80,6 +81,7 @@ public class BoardVanilla implements IBoard {
         }
     }
 
+    //TODO: remove comments
     private Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
 
         // Get coordinates of first tile in the row
@@ -146,6 +148,7 @@ public class BoardVanilla implements IBoard {
         return boardData;
     }
 
+    //TODO: remove?
     private String stringifyTileContentAtStorageCoordinates(int i, int j){
         Tile res = tileStorage[i][j];
         if(res == null){

@@ -84,6 +84,7 @@ public class PlayerTest {
             }
 //            player.computeScore();
             player.endMatch();
+            //TODO: should we test it twice?
             assertEquals("WAIT_MATCH", player.getData().get("playerState"));
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
@@ -103,6 +104,7 @@ public class PlayerTest {
             player.reset();
 //            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
             JSONObject data = player.getData();
+            //TODO: should we test it twice?
             assertEquals("WAIT_MATCH", data.get("playerState"));
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
             assertTrue(data.getJSONObject("playerBoard").isEmpty());

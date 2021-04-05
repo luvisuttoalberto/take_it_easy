@@ -2,6 +2,7 @@ package unittests.game;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import takeiteasy.board.BadHexCoordinatesException;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.Game;
 import takeiteasy.tilepool.Tile;
@@ -188,24 +189,23 @@ public class GameTest {
         assertEquals("FINISH", data.get("matchState"));
     }
 
-    //TODO: actually, the backToMainMenu can be called at any point, no need to finish the game.
-    //      should we change this test?
     @Test
     public void testBackToMainMenu(){
         Game game = new Game();
         game.createLocalGame();
         String name = "Dario";
-        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
-        game.addPlayer(name);
-        game.setMatchSeed(11);
-        game.startLocalMatch();
+        try {
+            HexCoordinates coord = new HexCoordinates(0, 0, 0);
+            game.addPlayer(name);
+            game.setMatchSeed(11);
+            game.startLocalMatch();
 
-        for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-            game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
+            game.playerPlacesTileAt(name, coord);
         }
-        game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
-        game.endMatch();
+        catch (BadHexCoordinatesException ignored){
+        }
+
         game.backToTheMainMenu();
         JSONObject data = game.getData();
         assertEquals("MAIN_MENU", data.get("gameState"));
@@ -238,10 +238,9 @@ public class GameTest {
         JSONObject board = player.getJSONObject("playerBoard");
         //TODO: To remove, tested in BoardVanillaTest
         for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
-            JSONObject tile = board.getJSONObject(tilesAndCoord.coordinate.getX() + " " + tilesAndCoord.coordinate.getY() + " " + tilesAndCoord.coordinate.getZ());
-            assertEquals(tilesAndCoord.tile.getTop(), tile.get("top"));
-            assertEquals(tilesAndCoord.tile.getLeft(), tile.get("left"));
-            assertEquals(tilesAndCoord.tile.getRight(), tile.get("right"));
+            JSONObject tileData = board.getJSONObject(tilesAndCoord.coordinate.toString());
+            Tile tile = new Tile(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
+            assertEquals(tilesAndCoord.tile, tile);
         }
     }
 
@@ -250,12 +249,18 @@ public class GameTest {
         Game game = new Game();
         game.createLocalGame();
         String name = "Dario";
-        //TODO: maybe we can avoid this since we just insert one tile in this test
-        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-        game.setMatchSeed(11);
-        game.addPlayer(name);
-        game.startLocalMatch();
-        game.playerPlacesTileAt(name, tilesAndCoords.get(0).coordinate);
+
+        try {
+            HexCoordinates coord = new HexCoordinates(0, 0, 0);
+            game.addPlayer(name);
+            game.setMatchSeed(11);
+            game.startLocalMatch();
+
+            game.playerPlacesTileAt(name, coord);
+        }
+        catch (BadHexCoordinatesException ignored){
+        }
+
         game.backToLocalSetup();
 
         JSONObject data = game.getData();

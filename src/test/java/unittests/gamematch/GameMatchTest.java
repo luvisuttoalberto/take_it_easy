@@ -334,7 +334,6 @@ public class GameMatchTest {
                                             insertedTileData.getInt("right")
                                         );
             assertEquals(gm.getCurrentTile(), insertedTile);
-            System.out.println(insertedTile);
 //            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));
         }
         catch (Exception e){
@@ -588,22 +587,23 @@ public class GameMatchTest {
 //        }
 //    }
 
-    @Test
-    public void testComputeScore(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        long tilePoolSeed = 11;
-        Integer finalScore = 54;
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-//            Dictionary<String,Integer> playerScores = gm.computeScore();
-            JSONObject playerData = gm.getData().getJSONObject("players").getJSONObject(name);
-            assertEquals(finalScore, playerData.getInt("playerScore"));
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
+//    //TODO: should we test it? ComputeScore is already tested in board + is not present in GameMatch
+//    @Test
+//    public void testComputeScore(){
+//        GameMatch gm = new GameMatch();
+//        String name = "Dario";
+//        long tilePoolSeed = 11;
+//        Integer finalScore = 54;
+//        try{
+//            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
+////            Dictionary<String,Integer> playerScores = gm.computeScore();
+//            JSONObject playerData = gm.getData().getJSONObject("players").getJSONObject(name);
+//            assertEquals(finalScore, playerData.getInt("playerScore"));
+//        }
+//        catch (Exception e){
+//            fail();
+//        }
+//    }
 
     @Test
     public void test2PMatch(){

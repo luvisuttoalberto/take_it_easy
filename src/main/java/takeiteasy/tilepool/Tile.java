@@ -46,11 +46,13 @@ public class Tile {
         return top.equals(tile.top) && left.equals(tile.left) && right.equals(tile.right);
     }
 
+    //TODO: Do we use it?
     @Override
     public int hashCode() {
         return Objects.hash(top, left, right);
     }
 
+    //TODO: Do we use it?
     @Override
     public String toString() {
         return ""+left+","+top+","+right;

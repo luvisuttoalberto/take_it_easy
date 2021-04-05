@@ -1,7 +1,6 @@
 package unittests.board;
 
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import static unittests.utility.Utility.*;
-
 
 public class BoardVanillaTest {
 
@@ -40,7 +38,7 @@ public class BoardVanillaTest {
         try {
             BoardVanilla b = new BoardVanilla();
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            Assertions.assertNull(b.getTile(coords));
+            assertNull(b.getTile(coords));
         }
         catch(Exception e){
             fail();
@@ -54,7 +52,7 @@ public class BoardVanillaTest {
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
             Tile tile = new Tile(1, 2, 3);
             b.placeTile(tile, coords);
-            Assertions.assertEquals(tile, b.getTile(coords));
+            assertEquals(tile, b.getTile(coords));
         }
         catch(Exception e){
             fail();
@@ -110,14 +108,11 @@ public class BoardVanillaTest {
             JSONObject boardData = board.getData();
             //TODO: check if this functional programming makes sense
             IntStream.range(0, list.size()).forEach(i -> {
-                JSONObject tile = boardData.getJSONObject(list.get(i).coordinate.getX() + " " + list.get(i).coordinate.getY() + " " + list.get(i).coordinate.getZ());
-                assertTrue(
-                list.get(i).tile.getTop() == tile.get("top")
-                && list.get(i).tile.getLeft() == tile.get("left")
-                && list.get(i).tile.getRight() == tile.get("right")
-                );
+                JSONObject tile = boardData.getJSONObject(list.get(i).coordinate.toString());
+                Tile realTile = new Tile(tile.getInt("top"), tile.getInt("left"), tile.getInt("right"));
+                assertEquals(list.get(i).tile, realTile);
             });
-            Assertions.assertEquals(score, board.computeScore());
+            assertEquals(score, board.computeScore());
         }
         catch(Exception e){
             fail();
