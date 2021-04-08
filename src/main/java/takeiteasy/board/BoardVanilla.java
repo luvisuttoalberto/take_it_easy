@@ -55,29 +55,29 @@ public class BoardVanilla implements IBoard {
 
     private Integer getTileNumberAtOrientation(Tile tile, RowOrientation orientation){
         switch (orientation) {
-            case LEFT -> {
+            case LEFT :
                 return tile.getLeft();
-            }
-            case RIGHT -> {
+
+            case RIGHT :
                 return tile.getRight();
-            }
-            default ->{
+
+            default :
                 return tile.getTop();
-            }
+
         }
     }
 
     private Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
         switch (counterRotation){
-            case LEFT -> {
+            case LEFT :
                 return this.getTile(coordinates.rotateRight());
-            }
-            case RIGHT -> {
+
+            case RIGHT :
                 return this.getTile(coordinates.rotateLeft());
-            }
-            default -> {
+
+            default :
                 return this.getTile(coordinates);
-            }
+
         }
     }
 
