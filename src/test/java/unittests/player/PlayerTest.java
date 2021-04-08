@@ -79,13 +79,13 @@ public class PlayerTest {
             player.startMatch();
             for(int i = 0; i < list.size(); ++i) {
                 player.placeTile(list.get(i).tile, list.get(i).coordinate);
-                if (i == 18) break;
+                if (i == 18) break; //TODO: use list.size()
                 player.transitionFromWaitingPlayersToPlacing();
             }
 //            player.computeScore();
             player.endMatch();
             //TODO: should we test it twice?
-            assertEquals("WAIT_MATCH", player.getData().get("playerState"));
+//            assertEquals("WAIT_MATCH", player.getData().get("playerState"));
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
         catch (Exception e) {
@@ -105,7 +105,7 @@ public class PlayerTest {
 //            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
             JSONObject data = player.getData();
             //TODO: should we test it twice?
-            assertEquals("WAIT_MATCH", data.get("playerState"));
+//            assertEquals("WAIT_MATCH", data.get("playerState"));
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
             assertTrue(data.getJSONObject("playerBoard").isEmpty());
 //            Assertions.assertNull(realTile);

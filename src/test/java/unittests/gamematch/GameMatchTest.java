@@ -237,6 +237,7 @@ public class GameMatchTest {
             fail();
         }
         assertEquals(seed, gm.getData().get("seed"));
+        //TODO: Build The tile and use the .Equals()
         assertTrue(
         gm.getCurrentTile().getData().get("top") == gm.getData().getJSONObject("currentTile").get("top") &&
         gm.getCurrentTile().getData().get("left") == gm.getData().getJSONObject("currentTile").get("left") &&

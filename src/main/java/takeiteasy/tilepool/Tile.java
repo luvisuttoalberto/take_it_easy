@@ -58,7 +58,7 @@ public class Tile {
         return ""+left+","+top+","+right;
     }
 
-    //TODO: should we create "TileTest" to test this function?
+    //TODO: should we create "TileTest" to test this function? YESSS
     public JSONObject getData(){
         JSONObject tileData = new JSONObject();
         tileData.put("top", top);

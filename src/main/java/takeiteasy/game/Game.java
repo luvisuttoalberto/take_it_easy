@@ -10,6 +10,7 @@ public class Game implements IGame{
     private String message = "";
     private State state = State.MAIN_MENU;
 
+    //TODO: change name and check State !!!
     @Override
     public void createLocalGame() {
         gameMatch = new GameMatch();
@@ -68,6 +69,7 @@ public class Game implements IGame{
         }
     }
 
+    //TODO: Kill the gameMatch, just null it
     @Override
     public void backToTheMainMenu() {
         state = State.MAIN_MENU;
@@ -88,6 +90,7 @@ public class Game implements IGame{
         }
     }
 
+    //TODO: The name is bad, change it !!!
     @Override
     public void backToLocalSetup() {
         try {
@@ -98,9 +101,11 @@ public class Game implements IGame{
         }
     }
 
+    //TODO: Kill it
     @Override
     public void endMatch() {
         try{
+            //TODO: move after "TilePool depleted"
             gameMatch.endMatch();
         }
         catch (PlayersNotReadyToEndMatchException | InvalidPlayerStateException | TilePoolNotDepletedException | InvalidMatchStateException ignored) {

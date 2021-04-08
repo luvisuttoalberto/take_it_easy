@@ -106,7 +106,7 @@ public class BoardVanillaTest {
                 board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
             }
             JSONObject boardData = board.getData();
-            //TODO: check if this functional programming makes sense
+            //TODO: move to getDataTesting and use JSONObject instead
             IntStream.range(0, list.size()).forEach(i -> {
                 JSONObject tile = boardData.getJSONObject(list.get(i).coordinate.toString());
                 Tile realTile = new Tile(tile.getInt("top"), tile.getInt("left"), tile.getInt("right"));

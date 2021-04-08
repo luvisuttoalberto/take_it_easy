@@ -9,9 +9,9 @@ public class BoardVanilla implements IBoard {
 
     private Tile[][] tileStorage = new Tile[5][5];
 
-    //TODO: PErché???
-    public BoardVanilla() {
-    }
+    //TODO: WHyyy?? Let's kill it !!!
+//    public BoardVanilla() {
+//    }
 
     private Boolean areCoordinatesInRange(HexCoordinates coordinates){
         return (-3<coordinates.getX() && coordinates.getX()<3) &&
