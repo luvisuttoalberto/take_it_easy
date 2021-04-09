@@ -11,7 +11,6 @@ import takeiteasy.tilepool.Tile;
 import unittests.utility.Pair;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 import static unittests.utility.Utility.*;
 
@@ -105,17 +104,27 @@ public class BoardVanillaTest {
             for (Pair<Tile, HexCoordinates> tileHexCoordinatesPair : list) {
                 board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
             }
-            JSONObject boardData = board.getData();
-            //TODO: move to getDataTesting and use JSONObject instead
-            IntStream.range(0, list.size()).forEach(i -> {
-                JSONObject tile = boardData.getJSONObject(list.get(i).coordinate.toString());
-                Tile realTile = new Tile(tile.getInt("top"), tile.getInt("left"), tile.getInt("right"));
-                assertEquals(list.get(i).tile, realTile);
-            });
             assertEquals(score, board.computeScore());
         }
         catch(Exception e){
             fail();
         }
+    }
+
+    @Test
+    public void testGetData(){
+        BoardVanilla board = new BoardVanilla();
+        try {
+            HexCoordinates coords = new HexCoordinates(0, 0, 0);
+            Tile tile = new Tile(9, 2,3);
+            board.placeTile(tile, coords);
+            JSONObject boardData = board.getData();
+            JSONObject tileData = boardData.getJSONObject(coords.toString());
+            Tile realTile = new Tile(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
+            assertEquals(tile, realTile);
+        }
+        catch(Exception ignored){
+        }
+
     }
 }
