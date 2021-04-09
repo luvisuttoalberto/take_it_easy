@@ -285,6 +285,19 @@ public class GameMatchTest {
         }
     }
 
+    //TODO: Should we check other things in the JSON
+    @Test
+    public void testGetData(){
+        GameMatch gm = new GameMatch();
+        long tilePoolSeed = 11;
+        try {
+            gm.setTilePoolSeed(tilePoolSeed);
+            assertEquals(tilePoolSeed, gm.getData().get("seed"));
+        }
+        catch(Exception ignored){
+        }
+    }
+
     @Test
     public void testStartMatchWithoutPlayers(){
         GameMatch gm = new GameMatch();
@@ -559,7 +572,6 @@ public class GameMatchTest {
         }
 
     }
-
 //    @Test
 //    public void testComputeScoreDuringSetup(){
 //        GameMatch gm = new GameMatch();
@@ -573,8 +585,8 @@ public class GameMatchTest {
 //        catch (Exception e){
 //            fail();
 //        }
-//    }
 
+//    }
 //    @Test
 //    public void testComputeScoreDuringPlay(){
 //        GameMatch gm = new GameMatch();
@@ -592,8 +604,8 @@ public class GameMatchTest {
 //        catch (Exception e){
 //            fail();
 //        }
-//    }
 
+//    }
 //    //TODO: should we test it? ComputeScore is already tested in board + is not present in GameMatch
 //    @Test
 //    public void testComputeScore(){
@@ -610,6 +622,7 @@ public class GameMatchTest {
 //        catch (Exception e){
 //            fail();
 //        }
+
 //    }
 
     @Test
