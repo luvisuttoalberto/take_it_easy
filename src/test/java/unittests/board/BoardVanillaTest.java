@@ -96,22 +96,6 @@ public class BoardVanillaTest {
     }
 
     @Test
-    public void testComputeScore() {
-        BoardVanilla board = new BoardVanilla();
-        Integer score = 54;
-        try {
-            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-            for (Pair<Tile, HexCoordinates> tileHexCoordinatesPair : list) {
-                board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
-            }
-            assertEquals(score, board.computeScore());
-        }
-        catch(Exception e){
-            fail();
-        }
-    }
-
-    @Test
     public void testGetData(){
         BoardVanilla board = new BoardVanilla();
         try {
@@ -124,6 +108,22 @@ public class BoardVanillaTest {
             assertEquals(tile, realTile);
         }
         catch(Exception ignored){
+        }
+    }
+
+    @Test
+    public void testComputeScore() {
+        BoardVanilla board = new BoardVanilla();
+        Integer score = 54;
+        try {
+            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
+            for (Pair<Tile, HexCoordinates> tileHexCoordinatesPair : list) {
+                board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
+            }
+            assertEquals(score, board.computeScore());
+        }
+        catch(Exception e){
+            fail();
         }
     }
 }
