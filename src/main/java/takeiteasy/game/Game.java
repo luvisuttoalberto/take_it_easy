@@ -7,7 +7,7 @@ import takeiteasy.player.InvalidPlayerStateException;
 
 public class Game implements IGame{
     private IGameMatch gameMatch;
-    private String message = "";
+//    private String message = "";
     private State state = State.MAIN_MENU;
 
     //TODO: Sta roba fa schifo ma vabbè lasciamola così che non si sa mai
@@ -24,10 +24,7 @@ public class Game implements IGame{
         try {
             gameMatch.addPlayer(name);
         }
-        catch (PlayersWithSameNameNotAllowedException e) {
-            message = "Player not added, a player with this name is already present";
-        }
-        catch (InvalidMatchStateException ignored){
+        catch (PlayersWithSameNameNotAllowedException | InvalidMatchStateException ignored){
         }
     }
 
@@ -45,10 +42,7 @@ public class Game implements IGame{
         try{
             gameMatch.setPlayerName(oldName, newName);
         }
-        catch(PlayerNameNotFoundException | InvalidMatchStateException ignored){
-        }
-        catch(PlayersWithSameNameNotAllowedException e){
-            message = "Player name not changed, a player with this name is already present";
+        catch(PlayerNameNotFoundException | InvalidMatchStateException | PlayersWithSameNameNotAllowedException ignored){
         }
     }
 
@@ -88,7 +82,9 @@ public class Game implements IGame{
                 NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){
-            message = "Tilepool depleted";
+            //TODO: alternatively: copy and paste what's inside of endMatch;
+            //      downside: use a try block inside a catch
+            endMatch();
         }
     }
 
@@ -104,8 +100,7 @@ public class Game implements IGame{
     }
 
     //TODO: Kill it
-    @Override
-    public void endMatch() {
+    private void endMatch() {
         try{
             //TODO: move after "TilePool depleted"
             gameMatch.endMatch();
@@ -127,10 +122,10 @@ public class Game implements IGame{
 
         data.put("gameState", state.name());
 
-        if(!message.isBlank()){
-            data.put("message", message);
-            message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
-        }
+//        if(!message.isBlank()){
+//            data.put("message", message);
+//            message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
+//        }
 
         return data;
     }
