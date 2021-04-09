@@ -65,10 +65,10 @@ public class Game implements IGame{
         }
     }
 
-    //TODO: Kill the gameMatch, just null it
     @Override
     public void backToTheMainMenu() {
         state = State.MAIN_MENU;
+        gameMatch = null;
     }
 
     @Override
@@ -88,9 +88,8 @@ public class Game implements IGame{
         }
     }
 
-    //TODO: The name is bad, change it !!!
     @Override
-    public void backToLocalSetup() {
+    public void backToLocalLobby() {
         try {
             gameMatch.backToSetup();
             state = State.LOCAL_LOBBY;
@@ -99,10 +98,8 @@ public class Game implements IGame{
         }
     }
 
-    //TODO: Kill it
     private void endMatch() {
         try{
-            //TODO: move after "TilePool depleted"
             gameMatch.endMatch();
         }
         catch (PlayersNotReadyToEndMatchException | InvalidPlayerStateException | TilePoolNotDepletedException | InvalidMatchStateException ignored) {
@@ -124,7 +121,7 @@ public class Game implements IGame{
 
 //        if(!message.isBlank()){
 //            data.put("message", message);
-//            message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
+//            message = "";
 //        }
 
         return data;

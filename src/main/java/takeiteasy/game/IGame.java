@@ -34,7 +34,7 @@ public interface IGame {
 
     //Play local match
     void playerPlacesTileAt(String name, HexCoordinates coordinates);
-    void backToLocalSetup();
+    void backToLocalLobby();
 //    void endMatch();
 
     JSONObject getData();

@@ -283,7 +283,7 @@ public class GameTest {
         catch (BadHexCoordinatesException ignored){
         }
 
-        game.backToLocalSetup();
+        game.backToLocalLobby();
 
         JSONObject data = game.getData();
         JSONObject players = data.getJSONObject("players");
