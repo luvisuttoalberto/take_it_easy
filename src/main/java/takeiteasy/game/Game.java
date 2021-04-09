@@ -10,11 +10,13 @@ public class Game implements IGame{
     private String message = "";
     private State state = State.MAIN_MENU;
 
-    //TODO: change name and check State !!!
+    //TODO: Sta roba fa schifo ma vabbè lasciamola così che non si sa mai
     @Override
-    public void createLocalGame() {
-        gameMatch = new GameMatch();
-        state = State.LOCAL_LOBBY;
+    public void createLocalLobby() {
+        if(state == State.MAIN_MENU){
+            gameMatch = new GameMatch();
+            state = State.LOCAL_LOBBY;
+        }
     }
 
     @Override

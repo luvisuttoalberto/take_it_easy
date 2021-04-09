@@ -22,7 +22,7 @@ public interface IGame {
     */
 
     //main menu
-    void createLocalGame();
+    void createLocalLobby();
 
     //local game setup
     void addPlayer(String name);

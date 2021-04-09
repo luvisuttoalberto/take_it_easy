@@ -26,7 +26,7 @@ public class GameTest {
     @Test
     public void testCreateLocalLobby(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
 
         JSONObject data = game.getData();
         JSONObject players = data.getJSONObject("players");
@@ -37,9 +37,33 @@ public class GameTest {
     }
 
     @Test
+    public void testCreateLocalLobbyInLocalLobby(){
+        Game game = new Game();
+        game.createLocalLobby();
+        String name = "Carlos";
+        game.addPlayer(name);
+        game.createLocalLobby();
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("players");
+        assertFalse(players.keySet().isEmpty());
+    }
+
+    @Test
+    public void testCreateLocalLobbyInLocalMatch(){
+        Game game = new Game();
+        game.createLocalLobby();
+        String name = "Carlos";
+        game.addPlayer(name);
+        game.startLocalMatch();
+        game.createLocalLobby();
+        JSONObject data = game.getData();
+        assertEquals("LOCAL_MATCH", data.get("gameState"));
+    }
+
+    @Test
     public void testAddPlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         game.addPlayer(name);
 
@@ -54,7 +78,7 @@ public class GameTest {
     @Test
     public void testAddAlreadyPresentPlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         game.addPlayer(name);
         game.addPlayer(name);
@@ -71,7 +95,7 @@ public class GameTest {
     @Test
     public void testRemovePlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         String otherName = "Carlos";
         game.addPlayer(name);
@@ -97,7 +121,7 @@ public class GameTest {
     @Test
     public void testRenamePlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String oldName = "Dario";
         String newName = "Carlos";
         game.addPlayer(oldName);
@@ -123,7 +147,7 @@ public class GameTest {
     @Test
     public void testRenamePlayerWithAlreadyPresentName(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         String otherName = "Carlos";
         game.addPlayer(name);
@@ -144,7 +168,7 @@ public class GameTest {
     @Test
     public void testSetMatchSeed(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         JSONObject data = game.getData();
 
         long initialSeed = data.getLong("seed");
@@ -158,7 +182,7 @@ public class GameTest {
     @Test
     public void testStartLocalMatch(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         game.addPlayer("Dario");
         game.startLocalMatch();
 
@@ -170,7 +194,7 @@ public class GameTest {
     @Test
     public void testEndMatch(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
@@ -192,7 +216,7 @@ public class GameTest {
     @Test
     public void testBackToMainMenu(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
 
         try {
@@ -216,7 +240,7 @@ public class GameTest {
     @Test
     public void testPlayerPlacesTileAt(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
@@ -247,7 +271,7 @@ public class GameTest {
     @Test
     public void testBackToLocalSetup(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
 
         try {
