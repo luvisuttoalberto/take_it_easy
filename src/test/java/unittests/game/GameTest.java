@@ -229,8 +229,6 @@ public class GameTest {
         assertNull(game.getData().opt("gameMatch"));
     }
 
-    //TODO: as before, is the whole test to be removed? the only thing we tested is if the
-    //      tiles are all positioned in the right place, but this is done in the BoardVanillaTest
     @Test
     public void testPlayerPlacesTileAt(){
         Game game = new Game();

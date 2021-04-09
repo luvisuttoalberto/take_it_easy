@@ -606,7 +606,7 @@ public class GameMatchTest {
 //        }
 
 //    }
-//    //TODO: should we test it? ComputeScore is already tested in board + is not present in GameMatch
+
 //    @Test
 //    public void testComputeScore(){
 //        GameMatch gm = new GameMatch();
