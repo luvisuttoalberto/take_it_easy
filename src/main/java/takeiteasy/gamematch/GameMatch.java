@@ -115,9 +115,7 @@ public class GameMatch implements IGameMatch{
 //        return currentTileIndex;
 //    }
 
-    //TODO: Privatize it and correct the Test !!!
-    @Override
-    public Tile getCurrentTile() {
+    private Tile getCurrentTile() {
         return tilePool.getTile(currentTileIndex);
     }
 
