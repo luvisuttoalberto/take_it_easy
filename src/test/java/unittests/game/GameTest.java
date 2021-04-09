@@ -38,7 +38,7 @@ public class GameTest {
     }
 
     @Test
-    public void testCreateLocalLobbyInLocalLobby(){
+    public void testCreateLocalLobbyDuringLocalLobby(){
         Game game = new Game();
         game.createLocalLobby();
         String name = "Carlos";
@@ -72,7 +72,6 @@ public class GameTest {
         JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
 
         assertTrue(players.keySet().contains(name));
-        assertEquals("WAIT_MATCH", players.getJSONObject(name).get("playerState"));
 //        assertNull(data.opt("message"));
     }
 
@@ -126,18 +125,11 @@ public class GameTest {
         String oldName = "Dario";
         String newName = "Carlos";
         game.addPlayer(oldName);
+        game.renamePlayer(oldName, newName);
 
         JSONObject data = game.getData();
         JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
-
-        assertEquals(oldName, playerNames.get(0));
-
-        game.renamePlayer(oldName, newName);
-
-        data = game.getData();
-        players = data.getJSONObject("gameMatch").getJSONObject("players");
-        playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(newName, playerNames.get(0));
         assertEquals(1, playerNames.size());
@@ -234,6 +226,7 @@ public class GameTest {
         game.backToTheMainMenu();
         JSONObject data = game.getData();
         assertEquals("MAIN_MENU", data.get("gameState"));
+        assertNull(game.getData().opt("gameMatch"));
     }
 
     //TODO: as before, is the whole test to be removed? the only thing we tested is if the
@@ -259,19 +252,16 @@ public class GameTest {
 //        game.endMatch();
 //        data = game.getData();
         JSONObject matchData = data.getJSONObject("gameMatch");
-        JSONObject players = matchData.getJSONObject("players");
-        JSONObject player = players.getJSONObject(name);
-        JSONObject board = player.getJSONObject("playerBoard");
-        //TODO: To remove, tested in BoardVanillaTest
-        for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
-            JSONObject tileData = board.getJSONObject(tilesAndCoord.coordinate.toString());
-            Tile tile = new Tile(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
-            assertEquals(tilesAndCoord.tile, tile);
-        }
+        assertEquals("FINISH", matchData.get("matchState"));
+//        for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
+//            JSONObject tileData = board.getJSONObject(tilesAndCoord.coordinate.toString());
+//            Tile tile = new Tile(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
+//            assertEquals(tilesAndCoord.tile, tile);
+//        }
     }
 
     @Test
-    public void testBackToLocalSetup(){
+    public void testBackToLocalLobby(){
         Game game = new Game();
         game.createLocalLobby();
         String name = "Dario";
