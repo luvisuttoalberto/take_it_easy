@@ -125,6 +125,5 @@ public class BoardVanillaTest {
         }
         catch(Exception ignored){
         }
-
     }
 }
