@@ -21,6 +21,7 @@ public class GameTest {
     public void testGetDataInMainMenu(){
         Game game = new Game();
         assertEquals("MAIN_MENU", game.getData().get("gameState"));
+        assertNull(game.getData().opt("gameMatch"));
     }
 
     @Test
@@ -29,7 +30,7 @@ public class GameTest {
         game.createLocalLobby();
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
 
 //        assertNull(data.opt("message"));
         assertEquals("LOCAL_LOBBY", data.get("gameState"));
@@ -44,7 +45,7 @@ public class GameTest {
         game.addPlayer(name);
         game.createLocalLobby();
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         assertFalse(players.keySet().isEmpty());
     }
 
@@ -68,7 +69,7 @@ public class GameTest {
         game.addPlayer(name);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
 
         assertTrue(players.keySet().contains(name));
         assertEquals("WAIT_MATCH", players.getJSONObject(name).get("playerState"));
@@ -84,7 +85,7 @@ public class GameTest {
         game.addPlayer(name);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
 
         assertEquals(1, players.keySet().size());
 //        assertEquals("Player not added, a player with this name is already present", data.opt("message"));
@@ -102,7 +103,7 @@ public class GameTest {
         game.addPlayer(otherName);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(2, playerNames.size());
@@ -110,7 +111,7 @@ public class GameTest {
         game.removePlayer(name);
 
         data = game.getData();
-        players = data.getJSONObject("players");
+        players = data.getJSONObject("gameMatch").getJSONObject("players");
         playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(1, playerNames.size());
@@ -127,7 +128,7 @@ public class GameTest {
         game.addPlayer(oldName);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(oldName, playerNames.get(0));
@@ -135,7 +136,7 @@ public class GameTest {
         game.renamePlayer(oldName, newName);
 
         data = game.getData();
-        players = data.getJSONObject("players");
+        players = data.getJSONObject("gameMatch").getJSONObject("players");
         playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(newName, playerNames.get(0));
@@ -156,7 +157,7 @@ public class GameTest {
         game.renamePlayer(name, otherName);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(name, playerNames.get(0));
@@ -170,13 +171,15 @@ public class GameTest {
         Game game = new Game();
         game.createLocalLobby();
         JSONObject data = game.getData();
+        JSONObject matchData = data.getJSONObject("gameMatch");
 
-        long initialSeed = data.getLong("seed");
+        long initialSeed = matchData.getLong("seed");
         long newSeed = initialSeed + 1;
         game.setMatchSeed(newSeed);
         data = game.getData();
+        matchData = data.getJSONObject("gameMatch");
 
-        assertEquals(newSeed, data.getLong("seed"));
+        assertEquals(newSeed, matchData.getLong("seed"));
     }
 
     @Test
@@ -255,7 +258,8 @@ public class GameTest {
 //        assertEquals("Tilepool depleted", data.opt("message"));
 //        game.endMatch();
 //        data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject matchData = data.getJSONObject("gameMatch");
+        JSONObject players = matchData.getJSONObject("players");
         JSONObject player = players.getJSONObject(name);
         JSONObject board = player.getJSONObject("playerBoard");
         //TODO: To remove, tested in BoardVanillaTest
@@ -286,7 +290,8 @@ public class GameTest {
         game.backToLocalLobby();
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject matchData = data.getJSONObject("gameMatch");
+        JSONObject players = matchData.getJSONObject("players");
         JSONObject player = players.getJSONObject(name);
         JSONObject board = player.getJSONObject("playerBoard");
 

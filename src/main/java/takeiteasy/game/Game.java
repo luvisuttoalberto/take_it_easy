@@ -110,14 +110,11 @@ public class Game implements IGame{
     public JSONObject getData() {
         JSONObject data = new JSONObject();
 
-        if(state == State.MAIN_MENU){
-            data.put("gameState", state.name());
-            return data;
-        }
-
-        data = gameMatch.getData();
-
         data.put("gameState", state.name());
+
+        if(gameMatch != null){
+            data.put("gameMatch", gameMatch.getData());
+        }
 
 //        if(!message.isBlank()){
 //            data.put("message", message);
