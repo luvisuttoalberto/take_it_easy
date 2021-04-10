@@ -2,6 +2,7 @@ package unittests.player;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.*;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
@@ -27,7 +28,15 @@ public class PlayerTest {
         }
     }
 
-    //TODO: Read on Telegram, loop with getData()
+    @Test
+    public void testConsistentGetData(){
+        Player player = new Player("Carlos");
+        JSONObject playerData = player.getData();
+        assertNotNull(playerData.opt("playerScore"));
+        assertNotNull(playerData.opt("playerState"));
+        assertNotNull(playerData.opt("playerBoard"));
+    }
+
     @Test
     public void testPlaceTile() {
         Player player = new Player("Dario");
@@ -98,13 +107,17 @@ public class PlayerTest {
             player.startMatch();
             JSONObject playerData = player.getData();
             assertEquals("PLACING", playerData.get("playerState"));
+            JSONObject boardData = new JSONObject();
             for(int i = 0; i < list.size(); ++i) {
                 player.placeTile(list.get(i).tile, list.get(i).coordinate);
+                boardData.put(list.get(i).coordinate.toString(), list.get(i).tile.getData());
                 if (i == list.size() - 1) break;
                 playerData = player.getData();
                 assertEquals("WAIT_OTHER", playerData.get("playerState"));
                 player.transitionFromWaitingPlayersToPlacing();
             }
+            playerData = player.getData();
+            JSONAssert.assertEquals(boardData, playerData.getJSONObject("playerBoard"), true);
             player.endMatch();
             playerData = player.getData();
             assertEquals("WAIT_MATCH", playerData.get("playerState"));
