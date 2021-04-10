@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
 
@@ -104,8 +105,7 @@ public class BoardVanillaTest {
             board.placeTile(tile, coords);
             JSONObject boardData = board.getData();
             JSONObject tileData = boardData.getJSONObject(coords.toString());
-            Tile realTile = new Tile(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
-            assertEquals(tile, realTile);
+            JSONAssert.assertEquals(tile.getData(), tileData, true);
         }
         catch(Exception ignored){
         }

@@ -14,6 +14,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'org.json:json:20201115'
+    testImplementation 'org.skyscreamer:jsonassert:1.2.3'
 
 //    compile 'org.openjfx:javafx-controls:15.0.1'
 //    compile 'org.openjfx:javafx-fxml:15.0.1'
