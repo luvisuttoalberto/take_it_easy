@@ -7,7 +7,6 @@ import takeiteasy.player.InvalidPlayerStateException;
 
 public class Game implements IGame{
     private IGameMatch gameMatch;
-//    private String message = "";
     private State state = State.MAIN_MENU;
 
     @Override
@@ -112,11 +111,6 @@ public class Game implements IGame{
         if(gameMatch != null){
             data.put("gameMatch", gameMatch.getData());
         }
-
-//        if(!message.isBlank()){
-//            data.put("message", message);
-//            message = "";
-//        }
 
         return data;
     }

@@ -53,7 +53,6 @@ public class PlayerTest {
                                             insertedTileData.getInt("left"),
                                             insertedTileData.getInt("right")
                                         );
-//            Tile realTile = player.showTileFromBoardAtCoordinates(coords);
             assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
             assertEquals(expectedTile, insertedTile);
         }
@@ -89,7 +88,6 @@ public class PlayerTest {
                 if (i == list.size() - 1) break;
                 player.transitionFromWaitingPlayersToPlacing();
             }
-//            player.computeScore();
             player.endMatch();
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
@@ -137,35 +135,12 @@ public class PlayerTest {
             player.startMatch();
             player.placeTile(tile, coordinates);
             player.reset();
-//            Tile realTile = player.showTileFromBoardAtCoordinates(coordinates);
             JSONObject data = player.getData();
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
             assertTrue(data.getJSONObject("playerBoard").isEmpty());
-//            Assertions.assertNull(realTile);
         }
         catch (Exception e) {
             fail();
         }
     }
-//    @Test
-//    public void testComputeScore() {
-//        Integer score = 54;
-//        try {
-//            Player player = new Player("Dario");
-//            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-//            player.startMatch();
-//            for (int i = 0; i < list.size(); ++i) {
-//                player.placeTile(list.get(i).tile, list.get(i).coordinate);
-//                if (i == 18) break;
-//                player.transitionFromWaitingPlayersToPlacing();
-//            }
-//            IBoard board = player.getBoard();
-//            JSONObject playerData = player.getData();
-//            assertEquals(score, playerData.get("playerScore"));
-//            assertEquals(score, board.computeScore());
-//        }
-//        catch(Exception e){
-//           fail();
-//        }
-//    }
 }

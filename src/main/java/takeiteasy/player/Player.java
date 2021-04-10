@@ -29,9 +29,6 @@ public class Player implements IPlayer{
     @Override
     public String getName() { return Name; }
 
-//    @Override
-//    public IBoard getBoard() { return playerBoard; }
-
     @Override
     public void reset() {
         playerBoard = new BoardVanilla();
@@ -78,16 +75,6 @@ public class Player implements IPlayer{
             throw new InvalidPlayerStateException();
         }
     }
-
-//    @Override
-//    public Integer computeScore() {
-//        return playerBoard.computeScore();
-//    }
-
-//    @Override
-//    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
-//        return playerBoard.getTile(coordinates);
-//    }
 
     @Override
     public JSONObject getData(){

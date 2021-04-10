@@ -237,28 +237,6 @@ public class GameMatchTest {
         }
     }
 
-//    @Test
-//    public void testGetCurrentTile(){
-//        GameMatch gm = new GameMatch();
-//        long seed = 11;
-//        try {
-//            gm.setTilePoolSeed(seed);
-//        }
-//        catch(InvalidMatchStateException e){
-//            fail();
-//        }
-//        JSONObject gameMatchData = gm.getData();
-//        assertEquals(seed, gameMatchData.get("seed"));
-//        JSONObject currentTileData = gameMatchData.getJSONObject("currentTile");
-//        assertTrue(
-//        gm.getCurrentTile().getData().get("top") == gm.getData().getJSONObject("currentTile").get("top") &&
-//        gm.getCurrentTile().getData().get("left") == gm.getData().getJSONObject("currentTile").get("left") &&
-//        gm.getCurrentTile().getData().get("right") == gm.getData().getJSONObject("currentTile").get("right")
-//        );
-//        TilePool tilePool = new TilePool(seed);
-//        assertEquals(tilePool.getTile(0), gm.getCurrentTile());
-//    }
-
     @Test
     public void testSetSeedDuringPlay(){
         GameMatch gm = new GameMatch();
@@ -317,7 +295,6 @@ public class GameMatchTest {
         }
         catch (NotEnoughPlayersException ignored){
             assertEquals("SETUP", gm.getData().get("matchState"));
-            //assertEquals(IGameMatch.State.SETUP, gm.getState());
         }
         catch (Exception e){
             fail();
@@ -332,7 +309,6 @@ public class GameMatchTest {
             gm.addPlayer(playerName);
             gm.startMatch();
             assertEquals("PLAY", gm.getData().get("matchState"));
-            //assertEquals(IGameMatch.State.PLAY, gm.getState());
         }
         catch (Exception e){
             fail();
@@ -358,7 +334,6 @@ public class GameMatchTest {
             JSONObject currentTileData = data.getJSONObject("currentTile");
 
             JSONAssert.assertEquals(currentTileData, insertedTileData, true);
-//            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));
         }
         catch (Exception e){
             fail();
@@ -451,11 +426,8 @@ public class GameMatchTest {
             gm.backToSetup();
 
             assertEquals("SETUP", gm.getData().get("matchState"));
-//            assertEquals(IGameMatch.State.SETUP, gm.getState());
-//            assertEquals(0, gm.getCurrentTileIndex());
             JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
             assertTrue(boardData.isEmpty());
-//            assertNull(gm.getBoardFromPlayerName(name).getTile(coords));
         }catch (Exception e){
             fail();
         }
@@ -569,65 +541,12 @@ public class GameMatchTest {
         try{
             SimulateCompleteGameMatch(gm, name, tilePoolSeed);
             assertEquals("FINISH", gm.getData().get("matchState"));
-            //assertEquals(IGameMatch.State.FINISH, gm.getState());
         }
         catch (Exception e){
             fail();
         }
 
     }
-//    @Test
-//    public void testComputeScoreDuringSetup(){
-//        GameMatch gm = new GameMatch();
-//        try{
-//            gm.computeScore();
-//            fail();
-//        }
-//        catch (InvalidMatchStateException ignored){
-//            // test passed
-//        }
-//        catch (Exception e){
-//            fail();
-//        }
-
-//    }
-//    @Test
-//    public void testComputeScoreDuringPlay(){
-//        GameMatch gm = new GameMatch();
-//        String name = "Dario";
-//
-//        try{
-//            gm.addPlayer(name);
-//            gm.startMatch();
-//            gm.computeScore();
-//            fail();
-//        }
-//        catch (InvalidMatchStateException ignored){
-//            // test passed
-//        }
-//        catch (Exception e){
-//            fail();
-//        }
-
-//    }
-
-//    @Test
-//    public void testComputeScore(){
-//        GameMatch gm = new GameMatch();
-//        String name = "Dario";
-//        long tilePoolSeed = 11;
-//        Integer finalScore = 54;
-//        try{
-//            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-////            Dictionary<String,Integer> playerScores = gm.computeScore();
-//            JSONObject playerData = gm.getData().getJSONObject("players").getJSONObject(name);
-//            assertEquals(finalScore, playerData.getInt("playerScore"));
-//        }
-//        catch (Exception e){
-//            fail();
-//        }
-
-//    }
 
     //TODO: is this test useful???
     @Test

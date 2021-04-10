@@ -20,11 +20,6 @@ public class GameMatch implements IGameMatch{
         currentTileIndex = 0;
     }
 
-//    @Override
-//    public State getState() {
-//        return state;
-//    }
-
     @Override
     public void setTilePoolSeed(long seed) throws InvalidMatchStateException {
         if(state != State.SETUP) {
@@ -32,11 +27,6 @@ public class GameMatch implements IGameMatch{
         }
         tilePool.reset(seed);
     }
-
-//    @Override
-//    public String[] getPlayerNames() {
-//        return players.stream().map(IPlayer::getName).toArray(String[]::new);
-//    }
 
     private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
 
@@ -47,16 +37,6 @@ public class GameMatch implements IGameMatch{
         }
         throw new PlayerNameNotFoundException(playerName);
     }
-
-//    @Override
-//    public IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException {
-//        return players.get(retrievePlayerIndexFromName(playerName)).getBoard();
-//    }
-
-//    @Override
-//    public IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException {
-//        return players.get(retrievePlayerIndexFromName(playerName)).getState();
-//    }
 
     @Override
     public void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException {
@@ -110,19 +90,9 @@ public class GameMatch implements IGameMatch{
         state = State.PLAY;
     }
 
-//    @Override
-//    public Integer getCurrentTileIndex() {
-//        return currentTileIndex;
-//    }
-
     private Tile getCurrentTile() {
         return tilePool.getTile(currentTileIndex);
     }
-
-//    @Override
-//    public long getSeed() {
-//        return tilePool.getSeed();
-//    }
 
     @Override
     public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
@@ -211,17 +181,4 @@ public class GameMatch implements IGameMatch{
 
         return data;
     }
-
-//    @Override
-//    public Dictionary<String,Integer> computeScore() throws InvalidMatchStateException{
-//        if(state != State.FINISH){
-//            throw new InvalidMatchStateException();
-//        }
-//
-//        Dictionary<String, Integer> dict = new Hashtable<>();
-//        for (IPlayer p : players){
-//            dict.put(p.getName(),p.computeScore());
-//        }
-//        return dict;
-//    }
 }
