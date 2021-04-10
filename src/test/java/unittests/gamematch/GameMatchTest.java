@@ -31,12 +31,9 @@ public class GameMatchTest {
     public void testAddPlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
-        try {
-            gm.addPlayer(plyName);
-        }
-        catch (Exception e){
-            fail("player add failed");
-        }
+
+        assertDoesNotThrow(() -> gm.addPlayer(plyName));
+
         JSONObject data = gm.getData();
         assertEquals("SETUP", data.get("matchState"));
         assertTrue(data.getJSONObject("players").keySet().contains(plyName));
