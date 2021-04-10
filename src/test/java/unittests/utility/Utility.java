@@ -75,12 +75,11 @@ public final class Utility {
         }
     }
 
-    //TODO: To we need it?
-    public static void main(String[] args){
-        ArrayList<Pair<Tile, HexCoordinates>> pairs = getTilesAndCoordinatesBoard11(27);
-        for(int i = 0; i < 19; ++i){
-            System.out.println("tile:" + "("+pairs.get(i).tile.getTop()+" "+pairs.get(i).tile.getLeft()+" "+pairs.get(i).tile.getRight()+" )"+
-                    "("+pairs.get(i).coordinate.getX()+" "+pairs.get(i).coordinate.getY()+" "+pairs.get(i).coordinate.getZ()+") ");
-        }
-    }
+//    public static void main(String[] args){
+//        ArrayList<Pair<Tile, HexCoordinates>> pairs = getTilesAndCoordinatesBoard11(27);
+//        for(int i = 0; i < 19; ++i){
+//            System.out.println("tile:" + "("+pairs.get(i).tile.getTop()+" "+pairs.get(i).tile.getLeft()+" "+pairs.get(i).tile.getRight()+" )"+
+//                    "("+pairs.get(i).coordinate.getX()+" "+pairs.get(i).coordinate.getY()+" "+pairs.get(i).coordinate.getZ()+") ");
+//        }
+//    }
 }

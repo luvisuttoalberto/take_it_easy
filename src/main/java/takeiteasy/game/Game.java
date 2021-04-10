@@ -10,7 +10,6 @@ public class Game implements IGame{
 //    private String message = "";
     private State state = State.MAIN_MENU;
 
-    //TODO: Sta roba fa schifo ma vabbè lasciamola così che non si sa mai
     @Override
     public void createLocalLobby() {
         if(state == State.MAIN_MENU){
@@ -82,8 +81,6 @@ public class Game implements IGame{
                 NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){
-            //TODO: alternatively: copy and paste what's inside of endMatch;
-            //      downside: use a try block inside a catch
             endMatch();
         }
     }
