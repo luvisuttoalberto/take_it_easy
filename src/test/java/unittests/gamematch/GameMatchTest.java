@@ -2,6 +2,7 @@ package unittests.gamematch;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
 import takeiteasy.tilepool.*;
@@ -15,6 +16,16 @@ import static unittests.utility.Utility.SimulateCompleteGameMatch;
 import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;
 
 public class GameMatchTest {
+
+    @Test
+    public void testConsistentGetData(){
+        GameMatch gm = new GameMatch();
+        JSONObject data = gm.getData();
+        assertNotNull(data.opt("players"));
+        assertNotNull(data.opt("currentTile"));
+        assertNotNull(data.opt("seed"));
+        assertNotNull(data.opt("matchState"));
+    }
 
     @Test
     public void testAddPlayer(){
@@ -285,9 +296,8 @@ public class GameMatchTest {
         }
     }
 
-    //TODO: Should we check other things in the JSON
     @Test
-    public void testGetData(){
+    public void testSetTilePoolSeed(){
         GameMatch gm = new GameMatch();
         long tilePoolSeed = 11;
         try {
@@ -344,16 +354,10 @@ public class GameMatchTest {
             JSONObject playerData = playersData.getJSONObject(name);
             JSONObject boardData = playerData.getJSONObject("playerBoard");
             JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
-            Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
-                                            insertedTileData.getInt("left"),
-                                            insertedTileData.getInt("right")
-                                        );
+
             JSONObject currentTileData = data.getJSONObject("currentTile");
-            Tile currentTile = new Tile(    currentTileData.getInt("top"),
-                                            currentTileData.getInt("left"),
-                                            currentTileData.getInt("right")
-                                        );
-            assertEquals(currentTile, insertedTile);
+
+            JSONAssert.assertEquals(currentTileData, insertedTileData, true);
 //            assertEquals(gm.getCurrentTile(), gm.getBoardFromPlayerName(name).getTile(coords));
         }
         catch (Exception e){
@@ -625,6 +629,7 @@ public class GameMatchTest {
 
 //    }
 
+    //TODO: is this test useful???
     @Test
     public void test2PMatch(){
         GameMatch gm = new GameMatch();
