@@ -45,15 +45,11 @@ public class GameMatchTest {
         String plyName = "Dario";
         try {
             gm.addPlayer(plyName);
-            gm.addPlayer(plyName);
-            fail();
         }
-        catch (PlayersWithSameNameNotAllowedException ignored){
-            // test passed
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(PlayersWithSameNameNotAllowedException.class, () -> gm.addPlayer(plyName));
     }
 
     @Test
