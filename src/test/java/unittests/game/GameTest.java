@@ -18,18 +18,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
 
     @Test
-    public void testGetDataInMainMenu(){
+    public void testConsistentGetData(){
         Game game = new Game();
-        assertEquals("MAIN_MENU", game.getData().get("gameState"));
+        assertNotNull(game.getData().opt("gameState"));
         assertNull(game.getData().opt("gameMatch"));
     }
 
     @Test
     public void testCreateLocalLobby(){
         Game game = new Game();
+        assertEquals("MAIN_MENU", game.getData().get("gameState"));
         game.createLocalLobby();
 
         JSONObject data = game.getData();
+        assertNotNull(data.opt("gameMatch"));
         JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
 
 //        assertNull(data.opt("message"));
