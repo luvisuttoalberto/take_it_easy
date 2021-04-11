@@ -209,12 +209,9 @@ public class GameMatchTest {
     public void testSetTilePoolSeed(){
         GameMatch gm = new GameMatch();
         long tilePoolSeed = 11;
-        try {
-            gm.setTilePoolSeed(tilePoolSeed);
-            assertEquals(tilePoolSeed, gm.getData().get("seed"));
-        }
-        catch(Exception ignored){
-        }
+
+        assertDoesNotThrow(() -> gm.setTilePoolSeed(tilePoolSeed));
+        assertEquals(tilePoolSeed, gm.getData().get("seed"));
     }
 
     @Test
