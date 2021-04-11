@@ -85,15 +85,10 @@ public class GameMatchTest {
         try{
             gm.addPlayer(oldName);
             gm.startMatch();
-            gm.setPlayerName(oldName, newName);
-            fail();
         }
-        catch (InvalidMatchStateException ignored){
-            //test passed
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(InvalidMatchStateException.class, () -> gm.setPlayerName(oldName, newName));
     }
 
     @Test
