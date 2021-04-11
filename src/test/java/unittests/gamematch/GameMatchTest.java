@@ -345,15 +345,11 @@ public class GameMatchTest {
         try{
             gm.addPlayer(name);
             gm.startMatch();
+        }
+        catch (Exception ignored){
+        }
 
-            gm.endMatch();
-            fail();
-        }catch (TilePoolNotDepletedException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(TilePoolNotDepletedException.class, gm::endMatch);
     }
 
     @Test
