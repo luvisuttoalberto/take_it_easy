@@ -387,18 +387,9 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String name = "Dario";
         long tilePoolSeed = 11;
+        SimulateCompleteGameMatch(gm, name, tilePoolSeed);
 
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            gm.endMatch();
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(InvalidMatchStateException.class, gm::endMatch);
     }
 
     @Test
