@@ -228,12 +228,11 @@ public class GameMatchTest {
         String playerName = "Dario";
         try{
             gm.addPlayer(playerName);
-            gm.startMatch();
-            assertEquals("PLAY", gm.getData().get("matchState"));
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
+        assertDoesNotThrow( () -> gm.startMatch());
+        assertEquals("PLAY", gm.getData().get("matchState"));
     }
 
     @Test
