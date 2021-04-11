@@ -397,14 +397,9 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String name = "Dario";
         long tilePoolSeed = 11;
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            assertEquals("FINISH", gm.getData().get("matchState"));
-        }
-        catch (Exception e){
-            fail();
-        }
 
+        assertDoesNotThrow(() -> SimulateCompleteGameMatch(gm, name, tilePoolSeed));
+        assertEquals("FINISH", gm.getData().get("matchState"));
     }
 
     //TODO: is this test useful???
