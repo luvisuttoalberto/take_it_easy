@@ -287,24 +287,22 @@ public class GameMatchTest {
         String name = "Dario";
         long tilePoolSeed = 11;
 
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
             gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
             for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
                 gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoord.coordinate);
-                gm.dealNextTile();
+                if (tilesAndCoord == tilesAndCoords.get(tilesAndCoords.size()-1)){
+                    break;
+                }
+                assertDoesNotThrow(gm::dealNextTile);
             }
-            fail();
+            assertThrows(TilePoolDepletedException.class, gm::dealNextTile);
         }
-        catch (TilePoolDepletedException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
