@@ -313,7 +313,8 @@ public class GameMatchTest {
             gm.positionCurrentTileOnPlayerBoard(name, coords);
             gm.dealNextTile();
 
-        }catch (Exception ignored){
+        }
+        catch (Exception ignored){
         }
 
         assertDoesNotThrow(gm::backToSetup);
@@ -324,17 +325,10 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testAbortMatchDuringSetup(){
+    public void testBackToSetupDuringSetup(){
         GameMatch gm = new GameMatch();
-        try{
-            gm.backToSetup();
-            fail();
-        }catch (InvalidMatchStateException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+        
+        assertThrows(InvalidMatchStateException.class, gm::backToSetup);
     }
 
     @Test
