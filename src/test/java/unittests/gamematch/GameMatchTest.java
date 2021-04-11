@@ -361,10 +361,10 @@ public class GameMatchTest {
         Integer finalScore = 54;
         Integer otherFinalScore = 27;
         long tilePoolSeed = 11;
-        try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
-            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
+        ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
 
+        try{
             gm.addPlayer(name);
             gm.addPlayer(otherName);
             gm.setTilePoolSeed(tilePoolSeed);
@@ -376,15 +376,10 @@ public class GameMatchTest {
                 gm.dealNextTile();
             }
             gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
-            fail();
         }
-        catch (PlayersNotReadyToEndMatchException ignored){
-            // test pass
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(PlayersNotReadyToEndMatchException.class, gm::endMatch);
     }
 
     @Test
