@@ -123,16 +123,8 @@ public class GameMatchTest {
     public void testRemoveAbsentPlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
-        try {
-            gm.removePlayer(plyName);
-            fail();
-        }
-        catch (PlayerNameNotFoundException ignored){
-            // test pass
-        }
-        catch(Exception e){
-            fail();
-        }
+
+        assertThrows(PlayerNameNotFoundException.class, () -> gm.removePlayer(plyName));
     }
 
     @Test
