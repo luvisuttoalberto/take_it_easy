@@ -166,13 +166,10 @@ public class GameMatchTest {
         try{
             gm.addPlayer(oldName);
             gm.addPlayer(newName);
-            gm.setPlayerName(newName, oldName);
-            fail();
-        } catch (PlayersWithSameNameNotAllowedException ignored){
-            // test passed
-        }catch (Exception e) {
-            fail();
         }
+        catch (Exception ignored) {
+        }
+        assertThrows(PlayersWithSameNameNotAllowedException.class, () -> gm.setPlayerName(newName, oldName));
     }
 
     @Test
