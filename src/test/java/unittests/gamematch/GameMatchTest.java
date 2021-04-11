@@ -261,28 +261,6 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testDealNextTileNoPlayers(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        String otherName = "Carlos";
-        try{
-            gm.addPlayer(name);
-            gm.addPlayer(otherName);
-            gm.startMatch();
-            gm.removePlayer(name);
-            gm.removePlayer(otherName);
-            gm.dealNextTile();
-            fail();
-        }
-        catch (NotEnoughPlayersException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
     public void testDealNextTilePlayersNotReady(){
         GameMatch gm = new GameMatch();
         String name = "Dario";

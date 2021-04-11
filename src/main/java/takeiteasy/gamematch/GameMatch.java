@@ -104,9 +104,10 @@ public class GameMatch implements IGameMatch{
         if (state != State.PLAY){
             throw new InvalidMatchStateException();
         }
-        if (players.size() < 1){
-            throw new NotEnoughPlayersException();
-        }
+        //TODO: This part of the code is never reached!!!
+//        if (players.size() < 1){
+//            throw new NotEnoughPlayersException();
+//        }
         for (IPlayer p : players){
             IPlayer.State playerState = p.getState();
             if (playerState == IPlayer.State.PLACING){
