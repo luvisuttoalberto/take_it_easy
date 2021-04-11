@@ -60,15 +60,10 @@ public class GameMatchTest {
         try{
             gm.addPlayer(name);
             gm.startMatch();
-            gm.addPlayer(otherName);
-            fail();
         }
-        catch (InvalidMatchStateException ignored){
-            //test passed
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(InvalidMatchStateException.class, () -> gm.addPlayer(otherName));
     }
 
 
