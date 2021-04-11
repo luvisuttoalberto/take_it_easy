@@ -269,20 +269,16 @@ public class GameMatchTest {
             gm.addPlayer(name);
             gm.addPlayer(otherName);
             gm.startMatch();
-            gm.positionCurrentTileOnPlayerBoard(otherName,new HexCoordinates(0,0,0));
-            gm.dealNextTile();
-            fail();
+            gm.positionCurrentTileOnPlayerBoard(otherName, new HexCoordinates(0,0,0));
         }
-        catch (PlayersNotReadyForNextTileException ignored){
-            // test pass
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(PlayersNotReadyForNextTileException.class, gm::dealNextTile);
     }
 
     @Test
-    public void testDealNextTilePlayersTilePoolOver(){
+    public void testDealNextTileTilePoolOver(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
         long tilePoolSeed = 11;
