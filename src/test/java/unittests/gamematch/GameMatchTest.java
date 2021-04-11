@@ -98,17 +98,8 @@ public class GameMatchTest {
         String newName = "Carlos";
         long tilePoolSeed = 11;
 
-        try{
-            SimulateCompleteGameMatch(gm, oldName, tilePoolSeed);
-            gm.setPlayerName(oldName, newName);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
+        SimulateCompleteGameMatch(gm, oldName, tilePoolSeed);
+        assertThrows(InvalidMatchStateException.class, () -> gm.setPlayerName(oldName, newName));
     }
 
     @Test
