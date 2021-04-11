@@ -303,26 +303,24 @@ public class GameMatchTest {
     }
 
     @Test
-    public void testAbortMatch(){
+    public void testBackToSetup(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
         try{
             gm.addPlayer(name);
             gm.startMatch();
-
             HexCoordinates coords = new HexCoordinates(0,0,0);
             gm.positionCurrentTileOnPlayerBoard(name, coords);
-
             gm.dealNextTile();
 
-            gm.backToSetup();
-
-            assertEquals("SETUP", gm.getData().get("matchState"));
-            JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
-            assertTrue(boardData.isEmpty());
-        }catch (Exception e){
-            fail();
+        }catch (Exception ignored){
         }
+
+        assertDoesNotThrow(gm::backToSetup);
+
+        assertEquals("SETUP", gm.getData().get("matchState"));
+        JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
+        assertTrue(boardData.isEmpty());
     }
 
     @Test
