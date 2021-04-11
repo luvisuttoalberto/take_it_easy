@@ -217,16 +217,9 @@ public class GameMatchTest {
     @Test
     public void testStartMatchWithoutPlayers(){
         GameMatch gm = new GameMatch();
-        try{
-            gm.startMatch();
-            fail();
-        }
-        catch (NotEnoughPlayersException ignored){
-            assertEquals("SETUP", gm.getData().get("matchState"));
-        }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(NotEnoughPlayersException.class, () -> gm.startMatch());
+        assertEquals("SETUP", gm.getData().get("matchState"));
     }
 
     @Test
