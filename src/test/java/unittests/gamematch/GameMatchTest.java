@@ -243,7 +243,8 @@ public class GameMatchTest {
             gm.addPlayer(name);
             gm.startMatch();
             HexCoordinates coords = new HexCoordinates(0,0,0);
-            gm.positionCurrentTileOnPlayerBoard(name, coords);
+
+            assertDoesNotThrow( () -> gm.positionCurrentTileOnPlayerBoard(name, coords));
 
             JSONObject data = gm.getData();
             JSONObject playersData = data.getJSONObject("players");
@@ -255,8 +256,7 @@ public class GameMatchTest {
 
             JSONAssert.assertEquals(currentTileData, insertedTileData, true);
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
