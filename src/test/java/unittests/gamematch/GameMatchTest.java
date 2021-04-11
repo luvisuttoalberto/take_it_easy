@@ -188,15 +188,11 @@ public class GameMatchTest {
         try {
             gm.addPlayer("Dario");
             gm.startMatch();
-            gm.setTilePoolSeed(seed);
-            fail();
         }
-        catch(InvalidMatchStateException ignored){
-            //test passed
+        catch(Exception ignored){
         }
-        catch(Exception e){
-            fail();
-        }
+
+        assertThrows(InvalidMatchStateException.class, () -> gm.setTilePoolSeed(seed));
     }
 
     @Test
