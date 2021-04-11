@@ -177,16 +177,8 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String oldName = "Dario";
         String newName = "Carlos";
-        try{
-            gm.setPlayerName(oldName, newName);
-            fail();
-        }
-        catch (PlayerNameNotFoundException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(PlayerNameNotFoundException.class, () -> gm.setPlayerName(oldName, newName));
     }
 
     @Test
