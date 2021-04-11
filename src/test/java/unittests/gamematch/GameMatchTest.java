@@ -110,11 +110,13 @@ public class GameMatchTest {
         try {
             gm.addPlayer(plyName);
             gm.addPlayer(otherPlyName);
-            gm.removePlayer(plyName);
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
+        assertDoesNotThrow( () -> gm.removePlayer(plyName));
+
+        JSONObject data = gm.getData();
+        assertFalse(data.getJSONObject("players").keySet().contains(plyName));
     }
 
     @Test
