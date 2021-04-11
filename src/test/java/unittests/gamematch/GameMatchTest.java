@@ -136,7 +136,7 @@ public class GameMatchTest {
         }
         catch (Exception ignored){
         }
-        
+
         assertThrows(NotEnoughPlayersException.class, () -> gm.removePlayer(plyName));
     }
 
@@ -147,14 +147,15 @@ public class GameMatchTest {
         String newName = "Carlos";
         try{
             gm.addPlayer(oldName);
-            gm.setPlayerName(oldName, newName);
-            List<String> playerNames = new ArrayList<>(gm.getData().getJSONObject("players").keySet());
-            assertTrue(playerNames.contains(newName));
-            assertFalse(playerNames.contains(oldName));
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
+
+        assertDoesNotThrow( () -> gm.setPlayerName(oldName, newName));
+
+        List<String> playerNames = new ArrayList<>(gm.getData().getJSONObject("players").keySet());
+        assertTrue(playerNames.contains(newName));
+        assertFalse(playerNames.contains(oldName));
     }
 
     @Test
