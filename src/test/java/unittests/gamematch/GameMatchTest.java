@@ -327,22 +327,15 @@ public class GameMatchTest {
     @Test
     public void testBackToSetupDuringSetup(){
         GameMatch gm = new GameMatch();
-        
+
         assertThrows(InvalidMatchStateException.class, gm::backToSetup);
     }
 
     @Test
     public void testEndMatchDuringSetup(){
         GameMatch gm = new GameMatch();
-        try{
-            gm.endMatch();
-            fail();
-        }catch (InvalidMatchStateException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(InvalidMatchStateException.class, gm::endMatch);
     }
 
     @Test
