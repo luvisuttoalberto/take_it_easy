@@ -133,15 +133,11 @@ public class GameMatchTest {
         String plyName = "Dario";
         try {
             gm.addPlayer(plyName);
-            gm.removePlayer(plyName);
-            fail();
         }
-        catch (NotEnoughPlayersException ignored){
-            //test passed
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+        
+        assertThrows(NotEnoughPlayersException.class, () -> gm.removePlayer(plyName));
     }
 
     @Test
