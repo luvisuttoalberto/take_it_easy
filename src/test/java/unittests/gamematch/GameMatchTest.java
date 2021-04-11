@@ -218,7 +218,7 @@ public class GameMatchTest {
     public void testStartMatchWithoutPlayers(){
         GameMatch gm = new GameMatch();
 
-        assertThrows(NotEnoughPlayersException.class, () -> gm.startMatch());
+        assertThrows(NotEnoughPlayersException.class, gm::startMatch);
         assertEquals("SETUP", gm.getData().get("matchState"));
     }
 
@@ -231,7 +231,7 @@ public class GameMatchTest {
         }
         catch (Exception ignored){
         }
-        assertDoesNotThrow( () -> gm.startMatch());
+        assertDoesNotThrow(gm::startMatch);
         assertEquals("PLAY", gm.getData().get("matchState"));
     }
 
