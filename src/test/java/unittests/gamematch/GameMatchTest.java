@@ -66,7 +66,6 @@ public class GameMatchTest {
         assertThrows(InvalidMatchStateException.class, () -> gm.addPlayer(otherName));
     }
 
-
     @Test
     public void testAddPlayerDuringFinish(){
         GameMatch gm = new GameMatch();
@@ -74,17 +73,8 @@ public class GameMatchTest {
         String otherName = "Carlos";
         long tilePoolSeed = 11;
 
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            gm.addPlayer(otherName);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
+        SimulateCompleteGameMatch(gm, name, tilePoolSeed);
+        assertThrows(InvalidMatchStateException.class, () -> gm.addPlayer(otherName));
     }
 
     @Test
