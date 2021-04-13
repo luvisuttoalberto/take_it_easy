@@ -23,8 +23,7 @@ public class PlayerTest {
             player.startMatch();
             assertEquals(IPlayer.State.PLACING, player.getState());
         }
-        catch (Exception e) {
-            fail();
+        catch (Exception ignored) {
         }
     }
 
