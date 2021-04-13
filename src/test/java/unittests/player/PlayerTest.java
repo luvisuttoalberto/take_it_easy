@@ -43,7 +43,7 @@ public class PlayerTest {
             player.startMatch();
             Tile expectedTile = new Tile(1, 2, 3);
             HexCoordinates coords = new HexCoordinates(0,0,0);
-            player.placeTile(expectedTile, coords);
+            assertDoesNotThrow(()->player.placeTile(expectedTile, coords));
 
             JSONObject data = player.getData();
             JSONObject boardData = data.getJSONObject("playerBoard");
@@ -55,8 +55,7 @@ public class PlayerTest {
             assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
             assertEquals(expectedTile, insertedTile);
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
