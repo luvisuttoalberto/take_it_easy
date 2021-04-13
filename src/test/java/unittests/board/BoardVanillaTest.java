@@ -31,12 +31,12 @@ public class BoardVanillaTest {
 
     @Test
     public void getTileNoTileAtValidCoordinates(){
-        try {
-            BoardVanilla b = new BoardVanilla();
+        BoardVanilla board = new BoardVanilla();
+        try{
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            assertNull(b.getTile(coords));
+            assertDoesNotThrow(()-> board.getTile(coords));
         }
-        catch(Exception e){
+        catch (Exception e){
             fail();
         }
     }
