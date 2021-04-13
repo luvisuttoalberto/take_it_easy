@@ -20,7 +20,7 @@ public class PlayerTest {
     public void testStartMatch(){
         Player player = new Player("Dario");
         try {
-            player.startMatch();
+            assertDoesNotThrow(player::startMatch);
             assertEquals(IPlayer.State.PLACING, player.getState());
         }
         catch (Exception ignored) {
