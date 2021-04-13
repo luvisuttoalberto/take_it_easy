@@ -67,11 +67,10 @@ public class PlayerTest {
             HexCoordinates coordinates = new HexCoordinates(0,0,0);
             player.startMatch();
             player.placeTile(tile, coordinates);
-            player.transitionFromWaitingPlayersToPlacing();
+            assertDoesNotThrow(player::transitionFromWaitingPlayersToPlacing);
             assertEquals(IPlayer.State.PLACING, player.getState());
         }
-        catch (Exception e) {
-            fail();
+        catch (Exception ignored) {
         }
     }
 
