@@ -85,11 +85,10 @@ public class PlayerTest {
                 if (i == list.size() - 1) break;
                 player.transitionFromWaitingPlayersToPlacing();
             }
-            player.endMatch();
+            assertDoesNotThrow(player::endMatch);
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
-        catch (Exception e) {
-            fail();
+        catch (Exception ignored) {
         }
     }
 
