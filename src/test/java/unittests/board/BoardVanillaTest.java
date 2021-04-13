@@ -24,8 +24,7 @@ public class BoardVanillaTest {
             HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
             assertThrows(OutOfBoardCoordinatesException.class, ()-> board.getTile(badcoords));
         }
-        catch(Exception e){
-            fail();
+        catch(Exception ignored){
         }
     }
 
@@ -36,8 +35,7 @@ public class BoardVanillaTest {
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
             assertDoesNotThrow(()-> board.getTile(coords));
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
@@ -57,19 +55,13 @@ public class BoardVanillaTest {
 
     @Test
     public void placeTileAtOutOfRangeCoordinates(){
-        try {
-            BoardVanilla b = new BoardVanilla();
+        BoardVanilla board = new BoardVanilla();
+        try{
             HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
-            Tile tile = new Tile(1,2,3);
-
-            b.placeTile(tile,badcoords);
-            fail();
+            Tile tile = new Tile(1, 2, 3);
+            assertThrows(OutOfBoardCoordinatesException.class, ()-> board.placeTile(tile, badcoords));
         }
-        catch (OutOfBoardCoordinatesException ignored) {
-            //test passed
-        }
-        catch (Exception e) {
-            fail();
+        catch(Exception ignored){
         }
     }
 
