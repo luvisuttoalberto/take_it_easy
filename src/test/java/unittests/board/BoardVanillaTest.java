@@ -19,16 +19,12 @@ public class BoardVanillaTest {
 
     @Test
     public void getTileOutOfBoardCoordinates() {
-        BoardVanilla b = new BoardVanilla();
-        try {
+        BoardVanilla board = new BoardVanilla();
+        try{
             HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
-            b.getTile(badcoords);
-            fail();
+            assertThrows(OutOfBoardCoordinatesException.class, ()-> board.getTile(badcoords));
         }
-        catch (OutOfBoardCoordinatesException ignored) {
-            //test passed
-        }
-        catch (Exception e) {
+        catch(Exception e){
             fail();
         }
     }
