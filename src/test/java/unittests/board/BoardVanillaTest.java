@@ -105,8 +105,7 @@ public class BoardVanillaTest {
             }
             assertEquals(score, board.computeScore());
         }
-        catch(Exception e){
-            fail();
+        catch(Exception ignored){
         }
     }
 }
