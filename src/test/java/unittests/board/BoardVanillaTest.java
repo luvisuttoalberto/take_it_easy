@@ -68,19 +68,14 @@ public class BoardVanillaTest {
     @Test
     public void placeTileAtOccupiedPosition() {
         try{
-            BoardVanilla b = new BoardVanilla();
+            BoardVanilla board = new BoardVanilla();
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
             Tile tile = new Tile(1,2,3);
 
-            b.placeTile(tile,coords);
-            b.placeTile(tile,coords);
-            fail();
+            board.placeTile(tile,coords);
+            assertThrows(CoordinatesOccupidedException.class, ()-> board.placeTile(tile,coords));
         }
-        catch (CoordinatesOccupidedException ignored) {
-            //test passed
-        }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
