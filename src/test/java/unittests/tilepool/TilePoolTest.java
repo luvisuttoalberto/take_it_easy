@@ -10,16 +10,8 @@ public class TilePoolTest {
 
     @Test
     public void testTileOutBound(){
-        try{
-            TilePool pool = new TilePool(19);
-            Tile t = pool.getTile(28);
-            fail();
-        }
-        catch (ArrayIndexOutOfBoundsException ignored){
-        }
-        catch (Exception e){
-            fail();
-        }
+        TilePool pool = new TilePool(19);
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> pool.getTile(28));
     }
 
     @Test
