@@ -13,6 +13,9 @@ public class MainMenuCtrl implements IViewController{
     IGame game;
     IViewUpdater vu;
 
+    @FXML
+    Button start;
+
     @Override
     public void injectGame(IGame g){
         this.game=g;
