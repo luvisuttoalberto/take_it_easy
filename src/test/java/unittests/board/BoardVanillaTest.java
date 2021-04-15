@@ -1,8 +1,11 @@
 package unittests.board;
 
-import org.junit.jupiter.api.Assertions;
+import org.json.JSONObject;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
 
@@ -11,7 +14,6 @@ import unittests.utility.Pair;
 import java.util.ArrayList;
 
 import static unittests.utility.Utility.*;
-
 
 public class BoardVanillaTest {
 
@@ -36,7 +38,7 @@ public class BoardVanillaTest {
         try {
             BoardVanilla b = new BoardVanilla();
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            Assertions.assertNull(b.getTile(coords));
+            assertNull(b.getTile(coords));
         }
         catch(Exception e){
             fail();
@@ -50,7 +52,7 @@ public class BoardVanillaTest {
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
             Tile tile = new Tile(1, 2, 3);
             b.placeTile(tile, coords);
-            Assertions.assertEquals(tile, b.getTile(coords));
+            assertEquals(tile, b.getTile(coords));
         }
         catch(Exception e){
             fail();
@@ -95,15 +97,30 @@ public class BoardVanillaTest {
     }
 
     @Test
+    public void testGetData(){
+        BoardVanilla board = new BoardVanilla();
+        try {
+            HexCoordinates coords = new HexCoordinates(0, 0, 0);
+            Tile tile = new Tile(9, 2,3);
+            board.placeTile(tile, coords);
+            JSONObject boardData = board.getData();
+            JSONObject tileData = boardData.getJSONObject(coords.toString());
+            JSONAssert.assertEquals(tile.getData(), tileData, true);
+        }
+        catch(Exception ignored){
+        }
+    }
+
+    @Test
     public void testComputeScore() {
         BoardVanilla board = new BoardVanilla();
         Integer score = 54;
         try {
             ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-            for (int i = 0; i < 19; ++i) {
-                board.placeTile(list.get(i).tile, list.get(i).coordinate);
+            for (Pair<Tile, HexCoordinates> tileHexCoordinatesPair : list) {
+                board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
             }
-            Assertions.assertEquals(score, board.computeScore());
+            assertEquals(score, board.computeScore());
         }
         catch(Exception e){
             fail();

@@ -1,11 +1,10 @@
 package takeiteasy.gamematch;
 
+import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.Vector;
 
 public class GameMatch implements IGameMatch{
@@ -22,21 +21,11 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public State getState() {
-        return state;
-    }
-
-    @Override
     public void setTilePoolSeed(long seed) throws InvalidMatchStateException {
         if(state != State.SETUP) {
             throw new InvalidMatchStateException();
         }
         tilePool.reset(seed);
-    }
-
-    @Override
-    public String[] getPlayerNames() {
-        return players.stream().map(IPlayer::getName).toArray(String[]::new);
     }
 
     private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
@@ -47,16 +36,6 @@ public class GameMatch implements IGameMatch{
             }
         }
         throw new PlayerNameNotFoundException(playerName);
-    }
-
-    @Override
-    public IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException {
-        return players.get(retrievePlayerIndexFromName(playerName)).getBoard();
-    }
-
-    @Override
-    public IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException {
-        return players.get(retrievePlayerIndexFromName(playerName)).getState();
     }
 
     @Override
@@ -111,19 +90,8 @@ public class GameMatch implements IGameMatch{
         state = State.PLAY;
     }
 
-    @Override
-    public Integer getCurrentTileIndex() {
-        return currentTileIndex;
-    }
-
-    @Override
-    public Tile getCurrentTile() {
+    private Tile getCurrentTile() {
         return tilePool.getTile(currentTileIndex);
-    }
-
-    @Override
-    public long getSeed() {
-        return tilePool.getSeed();
     }
 
     @Override
@@ -173,7 +141,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException {
+    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException {
 
         if(state != State.PLAY){
             throw new InvalidMatchStateException();
@@ -189,20 +157,28 @@ public class GameMatch implements IGameMatch{
             }
         }
 
+        for(IPlayer p : players){
+            p.endMatch();
+        }
+
         state = State.FINISH;
     }
 
     @Override
-    public Dictionary<String,Integer> computeScore() throws InvalidMatchStateException{
-        //TODO: Do we need to order the scores???
-        if(state != State.FINISH){
-            throw new InvalidMatchStateException();
+    public JSONObject getData() {
+        JSONObject data = new JSONObject();
+        JSONObject playersData = new JSONObject();
+        for(IPlayer p : players){
+            playersData.put(p.getName(), p.getData());
         }
+        data.put("players", playersData);
 
-        Dictionary<String, Integer> dict = new Hashtable<>();
-        for (IPlayer p : players){
-            dict.put(p.getName(),p.computeScore());
-        }
-        return dict;
+        data.put("currentTile", tilePool.getTile(currentTileIndex).getData());
+
+        data.put("seed", tilePool.getSeed());
+
+        data.put("matchState", state.name());
+
+        return data;
     }
 }

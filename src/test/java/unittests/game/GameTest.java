@@ -2,6 +2,7 @@ package unittests.game;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import takeiteasy.board.BadHexCoordinatesException;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.Game;
 import takeiteasy.tilepool.Tile;
@@ -17,72 +18,98 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
 
     @Test
-    public void testGetDataInMainMenu(){
+    public void testConsistentGetData(){
         Game game = new Game();
-        assertEquals("MAIN_MENU", game.getData().get("gameState"));
+        assertNotNull(game.getData().opt("gameState"));
+        assertNull(game.getData().opt("gameMatch"));
     }
 
     @Test
     public void testCreateLocalLobby(){
         Game game = new Game();
-        game.createLocalGame();
+        assertEquals("MAIN_MENU", game.getData().get("gameState"));
+        game.createLocalLobby();
+
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
-        assertNull(data.opt("message"));
-        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
+        assertNotNull(data.opt("gameMatch"));
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
+
+        assertEquals("LOCAL_LOBBY", data.get("gameState"));
         assertTrue(players.keySet().isEmpty());
+    }
+
+    @Test
+    public void testCreateLocalLobbyDuringLocalLobby(){
+        Game game = new Game();
+        game.createLocalLobby();
+        String name = "Carlos";
+        game.addPlayer(name);
+        game.createLocalLobby();
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
+        assertFalse(players.keySet().isEmpty());
+    }
+
+    @Test
+    public void testCreateLocalLobbyInLocalMatch(){
+        Game game = new Game();
+        game.createLocalLobby();
+        String name = "Carlos";
+        game.addPlayer(name);
+        game.startLocalMatch();
+        game.createLocalLobby();
+        JSONObject data = game.getData();
+        assertEquals("LOCAL_MATCH", data.get("gameState"));
     }
 
     @Test
     public void testAddPlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         game.addPlayer(name);
-        JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
-        List<String> playerNames = new ArrayList<>(players.keySet());
-        JSONObject firstPlayerData = players.getJSONObject(playerNames.get(0));
 
-        assertTrue(playerNames.contains(name));
-        assertEquals(firstPlayerData.get("playerState"), "WAIT_MATCH");
-        assertNull(data.opt("message"));
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
+
+        assertTrue(players.keySet().contains(name));
     }
 
     @Test
     public void testAddAlreadyPresentPlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         game.addPlayer(name);
         game.addPlayer(name);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
-        List<String> playerNames = new ArrayList<>(players.keySet());
-        assertEquals(1, playerNames.size());
-        assertEquals("Player not added, a player with this name is already present", data.opt("message"));
-        data = game.getData();
-        assertNull(data.opt("message"));
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
+
+        assertEquals(1, players.keySet().size());
     }
 
     @Test
     public void testRemovePlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         String otherName = "Carlos";
         game.addPlayer(name);
         game.addPlayer(otherName);
+
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
+
         assertEquals(2, playerNames.size());
 
         game.removePlayer(name);
+
         data = game.getData();
-        players = data.getJSONObject("players");
+        players = data.getJSONObject("gameMatch").getJSONObject("players");
         playerNames = new ArrayList<>(players.keySet());
+
         assertEquals(1, playerNames.size());
         assertTrue(playerNames.contains(otherName));
         assertFalse(playerNames.contains(name));
@@ -91,22 +118,15 @@ public class GameTest {
     @Test
     public void testRenamePlayer(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String oldName = "Dario";
         String newName = "Carlos";
         game.addPlayer(oldName);
-
-        JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
-        List<String> playerNames = new ArrayList<>(players.keySet());
-
-        assertEquals(oldName, playerNames.get(0));
-
         game.renamePlayer(oldName, newName);
 
-        data = game.getData();
-        players = data.getJSONObject("players");
-        playerNames = new ArrayList<>(players.keySet());
+        JSONObject data = game.getData();
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
+        List<String> playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(newName, playerNames.get(0));
         assertEquals(1, playerNames.size());
@@ -117,7 +137,7 @@ public class GameTest {
     @Test
     public void testRenamePlayerWithAlreadyPresentName(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         String otherName = "Carlos";
         game.addPlayer(name);
@@ -126,64 +146,67 @@ public class GameTest {
         game.renamePlayer(name, otherName);
 
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject players = data.getJSONObject("gameMatch").getJSONObject("players");
         List<String> playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(name, playerNames.get(0));
         assertEquals(otherName, playerNames.get(1));
         assertEquals(2, playerNames.size());
-        assertEquals("Player name not changed, a player with this name is already present", data.opt("message"));
     }
 
     @Test
     public void testSetMatchSeed(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         JSONObject data = game.getData();
+        JSONObject matchData = data.getJSONObject("gameMatch");
 
-        long initialSeed = (long) data.get("seed");
+        long initialSeed = matchData.getLong("seed");
         long newSeed = initialSeed + 1;
         game.setMatchSeed(newSeed);
         data = game.getData();
+        matchData = data.getJSONObject("gameMatch");
 
-        assertNotEquals(initialSeed, data.get("seed"));
-        assertEquals(newSeed, data.get("seed"));
+        assertEquals(newSeed, matchData.getLong("seed"));
     }
 
     @Test
     public void testStartLocalMatch(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         game.addPlayer("Dario");
         game.startLocalMatch();
-        JSONObject data = game.getData();
-        assertEquals(data.get("gameState"), "LOCAL_MATCH");
+
+        assertEquals("LOCAL_MATCH", game.getData().get("gameState"));
     }
 
     @Test
     public void testBackToMainMenu(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
-        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
-        game.addPlayer(name);
-        game.setMatchSeed(11);
-        game.startLocalMatch();
+        try {
+            HexCoordinates coord = new HexCoordinates(0, 0, 0);
+            game.addPlayer(name);
+            game.setMatchSeed(11);
+            game.startLocalMatch();
 
-        for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-            game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
+            game.playerPlacesTileAt(name, coord);
         }
-        game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
+        catch (BadHexCoordinatesException ignored){
+        }
+
         game.backToTheMainMenu();
         JSONObject data = game.getData();
-        assertEquals(data.get("gameState"), "MAIN_MENU");
+        assertEquals("MAIN_MENU", data.get("gameState"));
+        assertNull(game.getData().opt("gameMatch"));
     }
 
     @Test
     public void testPlayerPlacesTileAt(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
         ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
 
@@ -197,34 +220,36 @@ public class GameTest {
         game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
 
         JSONObject data = game.getData();
-        assertEquals("Tilepool depleted", data.opt("message"));
-        JSONObject players = data.getJSONObject("players");
-        JSONObject player = players.getJSONObject(name);
-        JSONObject board = player.getJSONObject("playerBoard");
-        for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
-            JSONObject tile = board.getJSONObject(tilesAndCoord.coordinate.getX() + " " + tilesAndCoord.coordinate.getY() + " " + tilesAndCoord.coordinate.getZ());
-            assertEquals(tilesAndCoord.tile.getTop(), tile.get("top"));
-            assertEquals(tilesAndCoord.tile.getLeft(), tile.get("left"));
-            assertEquals(tilesAndCoord.tile.getRight(), tile.get("right"));
-        }
+        JSONObject matchData = data.getJSONObject("gameMatch");
+        assertEquals("FINISH", matchData.get("matchState"));
     }
 
     @Test
-    public void testBackToLocalSetup(){
+    public void testBackToLocalLobby(){
         Game game = new Game();
-        game.createLocalGame();
+        game.createLocalLobby();
         String name = "Dario";
-        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-        game.setMatchSeed(11);
-        game.addPlayer(name);
-        game.startLocalMatch();
-        game.playerPlacesTileAt(name, tilesAndCoords.get(0).coordinate);
-        game.backToLocalSetup();
+
+        try {
+            HexCoordinates coord = new HexCoordinates(0, 0, 0);
+            game.addPlayer(name);
+            game.setMatchSeed(11);
+            game.startLocalMatch();
+
+            game.playerPlacesTileAt(name, coord);
+        }
+        catch (BadHexCoordinatesException ignored){
+        }
+
+        game.backToLocalLobby();
+
         JSONObject data = game.getData();
-        JSONObject players = data.getJSONObject("players");
+        JSONObject matchData = data.getJSONObject("gameMatch");
+        JSONObject players = matchData.getJSONObject("players");
         JSONObject player = players.getJSONObject(name);
         JSONObject board = player.getJSONObject("playerBoard");
-        assertNull(board.opt(tilesAndCoords.get(1).coordinate.getX() + " " + tilesAndCoords.get(1).coordinate.getY() + " " + tilesAndCoords.get(1).coordinate.getZ()));
-        assertEquals(data.get("gameState"), "LOCAL_LOBBY");
+
+        assertTrue(board.isEmpty());
+        assertEquals("LOCAL_LOBBY", data.get("gameState"));
     }
 }

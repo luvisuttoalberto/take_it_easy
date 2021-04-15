@@ -1,9 +1,8 @@
 package takeiteasy.player;
 
+import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
-
-import java.util.Scanner;
 
 public class Player implements IPlayer{
 
@@ -29,9 +28,6 @@ public class Player implements IPlayer{
 
     @Override
     public String getName() { return Name; }
-
-    @Override
-    public IBoard getBoard() { return playerBoard; }
 
     @Override
     public void reset() {
@@ -81,21 +77,20 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public Integer computeScore() {
-        return playerBoard.computeScore();
+    public JSONObject getData(){
+        JSONObject data = new JSONObject();
+        data.put("playerState", playerState.name());
+        data.put("playerBoard", playerBoard.getData());
+        data.put("playerScore", playerBoard.computeScore());
+        return data;
     }
 
-    @Override
-    public Tile showTileFromBoardAtCoordinates(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
-        return playerBoard.getTile(coordinates);
-    }
-
-    //TODO: Remove?
-    private HexCoordinates getCoordinatesFromUser() throws BadHexCoordinatesException {
-        Scanner sc = new Scanner(System.in);
-        Integer index1 = sc.nextInt();
-        Integer index2 = sc.nextInt();
-        Integer index3 = sc.nextInt();
-        return new HexCoordinates(index1, index2, index3);
-    }
+//    //TODO: Remove?
+//    private HexCoordinates getCoordinatesFromUser() throws BadHexCoordinatesException {
+//        Scanner sc = new Scanner(System.in);
+//        Integer index1 = sc.nextInt();
+//        Integer index2 = sc.nextInt();
+//        Integer index3 = sc.nextInt();
+//        return new HexCoordinates(index1, index2, index3);
+//    }
 }

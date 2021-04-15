@@ -62,7 +62,6 @@ public class TilePool implements ITilePool {
             }
         }
         catch (IllegalArgumentException ignored){
-
         }
         return tileSet;
     }

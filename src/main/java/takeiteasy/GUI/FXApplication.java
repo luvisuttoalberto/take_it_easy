@@ -70,9 +70,10 @@ public class FXApplication extends Application implements IViewUpdater{
         String fxmlPath="";
         //TODO:do we want scene titles/sizes?
         switch (iocontext){
-            case MainMenu -> fxmlPath = "/fxml/main_menu.fxml";
-            case LocalLobby -> fxmlPath = "/fxml/local_lobby.fxml";
-            case LocalMatch -> fxmlPath = "/fxml/local_match.fxml";
+            //TODO: change : back to -> if this doesn't work BEFORE MERGING!!!!!!
+            case MainMenu : fxmlPath = "/fxml/main_menu.fxml";
+            case LocalLobby : fxmlPath = "/fxml/local_lobby.fxml";
+            case LocalMatch : fxmlPath = "/fxml/local_match.fxml";
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent node = null;

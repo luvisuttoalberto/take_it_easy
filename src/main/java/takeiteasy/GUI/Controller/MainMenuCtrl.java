@@ -24,7 +24,7 @@ public class MainMenuCtrl implements IViewController{
         //TODO:link fxml objs actions to callbacks
     }
     public void onStartLocalBtnRelease() {
-        game.createLocalGame();
+        game.createLocalLobby();
         vu.updateView();
     }
     public void onExitBtnRelease() {

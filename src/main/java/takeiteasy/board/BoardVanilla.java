@@ -1,13 +1,13 @@
 package takeiteasy.board;
 
+import org.json.JSONObject;
 import takeiteasy.tilepool.Tile;
+
+import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class BoardVanilla implements IBoard {
 
     private Tile[][] tileStorage = new Tile[5][5];
-
-    public BoardVanilla() {
-    }
 
     private Boolean areCoordinatesInRange(HexCoordinates coordinates){
         return (-3<coordinates.getX() && coordinates.getX()<3) &&
@@ -51,32 +51,33 @@ public class BoardVanilla implements IBoard {
 
     private Integer getTileNumberAtOrientation(Tile tile, RowOrientation orientation){
         switch (orientation) {
-            case LEFT -> {
+            case LEFT :
                 return tile.getLeft();
-            }
-            case RIGHT -> {
+
+            case RIGHT :
                 return tile.getRight();
-            }
-            default ->{
+
+            default :
                 return tile.getTop();
-            }
+
         }
     }
 
     private Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
         switch (counterRotation){
-            case LEFT -> {
+            case LEFT :
                 return this.getTile(coordinates.rotateRight());
-            }
-            case RIGHT -> {
+
+            case RIGHT :
                 return this.getTile(coordinates.rotateLeft());
-            }
-            default -> {
+
+            default :
                 return this.getTile(coordinates);
-            }
+
         }
     }
 
+    //TODO: remove comments
     private Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
 
         // Get coordinates of first tile in the row
@@ -125,35 +126,54 @@ public class BoardVanilla implements IBoard {
         return score;
     }
 
-    private String stringifyTileContentAtStorageCoordinates(int i, int j){
-        Tile res = tileStorage[i][j];
-        if(res == null){
-            return ".....";
-        }
-        return res.toString();
-    }
-
-    public void printBoard(){
-        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,0) + "|");
-        for(int i = 0; i < 4; ++i){
-            System.out.println("      |" + stringifyTileContentAtStorageCoordinates(1,i+1) + "|     |" +
-                                           stringifyTileContentAtStorageCoordinates(3,i) + "|");
-            if(i < 3){
-                System.out.println("|" + stringifyTileContentAtStorageCoordinates(0,i+2) + "|     |" +
-                                         stringifyTileContentAtStorageCoordinates(2,i+1) + "|     |" +
-                                         stringifyTileContentAtStorageCoordinates(4,i) + "|");
+    @Override
+    public JSONObject getData() {
+        JSONObject boardData = new JSONObject();
+        HexCoordinates[] coords = generateCoordinateStandard();
+        for(HexCoordinates c : coords){
+            try{
+                Tile tile = getTile(c);
+                if(tile != null){
+                    boardData.put(c.toString(), tile.getData());
+                }
+            }
+            catch (OutOfBoardCoordinatesException ignored){
             }
         }
-        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,4) + "|");
+        return boardData;
     }
 
-    //DEBUG
-    public void printMatrixBoard(){
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
-                System.out.print(stringifyTileContentAtStorageCoordinates(i,j));
-            }
-            System.out.print("\n");
-        }
-    }
+    //TODO: remove? Not during MERGE
+//    private String stringifyTileContentAtStorageCoordinates(int i, int j){
+//        Tile res = tileStorage[i][j];
+//        if(res == null){
+//            return ".....";
+//        }
+//        return res.toString();
+//    }
+
+    //TODO: remove?
+//    public void printBoard(){
+//        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,0) + "|");
+//        for(int i = 0; i < 4; ++i){
+//            System.out.println("      |" + stringifyTileContentAtStorageCoordinates(1,i+1) + "|     |" +
+//                                           stringifyTileContentAtStorageCoordinates(3,i) + "|");
+//            if(i < 3){
+//                System.out.println("|" + stringifyTileContentAtStorageCoordinates(0,i+2) + "|     |" +
+//                                         stringifyTileContentAtStorageCoordinates(2,i+1) + "|     |" +
+//                                         stringifyTileContentAtStorageCoordinates(4,i) + "|");
+//            }
+//        }
+//        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,4) + "|");
+//    }
+
+    //TODO:DEBUG
+//    public void printMatrixBoard(){
+//        for(int i = 0; i < 5; i++){
+//            for(int j = 0; j < 5; j++){
+//                System.out.print(stringifyTileContentAtStorageCoordinates(i,j));
+//            }
+//            System.out.print("\n");
+//        }
+//    }
 }

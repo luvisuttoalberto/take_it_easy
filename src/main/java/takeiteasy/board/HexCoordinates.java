@@ -44,4 +44,9 @@ public class HexCoordinates {
 
         return this;
     }
+
+    @Override
+    public String toString() {
+        return ""+x+" "+y+" "+z;
+    }
 }

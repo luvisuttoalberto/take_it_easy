@@ -4,19 +4,17 @@ import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
-import takeiteasy.tilepool.Tile;
-
-import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class Game implements IGame{
-    private GameMatch gameMatch;
-    private String message = "";
+    private IGameMatch gameMatch;
     private State state = State.MAIN_MENU;
 
     @Override
-    public void createLocalGame() {
-        gameMatch = new GameMatch();
-        state = State.LOCAL_LOBBY;
+    public void createLocalLobby() {
+        if(state == State.MAIN_MENU){
+            gameMatch = new GameMatch();
+            state = State.LOCAL_LOBBY;
+        }
     }
 
     @Override
@@ -24,10 +22,7 @@ public class Game implements IGame{
         try {
             gameMatch.addPlayer(name);
         }
-        catch (PlayersWithSameNameNotAllowedException e) {
-            message = "Player not added, a player with this name is already present";
-        }
-        catch (InvalidMatchStateException ignored){
+        catch (PlayersWithSameNameNotAllowedException | InvalidMatchStateException ignored){
         }
     }
 
@@ -45,10 +40,7 @@ public class Game implements IGame{
         try{
             gameMatch.setPlayerName(oldName, newName);
         }
-        catch(PlayerNameNotFoundException | InvalidMatchStateException ignored){
-        }
-        catch(PlayersWithSameNameNotAllowedException e){
-            message = "Player name not changed, a player with this name is already present";
+        catch(PlayerNameNotFoundException | InvalidMatchStateException | PlayersWithSameNameNotAllowedException ignored){
         }
     }
 
@@ -73,12 +65,8 @@ public class Game implements IGame{
 
     @Override
     public void backToTheMainMenu() {
-        try {
-            gameMatch.endMatch();
-            state = State.MAIN_MENU;
-        }
-        catch(PlayersNotReadyToEndMatchException | InvalidMatchStateException | TilePoolNotDepletedException ignored) {
-        }
+        state = State.MAIN_MENU;
+        gameMatch = null;
     }
 
     @Override
@@ -92,12 +80,12 @@ public class Game implements IGame{
                 NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){
-            message = "Tilepool depleted";
+            endMatch();
         }
     }
 
     @Override
-    public void backToLocalSetup() {
+    public void backToLocalLobby() {
         try {
             gameMatch.backToSetup();
             state = State.LOCAL_LOBBY;
@@ -106,60 +94,25 @@ public class Game implements IGame{
         }
     }
 
+    private void endMatch() {
+        try{
+            gameMatch.endMatch();
+        }
+        catch (PlayersNotReadyToEndMatchException | InvalidPlayerStateException | TilePoolNotDepletedException | InvalidMatchStateException ignored) {
+        }
+    }
+
     @Override
     public JSONObject getData() {
         JSONObject data = new JSONObject();
+
         data.put("gameState", state.name());
-        if(state == State.MAIN_MENU){
-             return data;
-        }
-        if(!message.isBlank()){
-            data.put("message", message);
-            message = ""; //TODO: for network implementation: this should be adapted, at least in the "Tilepool depleted" case
-        }
-        JSONObject playersData = new JSONObject();
-        JSONObject playerData = new JSONObject();
-        for (String playerName : gameMatch.getPlayerNames()) {
-            try {
-                String playerState = gameMatch.getPlayerStateFromPlayerName(playerName).name();
-                playerData.put("playerState", playerState);
-            } catch (PlayerNameNotFoundException ignored) {
-            }
-            JSONObject boardData = new JSONObject();
-            HexCoordinates[] coords = generateCoordinateStandard();
-            try {
-                IBoard playerBoard = gameMatch.getBoardFromPlayerName(playerName);
-                for (HexCoordinates c : coords) {
-                    Tile tile = playerBoard.getTile(c);
-                    if (tile != null) {
-                        JSONObject tileData = new JSONObject();
-                        tileData.put("top", tile.getTop());
-                        tileData.put("left", tile.getLeft());
-                        tileData.put("right", tile.getRight());
-                        boardData.put(c.getX() + " " + c.getY() + " " + c.getZ(), tileData);
-                    }
-                }
-            } catch (PlayerNameNotFoundException | OutOfBoardCoordinatesException ignored) {
-            }
-            playerData.put("playerBoard", boardData);
-            playersData.put(playerName, playerData);
-        }
-        data.put("players", playersData);
 
-        JSONObject currentTileData = new JSONObject();
-        Tile currentTile = gameMatch.getCurrentTile();
-        currentTileData.put("top", currentTile.getTop());
-        currentTileData.put("left", currentTile.getLeft());
-        currentTileData.put("right", currentTile.getRight());
-        data.put("currentTile", currentTileData);
+        if(gameMatch != null){
+            data.put("gameMatch", gameMatch.getData());
+        }
 
-        data.put("seed", gameMatch.getSeed());
-        try{
-            JSONObject scoresData = new JSONObject(gameMatch.computeScore());
-            data.put("scores", scoresData);
-        }
-        catch (InvalidMatchStateException ignored){
-        }
         return data;
     }
+
 }

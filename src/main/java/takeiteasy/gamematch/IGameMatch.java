@@ -1,11 +1,8 @@
 package takeiteasy.gamematch;
 
+import org.json.JSONObject;
 import takeiteasy.board.*;
-import takeiteasy.player.IPlayer;
 import takeiteasy.player.InvalidPlayerStateException;
-import takeiteasy.tilepool.Tile;
-
-import java.util.Dictionary;
 
 public interface IGameMatch {
 
@@ -15,14 +12,6 @@ public interface IGameMatch {
         PAUSE,
         FINISH
     }
-    State getState();
-
-    Integer getCurrentTileIndex();
-    String[] getPlayerNames();
-    Tile getCurrentTile();
-    long getSeed();
-    IBoard getBoardFromPlayerName(String playerName) throws PlayerNameNotFoundException;
-    IPlayer.State getPlayerStateFromPlayerName(String playerName) throws PlayerNameNotFoundException;
 
     void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException;
 
@@ -37,8 +26,8 @@ public interface IGameMatch {
 
     void backToSetup() throws InvalidMatchStateException;
 
-    void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException;
+    void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException;
 
-    Dictionary<String,Integer> computeScore() throws InvalidMatchStateException;
+    JSONObject getData();
 
 }
