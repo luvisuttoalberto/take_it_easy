@@ -42,18 +42,15 @@ public class PlayerTest {
         try {
             player.startMatch();
             Tile expectedTile = new Tile(1, 2, 3);
+            JSONObject expectedTileData = expectedTile.getData();
             HexCoordinates coords = new HexCoordinates(0,0,0);
             assertDoesNotThrow(()->player.placeTile(expectedTile, coords));
 
             JSONObject data = player.getData();
             JSONObject boardData = data.getJSONObject("playerBoard");
             JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
-            Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
-                                            insertedTileData.getInt("left"),
-                                            insertedTileData.getInt("right")
-                                        );
             assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
-            assertEquals(expectedTile, insertedTile);
+            JSONAssert.assertEquals(expectedTileData, insertedTileData, true);
         }
         catch (Exception ignored){
         }
