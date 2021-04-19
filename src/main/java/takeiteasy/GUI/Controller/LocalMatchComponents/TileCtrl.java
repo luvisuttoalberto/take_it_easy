@@ -1,6 +1,5 @@
-package takeiteasy.GUI.Controller;
+package takeiteasy.GUI.Controller.LocalMatchComponents;
 
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
@@ -15,15 +14,24 @@ public class TileCtrl extends Pane {
 //        hitBox.setOnMouseEntered();
         buildContent();
     }
+
+    //TODO: test
+    public void setValues(Integer top, Integer left, Integer right){
+        text_top.setText(top.toString());
+        text_left.setText(left.toString());
+        text_right.setText(right.toString());
+    }
+
     void buildContent(){
         bg = new Polygon();
 
-        //TODO: determine units
+        //TODO: determine units. v = h*sqrt(3) ~ h*1.732
         double hunit=5, vunit=5;
-        //2 .5.4.
-        //1 6...3
-        //0 .1.2.
-        //  01234
+        //+1 .6.5.
+        // 0 1...4
+        //-1 .2.3.
+        //   21012
+        //   --.++
 
         bg.getPoints().setAll(
                 -hunit*2,0.0,
@@ -50,7 +58,7 @@ public class TileCtrl extends Pane {
         text_left = new Text();
         text_right = new Text();
 
-        //TODO: init to empty
+        //TODO: init to empty, position
         text_top.setText("T");
         text_left.setText("L");
         text_right.setText("R");

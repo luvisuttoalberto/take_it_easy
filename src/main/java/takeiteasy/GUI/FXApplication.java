@@ -21,7 +21,7 @@ public class FXApplication extends Application implements IViewUpdater{
 
     private IGame game;
     private Stage stage;
-    private IViewController ctrl;
+    private IViewController currentViewCtrl;
     private IOContext currentContext = null;
 
     @Override
@@ -58,10 +58,13 @@ public class FXApplication extends Application implements IViewUpdater{
             return;
         }
 
+        // Load new scene if it changed
         if (newContext != currentContext){
             loadScene(newContext);
         }
-        ctrl.refreshView(json);
+
+        // refresh current scene in any case
+        currentViewCtrl.refreshView(json);
     }
 
 
@@ -87,9 +90,9 @@ public class FXApplication extends Application implements IViewUpdater{
 
         Scene scene = new Scene(node, 600, 400);
 
-        ctrl = loader.getController();
-        ctrl.injectGame(game);
-        ctrl.injectViewUpdater(this);
+        currentViewCtrl = loader.getController();
+        currentViewCtrl.injectGame(game);
+        currentViewCtrl.injectViewUpdater(this);
 
         currentContext = iocontext;
 

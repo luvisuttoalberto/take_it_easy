@@ -1,4 +1,4 @@
-package takeiteasy.GUI.Controller;
+package takeiteasy.GUI.Controller.LocalMatchComponents;
 
 import javafx.scene.layout.Pane;
 import org.json.JSONObject;
@@ -6,7 +6,7 @@ import takeiteasy.board.HexCoordinates;
 
 public class BoardCtrl extends Pane {
 
-    private HexCoordinates focusedCoordinates = null;
+    HexCoordinates focusedCoordinates = null;
 
     public HexCoordinates getFocusedCoordinates(){
         return focusedCoordinates;
