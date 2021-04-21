@@ -1,12 +1,14 @@
 package takeiteasy.GUI.Controller.LocalMatchComponents;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
+//TODO: see if this needs to be initializable as the localmatchctrl
+public class TileCtrl extends AnchorPane {
 
-public class TileCtrl extends Pane {
-
-    Polygon hitBox, bg;
+    public Polygon hitBox;
+    Polygon bg;
     Text text_top, text_left, text_right;
 
     public TileCtrl() {
@@ -26,7 +28,7 @@ public class TileCtrl extends Pane {
         bg = new Polygon();
 
         //TODO: determine units. v = h*sqrt(3) ~ h*1.732
-        double hunit=5, vunit=5;
+        double hunit=20, vunit=34;
         //+1 .6.5.
         // 0 1...4
         //-1 .2.3.
@@ -42,6 +44,8 @@ public class TileCtrl extends Pane {
                 -hunit,vunit
         );
 
+        bg.setFill(Color.YELLOW);
+
         // hitbox is 1px inset wrt bg
         hitBox = new Polygon();
         hitBox.getPoints().setAll(
@@ -52,7 +56,7 @@ public class TileCtrl extends Pane {
                 hunit-1,vunit-1,
                 -hunit+1,vunit-1
         );
-        hitBox.setVisible(false);
+        hitBox.setFill(Color.TRANSPARENT);
 
         text_top = new Text();
         text_left = new Text();
@@ -64,6 +68,23 @@ public class TileCtrl extends Pane {
         text_right.setText("R");
 
         this.getChildren().addAll(bg,text_top,text_left,text_right, hitBox);
+
+        //TODO: fix these magic numbers
+        setTopAnchor(text_top, -vunit*0.9);
+        setLeftAnchor(text_top, -3.0);
+        setTopAnchor(text_left, vunit*0.2);
+        setLeftAnchor(text_left, -hunit*1.2);
+        setTopAnchor(text_right, vunit*0.2);
+        setLeftAnchor(text_right, hunit*0.9);
     }
 
+    public void unfocus() {
+        bg.setFill(Color.YELLOW);
+        //TODO: defocus graphical
+    }
+
+    public void focus() {
+        bg.setFill(Color.RED);
+        //TODO: focus graphical
+    }
 }

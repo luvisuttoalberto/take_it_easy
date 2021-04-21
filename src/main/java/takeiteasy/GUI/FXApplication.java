@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 import takeiteasy.GUI.Controller.IViewController;
 import takeiteasy.game.Game;
 import takeiteasy.game.IGame;
@@ -29,6 +30,7 @@ public class FXApplication extends Application implements IViewUpdater{
 
         // Initialize game
         game = new Game();
+        directlyToLocalMatch(game);
         //TODO: Link game to networking?
 
         stage = s;
@@ -38,11 +40,11 @@ public class FXApplication extends Application implements IViewUpdater{
 
     @Override
     public void updateView(){
-        var json = game.getData();
+        JSONObject gameData = game.getData();
 
         // take context from json
         IOContext newContext = null;
-        String gs = json.getString("gameState");
+        String gs = gameData.getString("gameState");
         if(gs == IGame.State.MAIN_MENU.name()){
             newContext = IOContext.MainMenu;
         }
@@ -64,7 +66,7 @@ public class FXApplication extends Application implements IViewUpdater{
         }
 
         // refresh current scene in any case
-        currentViewCtrl.refreshView(json);
+        currentViewCtrl.refreshView(gameData);
     }
 
 
@@ -88,7 +90,7 @@ public class FXApplication extends Application implements IViewUpdater{
             //TODO: is this right?
         }
 
-        Scene scene = new Scene(node, 600, 400);
+        Scene scene = new Scene(node);
 
         currentViewCtrl = loader.getController();
         currentViewCtrl.injectGame(game);
@@ -99,6 +101,12 @@ public class FXApplication extends Application implements IViewUpdater{
         stage.setTitle("Take it Easy");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void directlyToLocalMatch(IGame game){
+        game.createLocalLobby();
+        game.addPlayer("Dario");
+        game.startLocalMatch();
     }
 
 }
