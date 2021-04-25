@@ -106,6 +106,7 @@ public class FXApplication extends Application implements IViewUpdater{
     private void directlyToLocalMatch(IGame game){
         game.createLocalLobby();
         game.addPlayer("Dario");
+        game.addPlayer("Carlos");
         game.startLocalMatch();
     }
 

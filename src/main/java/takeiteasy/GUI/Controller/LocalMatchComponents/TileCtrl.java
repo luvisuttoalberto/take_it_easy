@@ -4,6 +4,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
+import org.json.JSONObject;
+
 //TODO: see if this needs to be initializable as the localmatchctrl
 public class TileCtrl extends AnchorPane {
 
@@ -17,11 +19,28 @@ public class TileCtrl extends AnchorPane {
         buildContent();
     }
 
-    //TODO: test
-    public void setValues(Integer top, Integer left, Integer right){
+    //TODO: is private ok?
+    void setValues(Integer top, Integer left, Integer right){
         text_top.setText(top.toString());
         text_left.setText(left.toString());
         text_right.setText(right.toString());
+    }
+
+    public void setPlacedGraphics(Integer top, Integer left, Integer right){
+        bg.setFill(Color.AQUA);
+        setValues(top, left, right);
+    }
+
+    public void setFocusedGraphics(Integer top, Integer left, Integer right) {
+        bg.setFill(Color.RED);
+        setValues(top, left, right);
+    }
+
+    public void resetGraphics(){
+        bg.setFill(Color.WHITE);
+        text_top.setText("");
+        text_left.setText("");
+        text_right.setText("");
     }
 
     void buildContent(){
@@ -44,7 +63,8 @@ public class TileCtrl extends AnchorPane {
                 -hunit,vunit
         );
 
-        bg.setFill(Color.YELLOW);
+        bg.setFill(Color.WHITE);
+        bg.setStroke(Color.BLACK);
 
         // hitbox is 1px inset wrt bg
         hitBox = new Polygon();
@@ -63,9 +83,7 @@ public class TileCtrl extends AnchorPane {
         text_right = new Text();
 
         //TODO: init to empty, position
-        text_top.setText("T");
-        text_left.setText("L");
-        text_right.setText("R");
+        resetGraphics();
 
         this.getChildren().addAll(bg,text_top,text_left,text_right, hitBox);
 
@@ -76,15 +94,5 @@ public class TileCtrl extends AnchorPane {
         setLeftAnchor(text_left, -hunit*1.2);
         setTopAnchor(text_right, vunit*0.2);
         setLeftAnchor(text_right, hunit*0.9);
-    }
-
-    public void unfocus() {
-        bg.setFill(Color.YELLOW);
-        //TODO: defocus graphical
-    }
-
-    public void focus() {
-        bg.setFill(Color.RED);
-        //TODO: focus graphical
     }
 }
