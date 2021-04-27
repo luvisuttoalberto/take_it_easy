@@ -3,10 +3,13 @@ package takeiteasy.GUI.Controller;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.json.JSONObject;
+import takeiteasy.GUI.Controller.LocalMatchComponents.PlayerListEntryCtrl;
 import takeiteasy.GUI.Controller.LocalMatchComponents.TileCtrl;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.board.HexCoordinates;
@@ -22,20 +25,27 @@ import static takeiteasy.utility.Utility.generateCoordinateStandard;
 public class LocalMatchCtrl extends GridPane implements IViewController, Initializable {
 
     public Pane boardPane;
+
     public Button btn_placeTile;
+
     public Text text_playerName;
     public Text text_playerStatus;
-    public ListView playersPane;
     public Text text_matchStatus;
+
+    public ScrollPane playersPane;
+    public VBox playersList;
+
     IGame game;
     IViewUpdater vu;
     HexCoordinates focusedCoordinates;
     String focusedPlayerName;
     Map<HexCoordinates, TileCtrl> tiles;
+    Map<String, PlayerListEntryCtrl> players;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         buildBoard();
+        //buildPlayersList();
         //TODO: maybe call here linkUI()
     }
 
@@ -43,6 +53,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         tiles = new HashMap<>();
 
+        //TODO: fix positionings with formula
         int[] layout_X = {  52,52,52,
                             111,111,111,111,
                             170,170,170,170,170,
@@ -75,6 +86,34 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //TODO: maybe defocus if click outside the board, build specific hitbox
     }
 
+    void buildPlayersList(JSONObject gameData){
+        players = new HashMap<>();
+
+        JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
+        for (String playerName : playersData.keySet()){
+
+            PlayerListEntryCtrl pe = new PlayerListEntryCtrl(playerName);
+            players.put(playerName,pe);
+            pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
+            pe.btn_kick.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
+            playersList.getChildren().add(pe);
+        }
+    }
+
+    void refreshPlayersList(JSONObject gameData){
+        JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
+        for (var playerName : players.keySet()){
+            JSONObject playerData = playersData.getJSONObject(playerName);
+            var player = players.get(playerName);
+
+            player.setValues(playerData.getString("playerState"));
+
+            player.btn_focus.setDisable(playerName == focusedPlayerName);
+            player.btn_kick.setDisable(players.size()<2);
+
+        }
+    };
+
     void focusCoordinates(HexCoordinates coords, JSONObject currentTileData){
 
         //Do nothing if already focused on this tile
@@ -103,8 +142,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             );
         }
 
-        //TODO: activate placing button, probably call refreshview()
-//        refreshView(game.getData());
         btn_placeTile.setDisable(false);
     }
 
@@ -156,6 +193,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshView(game.getData());
     }
 
+    void onKickPlayerRelease(String playerName){
+        //TODO: pop-up or other double check
+        game.removePlayer(playerName);
+
+        playersList.getChildren().remove(players.get(playerName));
+        players.remove(playerName);
+        focusedPlayerName = null;
+
+        refreshView(game.getData());
+    }
+
     void focusNextPlacingPlayer(JSONObject gameData){
 
         JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
@@ -193,14 +241,23 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     @Override
     public void refreshView(JSONObject gameData) {
 
+        //TODO: method for first refresh instead of these ifs?
+
         if(focusedPlayerName == null){
             focusNextPlacingPlayer(gameData);
+        }
+
+        if(players == null){
+            //DEBUG
+            System.out.println("Initializing players list!");
+            buildPlayersList(gameData);
         }
 
         //Todo: remove
         System.out.println(gameData);
 
         refreshBoard(gameData);
+        refreshPlayersList(gameData);
 
         JSONObject focusedPlayerData = gameData.getJSONObject("gameMatch").getJSONObject("players").getJSONObject(focusedPlayerName);
         refreshPlacingButton(focusedPlayerData);
@@ -230,7 +287,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                     placingPlayers++;
                 }
             }
-            matchStateText = placingPlayers + " players out of " + totalNumberOfPlayers + " are still placing.";
+            matchStateText = placingPlayers + " player"+
+                    (placingPlayers>1?"s":"") +
+                    " out of " + totalNumberOfPlayers + " are still placing.";
         }
         else{
             int bestScore = 0;

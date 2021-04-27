@@ -105,8 +105,20 @@ public class FXApplication extends Application implements IViewUpdater{
 
     private void directlyToLocalMatch(IGame game){
         game.createLocalLobby();
+
+        //TODO: check player ordering when generating JSON
         game.addPlayer("Dario");
         game.addPlayer("Carlos");
+        game.addPlayer("Dario2");
+        game.addPlayer("Carlos2");
+        game.addPlayer("Dario3");
+        game.addPlayer("Carlos3");
+        game.addPlayer("Dario4");
+        game.addPlayer("Carlos4");
+        game.addPlayer("Dario5");
+        game.addPlayer("Carlos5");
+        game.addPlayer("Dario6");
+        game.addPlayer("Carlos6");
         game.startLocalMatch();
     }
 
