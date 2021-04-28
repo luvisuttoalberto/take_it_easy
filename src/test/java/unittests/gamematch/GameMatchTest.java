@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.HexCoordinates;
+import takeiteasy.game.Game;
 import takeiteasy.gamematch.*;
 import takeiteasy.tilepool.*;
 import unittests.utility.*;
@@ -31,12 +32,9 @@ public class GameMatchTest {
     public void testAddPlayer(){
         GameMatch gm = new GameMatch();
         String plyName = "Dario";
-        try {
-            gm.addPlayer(plyName);
-        }
-        catch (Exception e){
-            fail("player add failed");
-        }
+
+        assertDoesNotThrow(() -> gm.addPlayer(plyName));
+
         JSONObject data = gm.getData();
         assertEquals("SETUP", data.get("matchState"));
         assertTrue(data.getJSONObject("players").keySet().contains(plyName));
@@ -48,271 +46,33 @@ public class GameMatchTest {
         String plyName = "Dario";
         try {
             gm.addPlayer(plyName);
-            gm.addPlayer(plyName);
-            fail();
         }
-        catch (PlayersWithSameNameNotAllowedException ignored){
-            // test passed
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
-    }
 
-    @Test
-    public void testAddPlayerDuringPlay(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        String otherName = "Carlos";
-        try{
-            gm.addPlayer(name);
-            gm.startMatch();
-            gm.addPlayer(otherName);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            //test passed
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-
-    @Test
-    public void testAddPlayerDuringFinish(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        String otherName = "Carlos";
-        long tilePoolSeed = 11;
-
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            gm.addPlayer(otherName);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetPlayerNameDuringPlay(){
-        GameMatch gm = new GameMatch();
-        String oldName = "Dario";
-        String newName = "Carlos";
-        try{
-            gm.addPlayer(oldName);
-            gm.startMatch();
-            gm.setPlayerName(oldName, newName);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            //test passed
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetPlayerNameDuringFinish(){
-        GameMatch gm = new GameMatch();
-        String oldName = "Dario";
-        String newName = "Carlos";
-        long tilePoolSeed = 11;
-
-        try{
-            SimulateCompleteGameMatch(gm, oldName, tilePoolSeed);
-            gm.setPlayerName(oldName, newName);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testRemovePlayer(){
-        GameMatch gm = new GameMatch();
-        String plyName = "Dario";
-        String otherPlyName = "Carlos";
-        try {
-            gm.addPlayer(plyName);
-            gm.addPlayer(otherPlyName);
-            gm.removePlayer(plyName);
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testRemoveAbsentPlayer(){
-        GameMatch gm = new GameMatch();
-        String plyName = "Dario";
-        try {
-            gm.removePlayer(plyName);
-            fail();
-        }
-        catch (PlayerNameNotFoundException ignored){
-            // test pass
-        }
-        catch(Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testRemoveLastPlayer(){
-        GameMatch gm = new GameMatch();
-        String plyName = "Dario";
-        try {
-            gm.addPlayer(plyName);
-            gm.removePlayer(plyName);
-            fail();
-        }
-        catch (NotEnoughPlayersException ignored){
-            //test passed
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetPlayerName(){
-        GameMatch gm = new GameMatch();
-        String oldName = "Dario";
-        String newName = "Carlos";
-        try{
-            gm.addPlayer(oldName);
-            gm.setPlayerName(oldName, newName);
-            List<String> playerNames = new ArrayList<>(gm.getData().getJSONObject("players").keySet());
-            assertTrue(playerNames.contains(newName));
-            assertFalse(playerNames.contains(oldName));
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetAlreadyPresentPlayerName(){
-        GameMatch gm = new GameMatch();
-        String oldName = "Dario";
-        String newName = "Carlos";
-        try{
-            gm.addPlayer(oldName);
-            gm.addPlayer(newName);
-            gm.setPlayerName(newName, oldName);
-            fail();
-        } catch (PlayersWithSameNameNotAllowedException ignored){
-            // test passed
-        }catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetAbsentPlayerName(){
-        GameMatch gm = new GameMatch();
-        String oldName = "Dario";
-        String newName = "Carlos";
-        try{
-            gm.setPlayerName(oldName, newName);
-            fail();
-        }
-        catch (PlayerNameNotFoundException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetSeedDuringPlay(){
-        GameMatch gm = new GameMatch();
-        long seed = 11;
-        try {
-            gm.addPlayer("Dario");
-            gm.startMatch();
-            gm.setTilePoolSeed(seed);
-            fail();
-        }
-        catch(InvalidMatchStateException ignored){
-            //test passed
-        }
-        catch(Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testSetSeedDuringFinish(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        long tilePoolSeed = 11;
-
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            gm.setTilePoolSeed(tilePoolSeed);
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(PlayersWithSameNameNotAllowedException.class, () -> gm.addPlayer(plyName));
     }
 
     @Test
     public void testSetTilePoolSeed(){
         GameMatch gm = new GameMatch();
         long tilePoolSeed = 11;
-        try {
-            gm.setTilePoolSeed(tilePoolSeed);
-            assertEquals(tilePoolSeed, gm.getData().get("seed"));
-        }
-        catch(Exception ignored){
-        }
+
+        assertDoesNotThrow(() -> gm.setTilePoolSeed(tilePoolSeed));
+        assertEquals(tilePoolSeed, gm.getData().get("seed"));
     }
 
     @Test
-    public void testStartMatchWithoutPlayers(){
-        GameMatch gm = new GameMatch();
-        try{
-            gm.startMatch();
-            fail();
-        }
-        catch (NotEnoughPlayersException ignored){
-            assertEquals("SETUP", gm.getData().get("matchState"));
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testStartMatchWithPlayers(){
+    public void testStartMatch(){
         GameMatch gm = new GameMatch();
         String playerName = "Dario";
         try{
             gm.addPlayer(playerName);
-            gm.startMatch();
-            assertEquals("PLAY", gm.getData().get("matchState"));
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
+        assertDoesNotThrow(gm::startMatch);
+        assertEquals("PLAY", gm.getData().get("matchState"));
     }
 
     @Test
@@ -323,7 +83,8 @@ public class GameMatchTest {
             gm.addPlayer(name);
             gm.startMatch();
             HexCoordinates coords = new HexCoordinates(0,0,0);
-            gm.positionCurrentTileOnPlayerBoard(name, coords);
+
+            assertDoesNotThrow( () -> gm.positionCurrentTileOnPlayerBoard(name, coords));
 
             JSONObject data = gm.getData();
             JSONObject playersData = data.getJSONObject("players");
@@ -335,31 +96,213 @@ public class GameMatchTest {
 
             JSONAssert.assertEquals(currentTileData, insertedTileData, true);
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
     @Test
-    public void testDealNextTileNoPlayers(){
+    public void testDealNextTile(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        long tilePoolSeed = 11;
+        try{
+            gm.addPlayer(name);
+            gm.setTilePoolSeed(tilePoolSeed);
+            gm.startMatch();
+            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(0,0,0));
+        }
+        catch (Exception ignored){
+        }
+
+        assertDoesNotThrow(gm::dealNextTile);
+    }
+
+    @Test
+    public void testEndMatch(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        long tilePoolSeed = 11;
+
+        assertDoesNotThrow(() -> SimulateCompleteGameMatch(gm, name, tilePoolSeed));
+        assertEquals("FINISH", gm.getData().get("matchState"));
+    }
+
+    @Test
+    public void testAddPlayerDuringPlay(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
         String otherName = "Carlos";
         try{
             gm.addPlayer(name);
+            gm.startMatch();
+        }
+        catch (Exception ignored){
+        }
+        assertThrows(InvalidMatchStateException.class, () -> gm.addPlayer(otherName));
+    }
+
+    @Test
+    public void testAddPlayerDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Carlos";
+        long tilePoolSeed = 11;
+
+        SimulateCompleteGameMatch(gm, name, tilePoolSeed);
+        assertThrows(InvalidMatchStateException.class, () -> gm.addPlayer(otherName));
+    }
+
+    @Test
+    public void testSetPlayerName(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        try{
+            gm.addPlayer(oldName);
+        }
+        catch (Exception ignored){
+        }
+
+        assertDoesNotThrow( () -> gm.setPlayerName(oldName, newName));
+
+        List<String> playerNames = new ArrayList<>(gm.getData().getJSONObject("players").keySet());
+        assertTrue(playerNames.contains(newName));
+        assertFalse(playerNames.contains(oldName));
+    }
+
+    @Test
+    public void testSetPlayerNameDuringPlay(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        try{
+            gm.addPlayer(oldName);
+            gm.startMatch();
+        }
+        catch (Exception ignored){
+        }
+        assertThrows(InvalidMatchStateException.class, () -> gm.setPlayerName(oldName, newName));
+    }
+
+    @Test
+    public void testSetPlayerNameDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        long tilePoolSeed = 11;
+
+        SimulateCompleteGameMatch(gm, oldName, tilePoolSeed);
+        assertThrows(InvalidMatchStateException.class, () -> gm.setPlayerName(oldName, newName));
+    }
+
+    @Test
+    public void testRemovePlayer(){
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+        String otherPlyName = "Carlos";
+        try {
+            gm.addPlayer(plyName);
+            gm.addPlayer(otherPlyName);
+        }
+        catch (Exception ignored){
+        }
+        assertDoesNotThrow( () -> gm.removePlayer(plyName));
+
+        JSONObject data = gm.getData();
+        assertFalse(data.getJSONObject("players").keySet().contains(plyName));
+    }
+
+    @Test
+    public void testRemoveAbsentPlayer(){
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+
+        assertThrows(PlayerNameNotFoundException.class, () -> gm.removePlayer(plyName));
+    }
+
+    @Test
+    public void testRemoveLastPlayer(){
+        GameMatch gm = new GameMatch();
+        String plyName = "Dario";
+        try {
+            gm.addPlayer(plyName);
+        }
+        catch (Exception ignored){
+        }
+
+        assertThrows(NotEnoughPlayersException.class, () -> gm.removePlayer(plyName));
+    }
+
+    @Test
+    public void testRemoveLastPlacingPlayer(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Carlos";
+        try {
+            gm.addPlayer(name);
             gm.addPlayer(otherName);
             gm.startMatch();
-            gm.removePlayer(name);
-            gm.removePlayer(otherName);
-            gm.dealNextTile();
-            fail();
+            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(0,0,0));
         }
-        catch (NotEnoughPlayersException ignored){
-            // test pass
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
+
+        assertThrows(LastPlacingPlayerRemovedException.class, () -> gm.removePlayer(otherName));
+    }
+
+    @Test
+    public void testSetAlreadyPresentPlayerName(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+        try{
+            gm.addPlayer(oldName);
+            gm.addPlayer(newName);
         }
+        catch (Exception ignored) {
+        }
+        assertThrows(PlayersWithSameNameNotAllowedException.class, () -> gm.setPlayerName(newName, oldName));
+    }
+
+    @Test
+    public void testSetAbsentPlayerName(){
+        GameMatch gm = new GameMatch();
+        String oldName = "Dario";
+        String newName = "Carlos";
+
+        assertThrows(PlayerNameNotFoundException.class, () -> gm.setPlayerName(oldName, newName));
+    }
+
+    @Test
+    public void testSetSeedDuringPlay(){
+        GameMatch gm = new GameMatch();
+        long seed = 11;
+        try {
+            gm.addPlayer("Dario");
+            gm.startMatch();
+        }
+        catch(Exception ignored){
+        }
+
+        assertThrows(InvalidMatchStateException.class, () -> gm.setTilePoolSeed(seed));
+    }
+
+    @Test
+    public void testSetSeedDuringFinish(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        long tilePoolSeed = 11;
+        SimulateCompleteGameMatch(gm, name, tilePoolSeed);
+
+        assertThrows(InvalidMatchStateException.class, () -> gm.setTilePoolSeed(tilePoolSeed));
+    }
+
+    @Test
+    public void testStartMatchWithoutPlayers(){
+        GameMatch gm = new GameMatch();
+
+        assertThrows(NotEnoughPlayersException.class, gm::startMatch);
+        assertEquals("SETUP", gm.getData().get("matchState"));
     }
 
     @Test
@@ -371,94 +314,73 @@ public class GameMatchTest {
             gm.addPlayer(name);
             gm.addPlayer(otherName);
             gm.startMatch();
-            gm.positionCurrentTileOnPlayerBoard(otherName,new HexCoordinates(0,0,0));
-            gm.dealNextTile();
-            fail();
+            gm.positionCurrentTileOnPlayerBoard(otherName, new HexCoordinates(0,0,0));
         }
-        catch (PlayersNotReadyForNextTileException ignored){
-            // test pass
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(PlayersNotReadyForNextTileException.class, gm::dealNextTile);
     }
 
     @Test
-    public void testDealNextTilePlayersTilePoolOver(){
+    public void testDealNextTileTilePoolOver(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
         long tilePoolSeed = 11;
 
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
         try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
             gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
             for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
                 gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoord.coordinate);
+                if (tilesAndCoord == tilesAndCoords.get(tilesAndCoords.size()-1)){
+                    break;
+                }
                 gm.dealNextTile();
             }
-            fail();
+            assertThrows(TilePoolDepletedException.class, gm::dealNextTile);
         }
-        catch (TilePoolDepletedException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
     @Test
-    public void testAbortMatch(){
+    public void testBackToSetup(){
         GameMatch gm = new GameMatch();
         String name = "Dario";
         try{
             gm.addPlayer(name);
             gm.startMatch();
-
             HexCoordinates coords = new HexCoordinates(0,0,0);
             gm.positionCurrentTileOnPlayerBoard(name, coords);
-
             gm.dealNextTile();
 
-            gm.backToSetup();
-
-            assertEquals("SETUP", gm.getData().get("matchState"));
-            JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
-            assertTrue(boardData.isEmpty());
-        }catch (Exception e){
-            fail();
         }
+        catch (Exception ignored){
+        }
+
+        assertDoesNotThrow(gm::backToSetup);
+
+        assertEquals("SETUP", gm.getData().get("matchState"));
+        JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
+        assertTrue(boardData.isEmpty());
     }
 
     @Test
-    public void testAbortMatchDuringSetup(){
+    public void testBackToSetupDuringSetup(){
         GameMatch gm = new GameMatch();
-        try{
-            gm.backToSetup();
-            fail();
-        }catch (InvalidMatchStateException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(InvalidMatchStateException.class, gm::backToSetup);
     }
 
     @Test
     public void testEndMatchDuringSetup(){
         GameMatch gm = new GameMatch();
-        try{
-            gm.endMatch();
-            fail();
-        }catch (InvalidMatchStateException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+
+        assertThrows(InvalidMatchStateException.class, gm::endMatch);
     }
 
     @Test
@@ -468,15 +390,11 @@ public class GameMatchTest {
         try{
             gm.addPlayer(name);
             gm.startMatch();
+        }
+        catch (Exception ignored){
+        }
 
-            gm.endMatch();
-            fail();
-        }catch (TilePoolNotDepletedException ignored){
-            // test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(TilePoolNotDepletedException.class, gm::endMatch);
     }
 
     @Test
@@ -488,10 +406,10 @@ public class GameMatchTest {
         Integer finalScore = 54;
         Integer otherFinalScore = 27;
         long tilePoolSeed = 11;
-        try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
-            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
+        ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
 
+        try{
             gm.addPlayer(name);
             gm.addPlayer(otherName);
             gm.setTilePoolSeed(tilePoolSeed);
@@ -503,15 +421,10 @@ public class GameMatchTest {
                 gm.dealNextTile();
             }
             gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.endMatch();
-            fail();
         }
-        catch (PlayersNotReadyToEndMatchException ignored){
-            // test pass
+        catch (Exception ignored){
         }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(PlayersNotReadyToEndMatchException.class, gm::endMatch);
     }
 
     @Test
@@ -519,33 +432,9 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
         String name = "Dario";
         long tilePoolSeed = 11;
+        SimulateCompleteGameMatch(gm, name, tilePoolSeed);
 
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            gm.endMatch();
-            fail();
-        }
-        catch (InvalidMatchStateException ignored){
-            // test pass
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void testEndMatch(){
-        GameMatch gm = new GameMatch();
-        String name = "Dario";
-        long tilePoolSeed = 11;
-        try{
-            SimulateCompleteGameMatch(gm, name, tilePoolSeed);
-            assertEquals("FINISH", gm.getData().get("matchState"));
-        }
-        catch (Exception e){
-            fail();
-        }
-
+        assertThrows(InvalidMatchStateException.class, gm::endMatch);
     }
 
     //TODO: is this test useful???

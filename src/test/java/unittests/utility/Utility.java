@@ -70,7 +70,7 @@ public final class Utility {
             gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
             gm.endMatch();
         }
-        catch(Exception ignored){
+        catch(Exception e){
             fail();
         }
     }
