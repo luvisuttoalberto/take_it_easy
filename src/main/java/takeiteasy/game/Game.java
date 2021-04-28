@@ -31,6 +31,13 @@ public class Game implements IGame{
         try{
             gameMatch.removePlayer(name);
         }
+        catch (LastPlacingPlayerRemovedException e){
+            try{
+                gameMatch.dealNextTile();
+            }
+            catch (Exception ignored){
+            }
+        }
         catch (PlayerNameNotFoundException | NotEnoughPlayersException ignored){
         }
     }

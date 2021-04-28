@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.HexCoordinates;
+import takeiteasy.game.Game;
 import takeiteasy.gamematch.*;
 import takeiteasy.tilepool.*;
 import unittests.utility.*;
@@ -230,6 +231,23 @@ public class GameMatchTest {
         }
 
         assertThrows(NotEnoughPlayersException.class, () -> gm.removePlayer(plyName));
+    }
+
+    @Test
+    public void testRemoveLastPlacingPlayer(){
+        GameMatch gm = new GameMatch();
+        String name = "Dario";
+        String otherName = "Carlos";
+        try {
+            gm.addPlayer(name);
+            gm.addPlayer(otherName);
+            gm.startMatch();
+            gm.positionCurrentTileOnPlayerBoard(name, new HexCoordinates(0,0,0));
+        }
+        catch (Exception ignored){
+        }
+
+        assertThrows(LastPlacingPlayerRemovedException.class, () -> gm.removePlayer(otherName));
     }
 
     @Test

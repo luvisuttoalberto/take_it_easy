@@ -67,12 +67,19 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException {
+    public void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException, LastPlacingPlayerRemovedException {
         Integer playerIndex = retrievePlayerIndexFromName(playerName);
         if(players.size() <= 1){
             throw new NotEnoughPlayersException();
         }
         players.removeElementAt(playerIndex);
+        for(IPlayer player : players){
+            if(player.getState() != IPlayer.State.WAIT_OTHER){
+                return;
+            }
+        }
+
+        throw new LastPlacingPlayerRemovedException();
     }
 
     @Override
