@@ -7,16 +7,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="takeiteasy.GUI.Controller.LocalLobbyCtrl">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="takeiteasy.GUI.Controller.LocalLobbyCtrl">
    <children>
-      <Label layoutX="75.0" layoutY="36.0" text="Players List">
+      <Label layoutX="75.0" layoutY="14.0" text="Players List">
          <font>
             <Font size="23.0" />
          </font>
       </Label>
-      <Label layoutX="75.0" layoutY="348.0" text="Add New Player:" />
-      <Button fx:id="addNewPlayer" layoutX="460.0" layoutY="343.0" mnemonicParsing="false" text="Submit" />
-      <TextField fx:id="nameField" layoutX="191.0" layoutY="343.0" prefHeight="26.0" prefWidth="250.0" />
-      <ListView fx:id="playersListView" layoutX="75.0" layoutY="75.0" prefHeight="250.0" prefWidth="450.0" />
+      <Label layoutX="75.0" layoutY="308.0" text="Add New Player:" />
+      <Button fx:id="submit" layoutX="438.0" layoutY="306.0" mnemonicParsing="false" onAction="#addNewPlayer" prefHeight="25.0" prefWidth="80.0" text="Submit" />
+      <TextField fx:id="nameField" layoutX="195.0" layoutY="305.0" prefHeight="25.0" prefWidth="180.0" />
+      <ListView fx:id="playersListView" layoutX="75.0" layoutY="45.0" prefHeight="250.0" prefWidth="300.0" />
+      <Button fx:id="remove" layoutX="438.0" layoutY="75.0" mnemonicParsing="false" onAction="#removePlayer" prefHeight="25.0" prefWidth="80.0" text="Remove" />
+      <Button fx:id="rename" layoutX="438.0" layoutY="142.0" mnemonicParsing="false" onAction="#renamePlayer" prefHeight="25.0" prefWidth="80.0" text="Rename" />
+      <TextField fx:id="renameField" layoutX="393.0" layoutY="176.0" visible="false" />
+      <Button fx:id="confirmButton" layoutX="494.0" layoutY="208.0" mnemonicParsing="false" onAction="#confirmRename" text="Confirm" visible="false" />
+      <Button fx:id="cancel" layoutX="394.0" layoutY="208.0" mnemonicParsing="false" onAction="#cancelRename" text="Cancel" visible="false" />
+      <Button fx:id="back" layoutX="75.0" layoutY="362.0" mnemonicParsing="false" onAction="#backToMainMenu" text="Main Menu" />
+      <Button fx:id="start" layoutX="300.0" layoutY="362.0" mnemonicParsing="false" onAction="#startMatch" text="Start Match" />
    </children>
 </AnchorPane>
