@@ -3,12 +3,14 @@ package takeiteasy.GUI.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.game.IGame;
+
+import java.util.Iterator;
 
 public class LocalLobbyCtrl implements IViewController {
     IGame game;
@@ -35,22 +37,149 @@ public class LocalLobbyCtrl implements IViewController {
     TextField nameField;
 
     @FXML
+    TextField renameField;
+
+    @FXML
+    Button confirmButton;
+
+    @FXML
+    Button cancel;
+
+    @FXML
+    Button submit;
+
+    @FXML
+    Button rename;
+
+    @FXML
+    Button remove;
+
+    @FXML
+    Button start;
+
+    @FXML
+    Button back;
+
+
+    @FXML
     void addNewPlayer() {
         if (!nameField.getText().equals("")) {
             String name = nameField.getText();
             game.addPlayer(name);
 
-            // following line of code should be replaced by string array of players list, collected from JSON object file
-            // this is just example to check functionality
-            String[] playersName = {"Azad", "Michele", "Nick", "Alberto"};
-
-            ObservableList<String> playersNameObservable = FXCollections.observableArrayList(playersName);
+            //TODO: get players name data from JSON object
+            JSONObject gameData = game.getData();
+            String[] playersName;
+            Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
+            ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
+            while(playersNameKeys.hasNext()) {
+                String nameKey = playersNameKeys.next();
+                playersNameObservable.add(nameKey);
+            }
             playersListView.setItems(playersNameObservable);
             nameField.clear();
         }
         vu.updateView();
     }
 
-    //public  void removePlayer(ActionEvent e) {}
-    //playerList.add(nameField.getText());
+    @FXML
+    void removePlayer() {
+        String newName = playersListView.getSelectionModel().getSelectedItem();
+        game.removePlayer(newName);
+        JSONObject gameData = game.getData();
+        String[] playersName;
+        Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
+        ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
+        while(playersNameKeys.hasNext()) {
+            String nameKey = playersNameKeys.next();
+            playersNameObservable.add(nameKey);
+        }
+        playersListView.setItems(playersNameObservable);
+    }
+
+
+    @FXML
+    void confirmRename() {
+        if (!renameField.getText().equals("")) {
+            String newName = renameField.getText();
+
+            String oldName = renamePlayer();
+            game.renamePlayer(oldName, newName);
+
+            JSONObject gameData = game.getData();
+            String[] playersName;
+            Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
+            ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
+            while(playersNameKeys.hasNext()) {
+                String nameKey = playersNameKeys.next();
+                playersNameObservable.add(nameKey);
+            }
+            playersListView.setItems(playersNameObservable);
+            renameField.clear();
+            renameField.setVisible(false);
+            confirmButton.setVisible(false);
+            playersListView.setMouseTransparent(false);
+            cancel.setVisible(false);
+            nameField.setMouseTransparent(false);
+            submit.setMouseTransparent(false);
+            rename.setMouseTransparent(false);
+            remove.setMouseTransparent(false);
+            start.setMouseTransparent(false);
+            back.setMouseTransparent(false);
+        }
+        //TODO: change visibility inside or outside of the IF
+    }
+
+    @FXML
+    String renamePlayer() {
+        if (playersListView.getSelectionModel().getSelectedItem() != null) {
+
+            renameField.setVisible(true);
+            confirmButton.setVisible(true);
+            cancel.setVisible(true);
+            String oldName = playersListView.getSelectionModel().getSelectedItem();
+            playersListView.setMouseTransparent(true);
+            nameField.setMouseTransparent(true);
+            submit.setMouseTransparent(true);
+            rename.setMouseTransparent(true);
+            remove.setMouseTransparent(true);
+            start.setMouseTransparent(true);
+            back.setMouseTransparent(true);
+            return oldName;
+        }
+        //TODO: how to manage the return statement in case that getSelectedItem()==null
+        return "null";
+    }
+
+    @FXML
+    void cancelRename() {
+        renameField.setVisible(false);
+        confirmButton.setVisible(false);
+        playersListView.setMouseTransparent(false);
+        cancel.setVisible(false);
+        renameField.clear();
+        nameField.setMouseTransparent(false);
+        submit.setMouseTransparent(false);
+        rename.setMouseTransparent(false);
+        remove.setMouseTransparent(false);
+        start.setMouseTransparent(false);
+        back.setMouseTransparent(false);
+    }
+
+
+    @FXML
+    void startMatch() {
+        game.startLocalMatch();
+        vu.updateView();
+    }
+
+    @FXML
+    void backToMainMenu() {
+        game.backToTheMainMenu();
+        vu.updateView();
+    }
+
+
+
+
 }
