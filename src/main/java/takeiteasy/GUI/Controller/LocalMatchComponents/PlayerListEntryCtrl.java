@@ -8,6 +8,10 @@ public class PlayerListEntryCtrl extends AnchorPane {
     Text text_playerName, text_status;
     public Button btn_kick, btn_focus;
 
+    //TODO: maybe put these into lang file
+    final String txt_statusPlacing = "Placing";
+    final String txt_statusWaitOther = "Waiting";
+
     public PlayerListEntryCtrl(String playerName){
         buildContent(playerName);
     }
@@ -44,8 +48,17 @@ public class PlayerListEntryCtrl extends AnchorPane {
     }
 
     //TODO: graphics, scores
-    public void setValues(String status){
-        text_status.setText(status);
+    public void setValues(String statusText){
+
+        if(statusText == "PLACING"){
+            text_status.setText(txt_statusPlacing);
+        }
+        else if(statusText == "WAIT_OTHER"){
+            text_status.setText(txt_statusWaitOther);
+        }
+        else{
+            text_status.setText("Score: " + statusText);
+        }
     }
 
 }

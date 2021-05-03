@@ -219,11 +219,19 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             JSONObject playerData = playersData.getJSONObject(playerName);
             PlayerListEntryCtrl player = players.get(playerName);
 
-            player.setValues(playerData.getString("playerState"));
+            String statusText;
+            if(matchData.getString("matchState") == "FINISH"){
+                statusText = String.valueOf(playerData.getInt("playerScore"));
+            }
+            else{
+                statusText = playerData.getString("playerState");
+            }
+            player.setValues(statusText);
 
             player.btn_focus.setDisable(playerName == focusedPlayerName);
             player.btn_kick.setDisable(players.size()<2 || matchData.getString("matchState") == "FINISH");
         }
+
     }
 
     void refreshPlacingButton(JSONObject gameData){
