@@ -62,39 +62,29 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     void buildBoard(){
 
+        double tileWidth = 80;
+
+        double tileHeight = tileWidth*.5*1.732,
+                boardXUnit = tileWidth*.75,
+                boardYUnit = tileHeight;
+
         tiles = new HashMap<>();
 
-        //TODO: fix positionings with formula
-        int[] layout_X = {  52,52,52,
-                            111,111,111,111,
-                            170,170,170,170,170,
-                            229,229,229,229,
-                            288,288,288};
-        int[] layout_Y = {  87,155,224,
-                            53,122,190,259,
-                            18,87,155,224,293,
-                            53,122,190,259,
-                            87,155,224};
+        for(HexCoordinates coords : generateCoordinateStandard()){
+            TileCtrl t = new TileCtrl(tileWidth,tileHeight);
 
-        HexCoordinates[] coords = generateCoordinateStandard();
+            double x = coords.getX()+2,
+                    y = 2-(coords.getY()+coords.getX()*.5);
 
-        for(int i = 0; i < 19; i++){
-            TileCtrl t = new TileCtrl();
-            t.setLayoutX(layout_X[i]);
-            t.setLayoutY(layout_Y[i]);
+            t.setLayoutX(boardXUnit * x);
+            t.setLayoutY(boardYUnit * y);
 
             boardPane.getChildren().add(t);
-            tiles.put(coords[i], t);
+            tiles.put(coords, t);
         }
 
         //todo: Move this to linkui()? If so, we have to call it somewhere
         btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
-//        btn_placeTile.setOnKeyReleased(e -> {
-//            if(e.getCode().equals(KeyCode.ENTER)){
-//                onPlaceTileRelease();
-//            }
-//        });
-        //TODO: maybe defocus if click outside the board, build specific hitbox
     }
 
     void buildPlayersList(JSONObject gameData){
@@ -365,12 +355,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         //Todo: remove
         System.out.println(gameData);
-
-        //TODO:Check endgame/winner and set gui logic
-        if (gameData.getJSONObject("gameMatch").
-                getString("matchState") == "FINISH"){
-
-        }
 
         refreshBoard(gameData);
         refreshPlayersList(gameData);

@@ -1,10 +1,13 @@
 package takeiteasy.GUI.Controller.LocalMatchComponents;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
-import org.json.JSONObject;
 
 //TODO: see if this needs to be initializable as the localmatchctrl
 public class TileCtrl extends AnchorPane {
@@ -13,13 +16,22 @@ public class TileCtrl extends AnchorPane {
     Polygon bg;
     Text text_top, text_left, text_right;
 
-    public TileCtrl() {
-//        setStyle();
-//        hitBox.setOnMouseEntered();
-        buildContent();
+    //Remove
+//    public TileCtrl() {
+////        setStyle();
+////        hitBox.setOnMouseEntered();
+//
+//        //TODO: determine units. v = h*sqrt(3) ~ h*1.732
+//        double hunit=20, vunit=34;
+//        buildContent(hunit,vunit);
+//    }
+
+    public TileCtrl(double width, double height) {
+
+        double hunit=width*.25, vunit=height*.5;
+        buildContent(hunit,vunit);
     }
 
-    //TODO: is private ok?
     void setValues(Integer top, Integer left, Integer right){
         text_top.setText(top.toString());
         text_left.setText(left.toString());
@@ -43,25 +55,22 @@ public class TileCtrl extends AnchorPane {
         text_right.setText("");
     }
 
-    void buildContent(){
+    void buildContent(double hunit,double vunit){
+
         bg = new Polygon();
 
-        //TODO: determine units. v = h*sqrt(3) ~ h*1.732
-        double hunit=20, vunit=34;
-        //+1 .6.5.
-        // 0 1...4
-        //-1 .2.3.
-        //   21012
-        //   --.++
-
+        //  01234
+        //0 .6.5.
+        //1 1...4
+        //2 .2.3.
         bg.getPoints().setAll(
-                -hunit*2,0.0,
-                -hunit,-vunit,
-                hunit,-vunit,
-                hunit*2,0.0,
-                hunit,vunit,
-                -hunit,vunit
-        );
+                0.0,    vunit,
+                hunit,  2*vunit,
+                3*hunit,2*vunit,
+                4*hunit,vunit,
+                3*hunit,0.0,
+                hunit,  0.0
+                );
 
         bg.setFill(Color.WHITE);
         bg.setStroke(Color.BLACK);
@@ -69,12 +78,12 @@ public class TileCtrl extends AnchorPane {
         // hitbox is 1px inset wrt bg
         hitBox = new Polygon();
         hitBox.getPoints().setAll(
-                -hunit*2+1,0.0,
-                -hunit+1,-vunit+1,
-                hunit-1,-vunit+1,
-                hunit*2-1,0.0,
-                hunit-1,vunit-1,
-                -hunit+1,vunit-1
+                0.0     +1.0,   vunit   ,
+                hunit   +1.0,   2*vunit -1.0,
+                3*hunit -1.0,   2*vunit -1.0,
+                4*hunit -1.0,   vunit   ,
+                3*hunit -1.0,   0.0     +1.0,
+                hunit   +1.0,   0.0     +1.0
         );
         hitBox.setFill(Color.TRANSPARENT);
 
@@ -82,17 +91,39 @@ public class TileCtrl extends AnchorPane {
         text_left = new Text();
         text_right = new Text();
 
-        //TODO: init to empty, position
         resetGraphics();
 
-        this.getChildren().addAll(bg,text_top,text_left,text_right, hitBox);
+        HBox layout_text_top = new HBox();
+        layout_text_top.setAlignment(Pos.TOP_CENTER);
+        VBox.setVgrow(layout_text_top, Priority.ALWAYS);
+        layout_text_top.getChildren().add(text_top);
 
-        //TODO: fix these magic numbers
-        setTopAnchor(text_top, -vunit*0.9);
-        setLeftAnchor(text_top, -3.0);
-        setTopAnchor(text_left, vunit*0.2);
-        setLeftAnchor(text_left, -hunit*1.2);
-        setTopAnchor(text_right, vunit*0.2);
-        setLeftAnchor(text_right, hunit*0.9);
+        HBox layout_text_bot_l = new HBox();
+        layout_text_bot_l.setAlignment(Pos.BOTTOM_LEFT);
+        HBox.setHgrow(layout_text_bot_l, Priority.ALWAYS);
+        layout_text_bot_l.getChildren().add(text_left);
+
+        HBox layout_text_bot_r = new HBox();
+        layout_text_bot_r.setAlignment(Pos.BOTTOM_RIGHT);
+        HBox.setHgrow(layout_text_bot_r, Priority.ALWAYS);
+        layout_text_bot_r.getChildren().add(text_right);
+
+        HBox layout_text_bot = new HBox();
+        layout_text_bot.setAlignment(Pos.CENTER);
+        VBox.setVgrow(layout_text_bot, Priority.ALWAYS);
+        layout_text_bot.getChildren().addAll(layout_text_bot_l,layout_text_bot_r);
+
+        VBox layout_text = new VBox();
+        layout_text.setAlignment(Pos.CENTER);
+        layout_text.getChildren().addAll(layout_text_top,layout_text_bot);
+
+
+        this.getChildren().addAll(bg,layout_text, hitBox);
+
+        //TODO: these can be better
+        setTopAnchor(layout_text,vunit*.1);
+        setBottomAnchor(layout_text,vunit*.5);
+        setLeftAnchor(layout_text,hunit*.9);
+        setRightAnchor(layout_text,hunit*.9);
     }
 }
