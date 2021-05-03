@@ -49,6 +49,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //TODO: maybe call here linkUI()
     }
 
+    @Override
+    public void injectGame(IGame g) {
+        this.game = g;
+        linkUI();
+    }
+
+    @Override
+    public void injectViewUpdater(IViewUpdater vu) {
+        this.vu = vu;
+    }
+
     void buildBoard(){
 
         tiles = new HashMap<>();
@@ -100,19 +111,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         }
     }
 
-    void refreshPlayersList(JSONObject gameData){
+
+    void focusNextPlacingPlayer(JSONObject gameData){
+
         JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
-        for (var playerName : players.keySet()){
-            JSONObject playerData = playersData.getJSONObject(playerName);
-            var player = players.get(playerName);
-
-            player.setValues(playerData.getString("playerState"));
-
-            player.btn_focus.setDisable(playerName == focusedPlayerName);
-            player.btn_kick.setDisable(players.size()<2);
-
+        for(String playerName : playersData.keySet()){
+            if(playersData.getJSONObject(playerName).get("playerState").equals("PLACING")){
+                focusedPlayerName = playerName;
+                break;
+            }
         }
-    };
+    }
 
     void focusCoordinates(HexCoordinates coords, JSONObject currentTileData){
 
@@ -136,13 +145,58 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //graphic focus
         if(currentTileData != null){
             tiles.get(focusedCoordinates).setFocusedGraphics(
-                    currentTileData.getInt("top"),
-                    currentTileData.getInt("left"),
-                    currentTileData.getInt("right")
+            currentTileData.getInt("top"),
+            currentTileData.getInt("left"),
+            currentTileData.getInt("right")
             );
         }
 
         btn_placeTile.setDisable(false);
+    }
+
+
+    void onFocusPlayerRelease(String playerName){
+        focusedPlayerName = playerName;
+        refreshView(game.getData());
+    }
+
+    void onKickPlayerRelease(String playerName){
+        //TODO: pop-up or other double check
+        game.removePlayer(playerName);
+
+        playersList.getChildren().remove(players.get(playerName));
+        players.remove(playerName);
+        focusedPlayerName = null;
+
+        refreshView(game.getData());
+    }
+
+
+    void onPlaceTileRelease(){
+        game.playerPlacesTileAt(focusedPlayerName, focusedCoordinates);
+        //Note: placement MUST succeed
+
+        //reset focus coordinates
+        focusCoordinates(null, null);
+
+        //TODO: should we avoid automatic change to next player?
+        focusNextPlacingPlayer(game.getData());
+        refreshView(game.getData());
+    }
+
+
+    void refreshPlayersList(JSONObject gameData){
+        JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
+        for (var playerName : players.keySet()){
+            JSONObject playerData = playersData.getJSONObject(playerName);
+            var player = players.get(playerName);
+
+            player.setValues(playerData.getString("playerState"));
+
+            player.btn_focus.setDisable(playerName == focusedPlayerName);
+            player.btn_kick.setDisable(players.size()<2);
+
+        }
     }
 
     void refreshPlacingButton(JSONObject playerData){
@@ -186,92 +240,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 }
             }
         }
-    }
-
-    void onFocusPlayerRelease(String playerName){
-        focusedPlayerName = playerName;
-        refreshView(game.getData());
-    }
-
-    void onKickPlayerRelease(String playerName){
-        //TODO: pop-up or other double check
-        game.removePlayer(playerName);
-
-        playersList.getChildren().remove(players.get(playerName));
-        players.remove(playerName);
-        focusedPlayerName = null;
-
-        refreshView(game.getData());
-    }
-
-    void focusNextPlacingPlayer(JSONObject gameData){
-
-        JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
-        for(String playerName : playersData.keySet()){
-            if(playersData.getJSONObject(playerName).get("playerState").equals("PLACING")){
-                focusedPlayerName = playerName;
-                break;
-            }
-        }
-    }
-
-    void onPlaceTileRelease(){
-        game.playerPlacesTileAt(focusedPlayerName, focusedCoordinates);
-        //Note: placement MUST succeed
-
-        //reset focus coordinates
-        focusCoordinates(null, null);
-
-        //TODO: should we avoid automatic change to next player?
-        focusNextPlacingPlayer(game.getData());
-        refreshView(game.getData());
-    }
-
-    @Override
-    public void injectGame(IGame g) {
-        this.game = g;
-        linkUI();
-    }
-
-    @Override
-    public void injectViewUpdater(IViewUpdater vu) {
-        this.vu = vu;
-    }
-
-    @Override
-    public void refreshView(JSONObject gameData) {
-
-        //TODO: method for first refresh instead of these ifs?
-
-        if(focusedPlayerName == null){
-            focusNextPlacingPlayer(gameData);
-        }
-
-        if(players == null){
-            //DEBUG
-            System.out.println("Initializing players list!");
-            buildPlayersList(gameData);
-        }
-
-        //Todo: remove
-        System.out.println(gameData);
-
-        refreshBoard(gameData);
-        refreshPlayersList(gameData);
-
-        JSONObject focusedPlayerData = gameData.getJSONObject("gameMatch").getJSONObject("players").getJSONObject(focusedPlayerName);
-        refreshPlacingButton(focusedPlayerData);
-
-        //player name/status
-        text_playerName.setText(focusedPlayerName);
-        refreshCurrentPlayerInfo(gameData);
-
-        refreshMatchInfo(gameData);
-
-        // Todo: players list...
-//        playersPane = new ListView(FXCollections.observableList(Arrays.asList(gameData.getJSONObject("gameMatch").getJSONObject("players").keySet())));
-
-        // game status text
     }
 
     void refreshMatchInfo(JSONObject gameData){
@@ -323,13 +291,49 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         if(focusedPlayerData.get("playerState") == "PLACING"){
             text_playerStatus.setText(
                     focusedPlayerData.getString("playerState") + ": (" +
-                    currentTileData.get("top") + "," +
-                    currentTileData.get("left") + "," +
-                    currentTileData.get("right") + ")");
+                            currentTileData.get("top") + "," +
+                            currentTileData.get("left") + "," +
+                            currentTileData.get("right") + ")");
         }
         else{
             text_playerStatus.setText(focusedPlayerData.getString("playerState"));
         }
+    }
+
+    @Override
+    public void refreshView(JSONObject gameData) {
+
+        //TODO: method for first refresh instead of these ifs?
+
+        if(focusedPlayerName == null){
+            focusNextPlacingPlayer(gameData);
+        }
+
+        if(players == null){
+            //DEBUG
+            System.out.println("Initializing players list!");
+            buildPlayersList(gameData);
+        }
+
+        //Todo: remove
+        System.out.println(gameData);
+
+        refreshBoard(gameData);
+        refreshPlayersList(gameData);
+
+        JSONObject focusedPlayerData = gameData.getJSONObject("gameMatch").getJSONObject("players").getJSONObject(focusedPlayerName);
+        refreshPlacingButton(focusedPlayerData);
+
+        //player name/status
+        text_playerName.setText(focusedPlayerName);
+        refreshCurrentPlayerInfo(gameData);
+
+        refreshMatchInfo(gameData);
+
+        // Todo: players list...
+//        playersPane = new ListView(FXCollections.observableList(Arrays.asList(gameData.getJSONObject("gameMatch").getJSONObject("players").keySet())));
+
+        // game status text
     }
 
     void linkUI(){
