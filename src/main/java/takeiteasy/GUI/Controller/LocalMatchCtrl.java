@@ -16,6 +16,7 @@ import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.IGame;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -154,6 +155,27 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         btn_placeTile.setDisable(false);
     }
 
+    ArrayList<String> computeHighestScoringPlayerNames(JSONObject gameData){
+        JSONObject playersData = gameData.getJSONObject("gameMatch").
+                getJSONObject("players");
+
+        ArrayList<String> winners = new ArrayList<>();
+        int bestScore = 0;
+        for(String playerName : playersData.keySet()){
+            int currentPlayerScore = playersData.getJSONObject(playerName).
+                    getInt("playerScore");
+            if(currentPlayerScore > bestScore){
+                bestScore = currentPlayerScore;
+                winners.clear();
+                winners.add(playerName);
+            }
+            else if(currentPlayerScore == bestScore){
+                winners.add(playerName);
+            }
+        }
+        return winners;
+    }
+
 
     void onFocusPlayerRelease(String playerName){
         focusedPlayerName = playerName;
@@ -180,8 +202,14 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         focusCoordinates(null, null);
 
         //TODO: should we avoid automatic change to next player?
-        focusNextPlacingPlayer(game.getData());
-        refreshView(game.getData());
+        JSONObject gameData = game.getData();
+
+        if(gameData.getJSONObject("gameMatch").getString("matchState") == "FINISH"){
+
+        } else {
+            focusNextPlacingPlayer(gameData);
+        }
+        refreshView(gameData);
     }
 
 
@@ -199,7 +227,11 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         }
     }
 
-    void refreshPlacingButton(JSONObject playerData){
+    void refreshPlacingButton(JSONObject gameData){
+
+        JSONObject playerData = gameData.getJSONObject("gameMatch").
+                getJSONObject("players").
+                getJSONObject(focusedPlayerName);
 
         //todo: magic fields, maybe add a graphic change on the text or background
         if(focusedCoordinates != null && playerData.get("playerState") == "PLACING"){
@@ -259,35 +291,42 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                     (placingPlayers>1?"s":"") +
                     " out of " + totalNumberOfPlayers + " are still placing.";
         }
+        // else match is finished
         else{
-            int bestScore = 0;
-            String winner = "";
-            boolean tie = false;
+            ArrayList<String> winners = computeHighestScoringPlayerNames(gameData);
 
-            for(String playerName : playersData.keySet()){
-                int currentPlayerScore = playersData.getJSONObject(playerName).getInt("playerScore");
-                if(currentPlayerScore > bestScore){
-                    bestScore = currentPlayerScore;
-                    winner = playerName;
-                    tie = false;
-                }
-                else if(currentPlayerScore == bestScore){
-                    tie = true;
-                }
-            }
-            if(tie){
+            if(winners.size()>1){
                 matchStateText = "TIE!";
             }
             else{
-                matchStateText = "The winner is " + winner + " with a score of "+ bestScore + "!";
+                int bestScore = gameData.getJSONObject("gameMatch").
+                        getJSONObject("players").
+                        getJSONObject(winners.get(0)).
+                        getInt("playerScore");
+                matchStateText = "The winner is " + winners.get(0) +
+                        " with a score of "+ bestScore + "!";
             }
         }
+
+
         text_matchStatus.setText(matchStateText);
     }
 
     void refreshCurrentPlayerInfo(JSONObject gameData) {
-        JSONObject focusedPlayerData = gameData.getJSONObject("gameMatch").getJSONObject("players").getJSONObject(focusedPlayerName);
-        JSONObject currentTileData = gameData.getJSONObject("gameMatch").getJSONObject("currentTile");
+
+        text_playerName.setText(focusedPlayerName);
+
+        //TODO: Reformat state text
+        //TODO: Reformat Json fields
+
+        //Refresh state
+        JSONObject focusedPlayerData = gameData.getJSONObject("gameMatch").
+                getJSONObject("players").
+                getJSONObject(focusedPlayerName);
+
+        JSONObject currentTileData = gameData.getJSONObject("gameMatch").
+                getJSONObject("currentTile");
+
         if(focusedPlayerData.get("playerState") == "PLACING"){
             text_playerStatus.setText(
                     focusedPlayerData.getString("playerState") + ": (" +
@@ -298,6 +337,8 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         else{
             text_playerStatus.setText(focusedPlayerData.getString("playerState"));
         }
+
+
     }
 
     @Override
@@ -318,22 +359,18 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //Todo: remove
         System.out.println(gameData);
 
+        //TODO:Check endgame/winner and set gui logic
+        if (gameData.getJSONObject("gameMatch").
+                getString("matchState") == "FINISH"){
+
+        }
+
         refreshBoard(gameData);
         refreshPlayersList(gameData);
-
-        JSONObject focusedPlayerData = gameData.getJSONObject("gameMatch").getJSONObject("players").getJSONObject(focusedPlayerName);
-        refreshPlacingButton(focusedPlayerData);
-
-        //player name/status
-        text_playerName.setText(focusedPlayerName);
+        refreshPlacingButton(gameData);
         refreshCurrentPlayerInfo(gameData);
-
         refreshMatchInfo(gameData);
 
-        // Todo: players list...
-//        playersPane = new ListView(FXCollections.observableList(Arrays.asList(gameData.getJSONObject("gameMatch").getJSONObject("players").keySet())));
-
-        // game status text
     }
 
     void linkUI(){
