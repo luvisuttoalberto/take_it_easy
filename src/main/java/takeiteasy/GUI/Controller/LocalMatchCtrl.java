@@ -2,7 +2,6 @@ package takeiteasy.GUI.Controller;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -205,7 +204,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         JSONObject gameData = game.getData();
 
         if(gameData.getJSONObject("gameMatch").getString("matchState") == "FINISH"){
-
+            focusedPlayerName = computeHighestScoringPlayerNames(gameData).get(0);
         } else {
             focusNextPlacingPlayer(gameData);
         }
@@ -214,16 +213,16 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
 
     void refreshPlayersList(JSONObject gameData){
-        JSONObject playersData = gameData.getJSONObject("gameMatch").getJSONObject("players");
-        for (var playerName : players.keySet()){
+        JSONObject matchData = gameData.getJSONObject("gameMatch");
+        JSONObject playersData = matchData.getJSONObject("players");
+        for (String playerName : players.keySet()){
             JSONObject playerData = playersData.getJSONObject(playerName);
-            var player = players.get(playerName);
+            PlayerListEntryCtrl player = players.get(playerName);
 
             player.setValues(playerData.getString("playerState"));
 
             player.btn_focus.setDisable(playerName == focusedPlayerName);
-            player.btn_kick.setDisable(players.size()<2);
-
+            player.btn_kick.setDisable(players.size()<2 || matchData.getString("matchState") == "FINISH");
         }
     }
 
