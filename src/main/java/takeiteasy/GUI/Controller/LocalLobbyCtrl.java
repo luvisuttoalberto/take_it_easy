@@ -67,11 +67,11 @@ public class LocalLobbyCtrl implements IViewController {
         playersListView.setMouseTransparent(bool);
         cancel.setVisible(bool);
         nameField.setMouseTransparent(bool);
-        submit.setMouseTransparent(bool);
-        rename.setMouseTransparent(bool);
-        remove.setMouseTransparent(bool);
-        start.setMouseTransparent(bool);
-        back.setMouseTransparent(bool);
+        submit.setDisable(bool);
+        rename.setDisable(bool);
+        remove.setDisable(bool);
+        start.setDisable(bool);
+        back.setDisable(bool);
     }
 
     @FXML
@@ -82,7 +82,6 @@ public class LocalLobbyCtrl implements IViewController {
 
             //TODO: get players name data from JSON object
             JSONObject gameData = game.getData();
-            String[] playersName;
             Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
             ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
             while(playersNameKeys.hasNext()) {
@@ -100,7 +99,6 @@ public class LocalLobbyCtrl implements IViewController {
         String newName = playersListView.getSelectionModel().getSelectedItem();
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
-        String[] playersName;
         Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
         ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
         while(playersNameKeys.hasNext()) {
@@ -117,12 +115,10 @@ public class LocalLobbyCtrl implements IViewController {
             String newName = renameField.getText();
             renamePlayer();
 
-//            String oldName = renamePlayer();
             game.renamePlayer(oldName, newName);
             oldName = "";
 
             JSONObject gameData = game.getData();
-            String[] playersName;
             Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
             ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
             while(playersNameKeys.hasNext()) {
@@ -139,11 +135,9 @@ public class LocalLobbyCtrl implements IViewController {
     @FXML
     void renamePlayer() {
         if (playersListView.getSelectionModel().getSelectedItem() != null) {
-
             oldName = playersListView.getSelectionModel().getSelectedItem();
             setVisibility(true);
         }
-        //TODO: how to manage the return statement in case that getSelectedItem()==null
     }
 
     @FXML
@@ -164,8 +158,5 @@ public class LocalLobbyCtrl implements IViewController {
         game.backToTheMainMenu();
         vu.updateView();
     }
-
-
-
 
 }
