@@ -15,6 +15,7 @@ import java.util.Iterator;
 public class LocalLobbyCtrl implements IViewController {
     IGame game;
     IViewUpdater vu;
+    private String oldName;
 
     @Override
     public void injectGame(IGame g) {
@@ -114,9 +115,11 @@ public class LocalLobbyCtrl implements IViewController {
     void confirmRename() {
         if (!renameField.getText().equals("")) {
             String newName = renameField.getText();
+            renamePlayer();
 
-            String oldName = renamePlayer();
+//            String oldName = renamePlayer();
             game.renamePlayer(oldName, newName);
+            oldName = "";
 
             JSONObject gameData = game.getData();
             String[] playersName;
@@ -128,56 +131,24 @@ public class LocalLobbyCtrl implements IViewController {
             }
             playersListView.setItems(playersNameObservable);
             renameField.clear();
-//            renameField.setVisible(false);
-//            confirmButton.setVisible(false);
-//            playersListView.setMouseTransparent(false);
-//            cancel.setVisible(false);
-//            nameField.setMouseTransparent(false);
-//            submit.setMouseTransparent(false);
-//            rename.setMouseTransparent(false);
-//            remove.setMouseTransparent(false);
-//            start.setMouseTransparent(false);
-//            back.setMouseTransparent(false);
             setVisibility(false);
         }
         //TODO: change visibility inside or outside of the IF
     }
 
     @FXML
-    String renamePlayer() {
+    void renamePlayer() {
         if (playersListView.getSelectionModel().getSelectedItem() != null) {
 
-            String oldName = playersListView.getSelectionModel().getSelectedItem();
-//            renameField.setVisible(true);
-//            confirmButton.setVisible(true);
-//            cancel.setVisible(true);
-//            playersListView.setMouseTransparent(true);
-//            nameField.setMouseTransparent(true);
-//            submit.setMouseTransparent(true);
-//            rename.setMouseTransparent(true);
-//            remove.setMouseTransparent(true);
-//            start.setMouseTransparent(true);
-//            back.setMouseTransparent(true);
+            oldName = playersListView.getSelectionModel().getSelectedItem();
             setVisibility(true);
-            return oldName;
         }
         //TODO: how to manage the return statement in case that getSelectedItem()==null
-        return "null";
     }
 
     @FXML
     void cancelRename() {
-//        renameField.setVisible(false);
-//        confirmButton.setVisible(false);
-//        playersListView.setMouseTransparent(false);
-//        cancel.setVisible(false);
         renameField.clear();
-//        nameField.setMouseTransparent(false);
-//        submit.setMouseTransparent(false);
-//        rename.setMouseTransparent(false);
-//        remove.setMouseTransparent(false);
-//        start.setMouseTransparent(false);
-//        back.setMouseTransparent(false);
         setVisibility(false);
     }
 
