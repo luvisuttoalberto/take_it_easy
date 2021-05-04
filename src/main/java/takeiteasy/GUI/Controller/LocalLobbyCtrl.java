@@ -60,6 +60,18 @@ public class LocalLobbyCtrl implements IViewController {
     @FXML
     Button back;
 
+    void setVisibility(Boolean bool){
+        renameField.setVisible(bool);
+        confirmButton.setVisible(bool);
+        playersListView.setMouseTransparent(bool);
+        cancel.setVisible(bool);
+        nameField.setMouseTransparent(bool);
+        submit.setMouseTransparent(bool);
+        rename.setMouseTransparent(bool);
+        remove.setMouseTransparent(bool);
+        start.setMouseTransparent(bool);
+        back.setMouseTransparent(bool);
+    }
 
     @FXML
     void addNewPlayer() {
@@ -116,16 +128,17 @@ public class LocalLobbyCtrl implements IViewController {
             }
             playersListView.setItems(playersNameObservable);
             renameField.clear();
-            renameField.setVisible(false);
-            confirmButton.setVisible(false);
-            playersListView.setMouseTransparent(false);
-            cancel.setVisible(false);
-            nameField.setMouseTransparent(false);
-            submit.setMouseTransparent(false);
-            rename.setMouseTransparent(false);
-            remove.setMouseTransparent(false);
-            start.setMouseTransparent(false);
-            back.setMouseTransparent(false);
+//            renameField.setVisible(false);
+//            confirmButton.setVisible(false);
+//            playersListView.setMouseTransparent(false);
+//            cancel.setVisible(false);
+//            nameField.setMouseTransparent(false);
+//            submit.setMouseTransparent(false);
+//            rename.setMouseTransparent(false);
+//            remove.setMouseTransparent(false);
+//            start.setMouseTransparent(false);
+//            back.setMouseTransparent(false);
+            setVisibility(false);
         }
         //TODO: change visibility inside or outside of the IF
     }
@@ -134,17 +147,18 @@ public class LocalLobbyCtrl implements IViewController {
     String renamePlayer() {
         if (playersListView.getSelectionModel().getSelectedItem() != null) {
 
-            renameField.setVisible(true);
-            confirmButton.setVisible(true);
-            cancel.setVisible(true);
             String oldName = playersListView.getSelectionModel().getSelectedItem();
-            playersListView.setMouseTransparent(true);
-            nameField.setMouseTransparent(true);
-            submit.setMouseTransparent(true);
-            rename.setMouseTransparent(true);
-            remove.setMouseTransparent(true);
-            start.setMouseTransparent(true);
-            back.setMouseTransparent(true);
+//            renameField.setVisible(true);
+//            confirmButton.setVisible(true);
+//            cancel.setVisible(true);
+//            playersListView.setMouseTransparent(true);
+//            nameField.setMouseTransparent(true);
+//            submit.setMouseTransparent(true);
+//            rename.setMouseTransparent(true);
+//            remove.setMouseTransparent(true);
+//            start.setMouseTransparent(true);
+//            back.setMouseTransparent(true);
+            setVisibility(true);
             return oldName;
         }
         //TODO: how to manage the return statement in case that getSelectedItem()==null
@@ -153,17 +167,18 @@ public class LocalLobbyCtrl implements IViewController {
 
     @FXML
     void cancelRename() {
-        renameField.setVisible(false);
-        confirmButton.setVisible(false);
-        playersListView.setMouseTransparent(false);
-        cancel.setVisible(false);
+//        renameField.setVisible(false);
+//        confirmButton.setVisible(false);
+//        playersListView.setMouseTransparent(false);
+//        cancel.setVisible(false);
         renameField.clear();
-        nameField.setMouseTransparent(false);
-        submit.setMouseTransparent(false);
-        rename.setMouseTransparent(false);
-        remove.setMouseTransparent(false);
-        start.setMouseTransparent(false);
-        back.setMouseTransparent(false);
+//        nameField.setMouseTransparent(false);
+//        submit.setMouseTransparent(false);
+//        rename.setMouseTransparent(false);
+//        remove.setMouseTransparent(false);
+//        start.setMouseTransparent(false);
+//        back.setMouseTransparent(false);
+        setVisibility(false);
     }
 
 
