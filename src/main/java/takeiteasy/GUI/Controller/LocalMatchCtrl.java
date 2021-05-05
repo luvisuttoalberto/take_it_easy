@@ -34,6 +34,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     public ScrollPane playersPane;
     public VBox playersList;
+    public Pane currentTilePane;
+    public Button btn_backToLobby;
+    public Button btn_backToMenu;
 
     IGame game;
     IViewUpdater vu;
@@ -41,10 +44,14 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     String focusedPlayerName;
     Map<HexCoordinates, TileCtrl> tiles;
     Map<String, PlayerListEntryCtrl> players;
+    TileCtrl currentTileCtrl;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         buildBoard();
+        buildCurrentTilePane();
+        btn_backToLobby.setOnMouseReleased(e -> onBackToLobbyRelease());
+        btn_backToMenu.setOnMouseReleased(e -> onBackToMenuRelease());
         //buildPlayersList();
         //TODO: maybe call here linkUI()
     }
@@ -87,6 +94,18 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
     }
 
+    void buildCurrentTilePane() {
+        //Todo: maybe change these values
+        double currentTileWidth = 80;
+
+        double currentTileHeight = currentTileWidth*.5*1.732;
+
+        currentTileCtrl = new TileCtrl(currentTileWidth, currentTileHeight);
+
+        currentTilePane.getChildren().add(currentTileCtrl);
+
+    }
+
     void buildPlayersList(JSONObject gameData){
         players = new HashMap<>();
 
@@ -100,7 +119,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             playersList.getChildren().add(pe);
         }
     }
-
 
     void focusNextPlacingPlayer(JSONObject gameData){
 
@@ -165,7 +183,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         return winners;
     }
 
-
     void onFocusPlayerRelease(String playerName){
         focusedPlayerName = playerName;
         refreshView(game.getData());
@@ -201,6 +218,26 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshView(gameData);
     }
 
+    void onBackToLobbyRelease(){
+        game.backToLocalLobby();
+        vu.updateView();
+    }
+
+    void onBackToMenuRelease(){
+        game.backToTheMainMenu();
+        vu.updateView();
+    }
+
+    void refreshCurrentTilePane(JSONObject gameData){
+        JSONObject currentTileData = gameData.getJSONObject("gameMatch").getJSONObject("currentTile");
+
+        //Todo: create specific graphics function
+        currentTileCtrl.setPlacedGraphics(
+                currentTileData.getInt("top"),
+                currentTileData.getInt("left"),
+                currentTileData.getInt("right")
+        );
+    }
 
     void refreshPlayersList(JSONObject gameData){
         JSONObject matchData = gameData.getJSONObject("gameMatch");
@@ -348,8 +385,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         }
 
         if(players == null){
-            //DEBUG
-            System.out.println("Initializing players list!");
             buildPlayersList(gameData);
         }
 
@@ -357,6 +392,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         System.out.println(gameData);
 
         refreshBoard(gameData);
+        refreshCurrentTilePane(gameData);
         refreshPlayersList(gameData);
         refreshPlacingButton(gameData);
         refreshCurrentPlayerInfo(gameData);
