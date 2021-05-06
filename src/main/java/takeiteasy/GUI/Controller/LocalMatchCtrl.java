@@ -115,7 +115,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             PlayerListEntryCtrl pe = new PlayerListEntryCtrl(playerName);
             players.put(playerName,pe);
             pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
-            pe.btn_kick.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
+            pe.btn_kick_confirm.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
             playersList.getChildren().add(pe);
         }
     }
@@ -189,7 +189,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     }
 
     void onKickPlayerRelease(String playerName){
-        //TODO: pop-up or other double check
         game.removePlayer(playerName);
 
         playersList.getChildren().remove(players.get(playerName));
@@ -256,7 +255,8 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             player.setValues(statusText);
 
             player.btn_focus.setDisable(playerName == focusedPlayerName);
-            player.btn_kick.setDisable(players.size()<2 || matchData.getString("matchState") == "FINISH");
+            player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString("matchState") == "FINISH");
+            player.pane_kickDialog.setVisible(false);
         }
 
     }
