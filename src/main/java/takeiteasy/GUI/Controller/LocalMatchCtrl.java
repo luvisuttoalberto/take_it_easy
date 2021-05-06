@@ -4,6 +4,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -15,10 +16,7 @@ import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.IGame;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
@@ -37,6 +35,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     public Pane pane_currentTile;
     public Button btn_backToLobby;
     public Button btn_backToMenu;
+    public Button btn_rematch;
+    public Button btn_rematchNewSeed;
+    public HBox pane_rematchPanel;
 
     IGame game;
     IViewUpdater vu;
@@ -52,8 +53,11 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         buildCurrentTilePane();
         btn_backToLobby.setOnMouseReleased(e -> onBackToLobbyRelease());
         btn_backToMenu.setOnMouseReleased(e -> onBackToMenuRelease());
-        //buildPlayersList();
-        //TODO: maybe call here linkUI()
+
+        btn_rematch.setText("Rematch\n(SAME tile pool)");
+        btn_rematchNewSeed.setText("Rematch\n(new tile pool)");
+        btn_rematch.setOnMouseReleased(e -> onRematchRelease());
+        btn_rematchNewSeed.setOnMouseReleased(e -> onRematchNewSeedRelease());
     }
 
     @Override
@@ -227,6 +231,20 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         vu.updateView();
     }
 
+
+    void onRematchRelease() {
+        game.backToLocalLobby();
+        game.startLocalMatch();
+        refreshView(game.getData());
+    }
+
+    void onRematchNewSeedRelease() {
+        game.backToLocalLobby();
+        game.setMatchSeed(new Random().nextLong());
+        game.startLocalMatch();
+        refreshView(game.getData());
+    }
+
     void refreshCurrentTilePane(JSONObject gameData){
         JSONObject currentTileData = gameData.getJSONObject("gameMatch").getJSONObject("currentTile");
 
@@ -342,7 +360,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             }
         }
 
-
         text_matchStatus.setText(matchStateText);
     }
 
@@ -374,6 +391,11 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
 
     }
+    void refreshRematchPanel(JSONObject gameData){
+        String matchState = gameData.getJSONObject("gameMatch").getString("matchState");
+        //TODO: refactor state label
+        pane_rematchPanel.setVisible(matchState == "FINISH");
+    }
 
     @Override
     public void refreshView(JSONObject gameData) {
@@ -391,10 +413,12 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //Todo: remove
         System.out.println(gameData);
 
+        //TODO: regroup these refresh functions? (eg board, currenttile, placingbtn, rematch)
         refreshBoard(gameData);
         refreshCurrentTilePane(gameData);
         refreshPlayersList(gameData);
         refreshPlacingButton(gameData);
+        refreshRematchPanel(gameData);
         refreshCurrentPlayerInfo(gameData);
         refreshMatchInfo(gameData);
 

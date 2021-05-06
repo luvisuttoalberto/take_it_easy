@@ -31,15 +31,17 @@ public class TilePool implements ITilePool {
     @Override
     public void reset(long seed) {
         Tile[] tileset = createFullTileSet();
+
+        //TODO:Collections.shuffle(Arrays.asList(tileset), new Random(this.seed));
         this.seed = seed;
         Random rand = new Random(seed);
         Collections.shuffle(Arrays.asList(tileset), rand);
+
         System.arraycopy(tileset, 0, extractedTiles, 0, size);
     }
 
     private static long generateSeed(){
-        Random rand = new Random();
-        return rand.nextLong();
+        return new Random().nextLong();
     }
 
     public TilePool(long seed){
