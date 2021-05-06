@@ -40,15 +40,15 @@
    </GridPane>
       <VBox alignment="CENTER" prefHeight="420.0" prefWidth="420.0" GridPane.rowIndex="1">
          <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-            <Pane fx:id="boardPane" />
+            <Pane fx:id="pane_boardPane" />
          </HBox>
          <HBox alignment="CENTER" >
             <Button fx:id="btn_placeTile" HBox.hgrow="ALWAYS" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" text="PLACE TILE" textAlignment="CENTER" />
-            <Pane fx:id="currentTilePane" />
+            <Pane fx:id="pane_currentTile" />
          </HBox>
       </VBox>
    <Text fx:id="text_matchStatus" strokeType="OUTSIDE" strokeWidth="0.0" text="Players are waiting for the game to start" textAlignment="CENTER" textOrigin="CENTER" GridPane.rowIndex="2" />
-   <ScrollPane fx:id="playersPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
-      <VBox fx:id="playersList" prefWidth="150.0" />
+   <ScrollPane fx:id="pane_playersPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <VBox fx:id="layout_playersPane" prefWidth="150.0" />
    </ScrollPane>
 </GridPane>

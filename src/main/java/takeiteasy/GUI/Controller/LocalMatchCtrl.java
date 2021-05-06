@@ -24,7 +24,7 @@ import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class LocalMatchCtrl extends GridPane implements IViewController, Initializable {
 
-    public Pane boardPane;
+    public Pane pane_boardPane;
 
     public Button btn_placeTile;
 
@@ -32,9 +32,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     public Text text_playerStatus;
     public Text text_matchStatus;
 
-    public ScrollPane playersPane;
-    public VBox playersList;
-    public Pane currentTilePane;
+    public ScrollPane pane_playersPane;
+    public VBox layout_playersPane;
+    public Pane pane_currentTile;
     public Button btn_backToLobby;
     public Button btn_backToMenu;
 
@@ -86,7 +86,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             t.setLayoutX(boardXUnit * x);
             t.setLayoutY(boardYUnit * y);
 
-            boardPane.getChildren().add(t);
+            pane_boardPane.getChildren().add(t);
             tiles.put(coords, t);
         }
 
@@ -102,7 +102,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         currentTileCtrl = new TileCtrl(currentTileWidth, currentTileHeight);
 
-        currentTilePane.getChildren().add(currentTileCtrl);
+        pane_currentTile.getChildren().add(currentTileCtrl);
 
     }
 
@@ -116,7 +116,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             players.put(playerName,pe);
             pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
             pe.btn_kick_confirm.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
-            playersList.getChildren().add(pe);
+            layout_playersPane.getChildren().add(pe);
         }
     }
 
@@ -191,7 +191,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     void onKickPlayerRelease(String playerName){
         game.removePlayer(playerName);
 
-        playersList.getChildren().remove(players.get(playerName));
+        layout_playersPane.getChildren().remove(players.get(playerName));
         players.remove(playerName);
         focusedPlayerName = null;
 
