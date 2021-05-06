@@ -290,19 +290,19 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 tiles.get(possibleCoord).setPlacedGraphics(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
 
                 if(playerData.get("playerState") == "PLACING") {
-                    tiles.get(possibleCoord).hitBox.setOnMouseReleased(e -> focusCoordinates(null, null));
+                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(null, null));
                 }
                 else{
-                    tiles.get(possibleCoord).hitBox.setOnMouseReleased(e -> {});
+                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> {});
                 }
             }
             else{
                 tiles.get(possibleCoord).resetGraphics();
                 if(playerData.get("playerState") == "PLACING") {
-                    tiles.get(possibleCoord).hitBox.setOnMouseReleased(e -> focusCoordinates(possibleCoord, currentTileData));
+                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(possibleCoord, currentTileData));
                 }
                 else{
-                    tiles.get(possibleCoord).hitBox.setOnMouseReleased(e -> {});
+                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> {});
                 }
             }
         }

@@ -12,19 +12,9 @@ import javafx.scene.text.Text;
 //TODO: see if this needs to be initializable as the localmatchctrl
 public class TileCtrl extends AnchorPane {
 
-    public Polygon hitBox;
-    Polygon bg;
+    public Polygon graphic_hitBox;
+    Polygon graphic_bg;
     Text text_top, text_left, text_right;
-
-    //Remove
-//    public TileCtrl() {
-////        setStyle();
-////        hitBox.setOnMouseEntered();
-//
-//        //TODO: determine units. v = h*sqrt(3) ~ h*1.732
-//        double hunit=20, vunit=34;
-//        buildContent(hunit,vunit);
-//    }
 
     public TileCtrl(double width, double height) {
 
@@ -39,17 +29,17 @@ public class TileCtrl extends AnchorPane {
     }
 
     public void setPlacedGraphics(Integer top, Integer left, Integer right){
-        bg.setFill(Color.AQUA);
+        graphic_bg.setFill(Color.AQUA);
         setValues(top, left, right);
     }
 
     public void setFocusedGraphics(Integer top, Integer left, Integer right) {
-        bg.setFill(Color.RED);
+        graphic_bg.setFill(Color.RED);
         setValues(top, left, right);
     }
 
     public void resetGraphics(){
-        bg.setFill(Color.WHITE);
+        graphic_bg.setFill(Color.WHITE);
         text_top.setText("");
         text_left.setText("");
         text_right.setText("");
@@ -57,13 +47,13 @@ public class TileCtrl extends AnchorPane {
 
     void buildContent(double hunit,double vunit){
 
-        bg = new Polygon();
+        graphic_bg = new Polygon();
 
         //  01234
         //0 .6.5.
         //1 1...4
         //2 .2.3.
-        bg.getPoints().setAll(
+        graphic_bg.getPoints().setAll(
                 0.0,    vunit,
                 hunit,  2*vunit,
                 3*hunit,2*vunit,
@@ -72,12 +62,12 @@ public class TileCtrl extends AnchorPane {
                 hunit,  0.0
                 );
 
-        bg.setFill(Color.WHITE);
-        bg.setStroke(Color.BLACK);
+        graphic_bg.setFill(Color.WHITE);
+        graphic_bg.setStroke(Color.BLACK);
 
         // hitbox is 1px inset wrt bg
-        hitBox = new Polygon();
-        hitBox.getPoints().setAll(
+        graphic_hitBox = new Polygon();
+        graphic_hitBox.getPoints().setAll(
                 0.0     +1.0,   vunit   ,
                 hunit   +1.0,   2*vunit -1.0,
                 3*hunit -1.0,   2*vunit -1.0,
@@ -85,7 +75,7 @@ public class TileCtrl extends AnchorPane {
                 3*hunit -1.0,   0.0     +1.0,
                 hunit   +1.0,   0.0     +1.0
         );
-        hitBox.setFill(Color.TRANSPARENT);
+        graphic_hitBox.setFill(Color.TRANSPARENT);
 
         text_top = new Text();
         text_left = new Text();
@@ -118,7 +108,7 @@ public class TileCtrl extends AnchorPane {
         layout_text.getChildren().addAll(layout_text_top,layout_text_bot);
 
 
-        this.getChildren().addAll(bg,layout_text, hitBox);
+        this.getChildren().addAll(graphic_bg,layout_text, graphic_hitBox);
 
         //TODO: these can be better
         setTopAnchor(layout_text,vunit*.1);
