@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
@@ -61,12 +62,23 @@ public class LocalLobbyCtrl implements IViewController {
     @FXML
     Button back;
 
+    @FXML
+    TextField seedField;
+
+    @FXML
+    Label seedLabel;
+
+    @FXML
+    Button setSeed;
+
     void setVisibility(Boolean bool){
         renameField.setVisible(bool);
         confirmButton.setVisible(bool);
         playersListView.setMouseTransparent(bool);
         cancel.setVisible(bool);
         nameField.setMouseTransparent(bool);
+        seedField.setMouseTransparent(bool);
+        setSeed.setDisable(bool);
         submit.setDisable(bool);
         rename.setDisable(bool);
         remove.setDisable(bool);
@@ -159,4 +171,13 @@ public class LocalLobbyCtrl implements IViewController {
         vu.updateView();
     }
 
+    @FXML
+    void setSeed() {
+        if (!seedField.getText().equals("")) {
+            String seed = seedField.getText();
+            seedLabel.setText(seed);
+            game.setMatchSeed(seed.hashCode());
+            seedField.clear();
+        }
+    }
 }
