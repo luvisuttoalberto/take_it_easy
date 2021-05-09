@@ -86,9 +86,14 @@ public class LocalLobbyCtrl implements IViewController {
         back.setDisable(bool);
     }
 
+    boolean checkPlayerName(String name){
+        return (name.equals(name.toLowerCase()) && name.length() < 12 ||
+                !name.equals(name.toLowerCase()) && name.length() < 10);
+    }
+
     @FXML
     void addNewPlayer() {
-        if (!nameField.getText().equals("")) {
+        if (!nameField.getText().equals("") && checkPlayerName(nameField.getText())) {
             String name = nameField.getText();
             game.addPlayer(name);
 
@@ -123,7 +128,7 @@ public class LocalLobbyCtrl implements IViewController {
 
     @FXML
     void confirmRename() {
-        if (!renameField.getText().equals("")) {
+        if (!renameField.getText().equals("") && checkPlayerName(renameField.getText())) {
             String newName = renameField.getText();
             renamePlayer();
 
@@ -173,10 +178,16 @@ public class LocalLobbyCtrl implements IViewController {
 
     @FXML
     void setSeed() {
+        int seedValue;
         if (!seedField.getText().equals("")) {
             String seed = seedField.getText();
-            seedLabel.setText(seed);
-            game.setMatchSeed(seed.hashCode());
+            if(!seed.matches("\\d*")){
+                seedValue = seed.hashCode();
+            }else{
+                seedValue = Integer.parseInt(seed);
+            }
+            seedLabel.setText(String.valueOf(seedValue));
+            game.setMatchSeed(seedValue);
             seedField.clear();
         }
     }
