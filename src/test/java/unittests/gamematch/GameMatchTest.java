@@ -1,16 +1,15 @@
 package unittests.gamematch;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.HexCoordinates;
-import takeiteasy.game.Game;
 import takeiteasy.gamematch.*;
 import takeiteasy.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unittests.utility.Utility.SimulateCompleteGameMatch;
@@ -37,7 +36,7 @@ public class GameMatchTest {
 
         JSONObject data = gm.getData();
         assertEquals("SETUP", data.get("matchState"));
-        assertTrue(data.getJSONObject("players").keySet().contains(plyName));
+        assertTrue(data.getJSONArray("players").toString().contains(plyName));
     }
 
     @Test
@@ -165,9 +164,9 @@ public class GameMatchTest {
 
         assertDoesNotThrow( () -> gm.setPlayerName(oldName, newName));
 
-        List<String> playerNames = new ArrayList<>(gm.getData().getJSONObject("players").keySet());
-        assertTrue(playerNames.contains(newName));
-        assertFalse(playerNames.contains(oldName));
+        JSONArray players = gm.getData().getJSONArray("players");
+        assertTrue(players.toString().contains(newName));
+        assertFalse(players.toString().contains(oldName));
     }
 
     @Test
@@ -209,7 +208,7 @@ public class GameMatchTest {
         assertDoesNotThrow( () -> gm.removePlayer(plyName));
 
         JSONObject data = gm.getData();
-        assertFalse(data.getJSONObject("players").keySet().contains(plyName));
+        assertFalse(data.getJSONArray("players").toString().contains(plyName));
     }
 
     @Test
@@ -365,7 +364,7 @@ public class GameMatchTest {
         assertDoesNotThrow(gm::backToSetup);
 
         assertEquals("SETUP", gm.getData().get("matchState"));
-        JSONObject boardData = gm.getData().getJSONObject("players").getJSONObject(name).getJSONObject("playerBoard");
+        JSONObject boardData = gm.getData().getJSONArray("players").getJSONObject(0).getJSONObject("playerBoard");
         assertTrue(boardData.isEmpty());
     }
 
@@ -464,9 +463,9 @@ public class GameMatchTest {
             gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(18).coordinate);
 
             gm.endMatch();
-            JSONObject playersData = gm.getData().getJSONObject("players");
-            assertEquals(finalScore, playersData.getJSONObject(name).getInt("playerScore"));
-            assertEquals(otherFinalScore, playersData.getJSONObject(otherName).getInt("playerScore"));
+            JSONArray playersData = gm.getData().getJSONArray("players");
+            assertEquals(finalScore, playersData.getJSONObject(0).getInt("playerScore"));
+            assertEquals(otherFinalScore, playersData.getJSONObject(1).getInt("playerScore"));
         }
         catch (Exception e){
             fail();

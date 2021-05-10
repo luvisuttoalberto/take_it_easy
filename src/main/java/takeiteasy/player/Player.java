@@ -79,6 +79,7 @@ public class Player implements IPlayer{
     @Override
     public JSONObject getData(){
         JSONObject data = new JSONObject();
+        data.put("playerName", Name);
         data.put("playerState", playerState.name());
         data.put("playerBoard", playerBoard.getData());
         data.put("playerScore", playerBoard.computeScore());
