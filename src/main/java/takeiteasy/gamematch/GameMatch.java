@@ -1,5 +1,6 @@
 package takeiteasy.gamematch;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.player.*;
@@ -175,9 +176,9 @@ public class GameMatch implements IGameMatch{
     @Override
     public JSONObject getData() {
         JSONObject data = new JSONObject();
-        JSONObject playersData = new JSONObject();
+        JSONArray playersData = new JSONArray();
         for(IPlayer p : players){
-            playersData.put(p.getName(), p.getData());
+            playersData.put(p.getData());
         }
         data.put("players", playersData);
 
