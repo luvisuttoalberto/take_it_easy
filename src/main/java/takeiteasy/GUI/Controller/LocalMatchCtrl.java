@@ -128,12 +128,18 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         }
     }
 
+    void resetFocusedCoordinateAndChangeFocusedPlayerTo(String playerName){
+        focusedPlayerName = playerName;
+        focusedCoordinates = null;
+    }
+
     void focusNextPlacingPlayer(JSONObject gameData){
 
         JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
         for(int iii = 0; iii < playersData.length(); ++iii){
             if(playersData.getJSONObject(iii).get("playerState").equals("PLACING")){
-                focusedPlayerName = playersData.getJSONObject(iii).getString("playerName");
+                resetFocusedCoordinateAndChangeFocusedPlayerTo(playersData.getJSONObject(iii).getString("playerName"));
+//                focusedPlayerName = playersData.getJSONObject(iii).getString("playerName");
                 break;
             }
         }
@@ -192,7 +198,8 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     }
 
     void onFocusPlayerRelease(String playerName){
-        focusedPlayerName = playerName;
+        resetFocusedCoordinateAndChangeFocusedPlayerTo(playerName);
+//        focusedPlayerName = playerName;
         refreshView(game.getData());
     }
 
@@ -201,8 +208,10 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         layout_playersPane.getChildren().remove(players.get(playerName));
         players.remove(playerName);
-        focusedPlayerName = null;
-
+//        focusedPlayerName = null;
+        if(playerName == focusedPlayerName){
+            resetFocusedCoordinateAndChangeFocusedPlayerTo(null);
+        }
         refreshView(game.getData());
     }
 
@@ -218,7 +227,8 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         JSONObject gameData = game.getData();
 
         if(gameData.getJSONObject("gameMatch").getString("matchState") == "FINISH"){
-            focusedPlayerName = computeHighestScoringPlayerNames(gameData).get(0);
+//            focusedPlayerName = computeHighestScoringPlayerNames(gameData).get(0);
+            resetFocusedCoordinateAndChangeFocusedPlayerTo(computeHighestScoringPlayerNames(gameData).get(0));
         } else {
             focusNextPlacingPlayer(gameData);
         }
@@ -333,7 +343,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 }
             }
             else{
-                tiles.get(possibleCoord).resetGraphics();
+                if(possibleCoord != focusedCoordinates){
+                    tiles.get(possibleCoord).resetGraphics();
+                }
                 if(playerData.get("playerState") == "PLACING") {
                     tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(possibleCoord, currentTileData));
                 }
