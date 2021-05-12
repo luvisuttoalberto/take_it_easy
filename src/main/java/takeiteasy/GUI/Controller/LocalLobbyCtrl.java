@@ -94,7 +94,6 @@ public class LocalLobbyCtrl implements IViewController {
         else {
             nameLengthAlert();
         }
-        vu.updateView();
     }
 
     @FXML
