@@ -1,5 +1,6 @@
 package takeiteasy.gamematch;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.player.*;
@@ -67,12 +68,19 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException {
+    public void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException, LastPlacingPlayerRemovedException {
         Integer playerIndex = retrievePlayerIndexFromName(playerName);
         if(players.size() <= 1){
             throw new NotEnoughPlayersException();
         }
         players.removeElementAt(playerIndex);
+        for(IPlayer player : players){
+            if(player.getState() != IPlayer.State.WAIT_OTHER){
+                return;
+            }
+        }
+
+        throw new LastPlacingPlayerRemovedException();
     }
 
     @Override
@@ -104,9 +112,10 @@ public class GameMatch implements IGameMatch{
         if (state != State.PLAY){
             throw new InvalidMatchStateException();
         }
-        if (players.size() < 1){
-            throw new NotEnoughPlayersException();
-        }
+        //TODO: This part of the code is never reached!!!
+//        if (players.size() < 1){
+//            throw new NotEnoughPlayersException();
+//        }
         for (IPlayer p : players){
             IPlayer.State playerState = p.getState();
             if (playerState == IPlayer.State.PLACING){
@@ -167,9 +176,9 @@ public class GameMatch implements IGameMatch{
     @Override
     public JSONObject getData() {
         JSONObject data = new JSONObject();
-        JSONObject playersData = new JSONObject();
+        JSONArray playersData = new JSONArray();
         for(IPlayer p : players){
-            playersData.put(p.getName(), p.getData());
+            playersData.put(p.getData());
         }
         data.put("players", playersData);
 

@@ -19,29 +19,23 @@ public class BoardVanillaTest {
 
     @Test
     public void getTileOutOfBoardCoordinates() {
-        BoardVanilla b = new BoardVanilla();
-        try {
+        BoardVanilla board = new BoardVanilla();
+        try{
             HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
-            b.getTile(badcoords);
-            fail();
+            assertThrows(OutOfBoardCoordinatesException.class, ()-> board.getTile(badcoords));
         }
-        catch (OutOfBoardCoordinatesException ignored) {
-            //test passed
-        }
-        catch (Exception e) {
-            fail();
+        catch(Exception ignored){
         }
     }
 
     @Test
     public void getTileNoTileAtValidCoordinates(){
-        try {
-            BoardVanilla b = new BoardVanilla();
+        BoardVanilla board = new BoardVanilla();
+        try{
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            assertNull(b.getTile(coords));
+            assertDoesNotThrow(()-> board.getTile(coords));
         }
-        catch(Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
@@ -61,38 +55,27 @@ public class BoardVanillaTest {
 
     @Test
     public void placeTileAtOutOfRangeCoordinates(){
-        try {
-            BoardVanilla b = new BoardVanilla();
+        BoardVanilla board = new BoardVanilla();
+        try{
             HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
-            Tile tile = new Tile(1,2,3);
-
-            b.placeTile(tile,badcoords);
-            fail();
+            Tile tile = new Tile(1, 2, 3);
+            assertThrows(OutOfBoardCoordinatesException.class, ()-> board.placeTile(tile, badcoords));
         }
-        catch (OutOfBoardCoordinatesException ignored) {
-            //test passed
-        }
-        catch (Exception e) {
-            fail();
+        catch(Exception ignored){
         }
     }
 
     @Test
     public void placeTileAtOccupiedPosition() {
         try{
-            BoardVanilla b = new BoardVanilla();
+            BoardVanilla board = new BoardVanilla();
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
             Tile tile = new Tile(1,2,3);
 
-            b.placeTile(tile,coords);
-            b.placeTile(tile,coords);
-            fail();
+            board.placeTile(tile,coords);
+            assertThrows(CoordinatesOccupidedException.class, ()-> board.placeTile(tile,coords));
         }
-        catch (CoordinatesOccupidedException ignored) {
-            //test passed
-        }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
@@ -122,8 +105,7 @@ public class BoardVanillaTest {
             }
             assertEquals(score, board.computeScore());
         }
-        catch(Exception e){
-            fail();
+        catch(Exception ignored){
         }
     }
 }

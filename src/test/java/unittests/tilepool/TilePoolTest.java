@@ -1,5 +1,6 @@
 package unittests.tilepool;
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 import takeiteasy.tilepool.*;
@@ -10,16 +11,8 @@ public class TilePoolTest {
 
     @Test
     public void testTileOutBound(){
-        try{
-            TilePool pool = new TilePool(19);
-            Tile t = pool.getTile(28);
-            fail();
-        }
-        catch (ArrayIndexOutOfBoundsException ignored){
-        }
-        catch (Exception e){
-            fail();
-        }
+        TilePool pool = new TilePool(19);
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> pool.getTile(28));
     }
 
     @Test
@@ -71,15 +64,6 @@ public class TilePoolTest {
 
     @Test
     public void testCorrectValueForTile(){
-        try{
-            Tile t = new Tile(3,2,1);
-            fail();
-        }
-        catch (IllegalArgumentException E){
-            //test passed
-        }
-        catch (Exception e){
-            fail();
-        }
+        assertThrows(IllegalArgumentException.class, ()-> new Tile(3,2,1));
     }
 }

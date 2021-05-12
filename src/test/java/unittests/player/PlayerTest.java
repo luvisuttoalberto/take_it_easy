@@ -20,11 +20,10 @@ public class PlayerTest {
     public void testStartMatch(){
         Player player = new Player("Dario");
         try {
-            player.startMatch();
+            assertDoesNotThrow(player::startMatch);
             assertEquals(IPlayer.State.PLACING, player.getState());
         }
-        catch (Exception e) {
-            fail();
+        catch (Exception ignored) {
         }
     }
 
@@ -43,21 +42,17 @@ public class PlayerTest {
         try {
             player.startMatch();
             Tile expectedTile = new Tile(1, 2, 3);
+            JSONObject expectedTileData = expectedTile.getData();
             HexCoordinates coords = new HexCoordinates(0,0,0);
-            player.placeTile(expectedTile, coords);
+            assertDoesNotThrow(()->player.placeTile(expectedTile, coords));
 
             JSONObject data = player.getData();
             JSONObject boardData = data.getJSONObject("playerBoard");
             JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
-            Tile insertedTile = new Tile(   insertedTileData.getInt("top"),
-                                            insertedTileData.getInt("left"),
-                                            insertedTileData.getInt("right")
-                                        );
             assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
-            assertEquals(expectedTile, insertedTile);
+            JSONAssert.assertEquals(expectedTileData, insertedTileData, true);
         }
-        catch (Exception e){
-            fail();
+        catch (Exception ignored){
         }
     }
 
@@ -69,11 +64,10 @@ public class PlayerTest {
             HexCoordinates coordinates = new HexCoordinates(0,0,0);
             player.startMatch();
             player.placeTile(tile, coordinates);
-            player.transitionFromWaitingPlayersToPlacing();
+            assertDoesNotThrow(player::transitionFromWaitingPlayersToPlacing);
             assertEquals(IPlayer.State.PLACING, player.getState());
         }
-        catch (Exception e) {
-            fail();
+        catch (Exception ignored) {
         }
     }
 
@@ -88,11 +82,10 @@ public class PlayerTest {
                 if (i == list.size() - 1) break;
                 player.transitionFromWaitingPlayersToPlacing();
             }
-            player.endMatch();
+            assertDoesNotThrow(player::endMatch);
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
         }
-        catch (Exception e) {
-            fail();
+        catch (Exception ignored) {
         }
     }
 

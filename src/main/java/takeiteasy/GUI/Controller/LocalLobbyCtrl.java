@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.game.IGame;
@@ -39,11 +40,11 @@ public class LocalLobbyCtrl implements IViewController {
     }
 
     public void refreshPlayersList(JSONObject gameData) {
-        Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
         ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
-        while(playersNameKeys.hasNext()) {
-            String nameKey = playersNameKeys.next();
-            playersNameObservable.add(nameKey);
+        JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
+        for (int iii = 0; iii < playersData.length(); ++iii){
+            String playerName = playersData.getJSONObject(iii).getString("playerName");
+            playersNameObservable.add(playerName);
         }
         playersListView.setItems(playersNameObservable);
     }
