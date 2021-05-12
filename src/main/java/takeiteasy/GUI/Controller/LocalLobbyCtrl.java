@@ -3,10 +3,7 @@ package takeiteasy.GUI.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.game.IGame;
@@ -86,10 +83,18 @@ public class LocalLobbyCtrl implements IViewController {
         back.setDisable(bool);
     }
 
+    void Alert() {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setResizable(true);
+        errorAlert.setHeaderText("Input not valid");
+        errorAlert.setContentText("The name must be between 1 and 10 characters");
+        errorAlert.showAndWait();
+    }
+
     boolean checkPlayerNameLength(String name){
         return (name.length() < 11);
     }
-
+    
     @FXML
     void addNewPlayer() {
         if (!nameField.getText().equals("") && checkPlayerNameLength(nameField.getText())) {
@@ -106,6 +111,9 @@ public class LocalLobbyCtrl implements IViewController {
             }
             playersListView.setItems(playersNameObservable);
             nameField.clear();
+        }
+        else {
+            Alert();
         }
         vu.updateView();
     }
