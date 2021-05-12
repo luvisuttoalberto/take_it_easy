@@ -14,6 +14,7 @@ public class LocalLobbyCtrl implements IViewController {
     IGame game;
     IViewUpdater vu;
     private String oldName;
+    private boolean seedFieldFlag = false;
 
     @Override
     public void injectGame(IGame g) {
@@ -188,11 +189,14 @@ public class LocalLobbyCtrl implements IViewController {
 
     @FXML
     void seedOnMouseClicked(){
-        seedField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                seedField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        if(!seedFieldFlag) {
+            seedField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    seedField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            });
+            seedFieldFlag = true;
+        }
     }
 
     @FXML
