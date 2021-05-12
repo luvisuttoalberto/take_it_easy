@@ -15,11 +15,12 @@ import takeiteasy.GUI.Controller.LocalMatchComponents.TileCtrl;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.IGame;
-
 import java.net.URL;
 import java.util.*;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
+
+//TODO: Reformat Json fields
 
 public class LocalMatchCtrl extends GridPane implements IViewController, Initializable {
 
@@ -50,8 +51,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     final double tileWidth = 80;
     final double tileHeight = tileWidth *.5*1.732;
-
-
 
     void linkStaticButtons(){
         btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
@@ -212,11 +211,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     void onPlaceTileRelease(){
         game.playerPlacesTileAt(focusedPlayerName, focusedCoordinates);
-        //Note: placement MUST succeed
 
-        //reset focus coordinates
         defocusCoordinates();
-        //TODO: should we avoid automatic change to next player?
+
         JSONObject gameData = game.getData();
 
         if(gameData.getJSONObject("gameMatch").getString("matchState") == "FINISH"){
@@ -273,6 +270,10 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     }
 
     void refreshPlayersList(JSONObject gameData){
+        if(players == null){
+            buildPlayersList(gameData);
+        }
+
         JSONObject matchData = gameData.getJSONObject("gameMatch");
         JSONArray playersData = matchData.getJSONArray("players");
         for (int iii = 0; iii < playersData.length(); ++iii){
@@ -303,16 +304,18 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 focusedPlayerName
         );
 
-        //todo: magic fields, maybe add a graphic change on the text or background
+        //todo: maybe add a graphic change on the text or background
         btn_placeTile.setDisable(focusedCoordinates == null || playerData.get("playerState") != "PLACING");
-
     }
 
     void refreshBoard(JSONObject gameData){
+        if(focusedPlayerName == null){
+            focusFirstPlacingPlayer(gameData);
+        }
 
         JSONObject playerData = getPlayerDataFromPlayerName(
-                gameData.getJSONObject("gameMatch").
-                        getJSONArray("players"),
+                gameData.getJSONObject("gameMatch")
+                        .getJSONArray("players"),
                 focusedPlayerName
         );
 
@@ -321,7 +324,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         for(HexCoordinates possibleCoord : tiles.keySet()){
 
-            //TODO: extract method during refactoring to make more clear what the function does
+            //TODO: refactor: extract method to make more clear what the function does
             //TODO: consider introducing function with specific "callback" name (es. on...release) that
             //      just calls defocusCoordinates/focusCoordinates
 
@@ -391,7 +394,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         text_playerName.setText(focusedPlayerName);
 
-        //TODO: Reformat Json fields
         JSONObject focusedPlayerData = getPlayerDataFromPlayerName(
                 gameData.getJSONObject("gameMatch").
                         getJSONArray("players"),
@@ -402,42 +404,19 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 getJSONObject("currentTile");
 
         //TODO: Reformat state text
-        if(focusedPlayerData.get("playerState") == "PLACING"){
-            text_playerStatus.setText(
-                    focusedPlayerData.getString("playerState") + ": (" +
-                            currentTileData.get("top") + "," +
-                            currentTileData.get("left") + "," +
-                            currentTileData.get("right") + ")");
-        }
-        else{
-            text_playerStatus.setText(focusedPlayerData.getString("playerState"));
-        }
-
-
+        text_playerStatus.setText(focusedPlayerData.getString("playerState"));
     }
     void refreshRematchPanel(JSONObject gameData){
         String matchState = gameData.getJSONObject("gameMatch").getString("matchState");
-        //TODO: refactor state label
         pane_rematchPanel.setVisible(matchState == "FINISH");
     }
 
     @Override
     public void refreshView(JSONObject gameData) {
 
-        //TODO: method for first refresh instead of these ifs?
+        //Todo: remove, DEBUG
+//        System.out.println(gameData);
 
-        if(focusedPlayerName == null){
-            focusFirstPlacingPlayer(gameData);
-        }
-
-        if(players == null){
-            buildPlayersList(gameData);
-        }
-
-        //Todo: remove
-        System.out.println(gameData);
-
-        //TODO: regroup these refresh functions? (eg board, currenttile, placingbtn, rematch)
         refreshBoard(gameData);
         refreshCurrentTilePane(gameData);
         refreshPlayersList(gameData);
