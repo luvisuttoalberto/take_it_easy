@@ -86,14 +86,13 @@ public class LocalLobbyCtrl implements IViewController {
         back.setDisable(bool);
     }
 
-    boolean checkPlayerName(String name){
-        return (name.equals(name.toLowerCase()) && name.length() < 12 ||
-                !name.equals(name.toLowerCase()) && name.length() < 10);
+    boolean checkPlayerNameLength(String name){
+        return (name.length() < 11);
     }
 
     @FXML
     void addNewPlayer() {
-        if (!nameField.getText().equals("") && checkPlayerName(nameField.getText())) {
+        if (!nameField.getText().equals("") && checkPlayerNameLength(nameField.getText())) {
             String name = nameField.getText();
             game.addPlayer(name);
 
@@ -128,7 +127,7 @@ public class LocalLobbyCtrl implements IViewController {
 
     @FXML
     void confirmRename() {
-        if (!renameField.getText().equals("") && checkPlayerName(renameField.getText())) {
+        if (!renameField.getText().equals("") && checkPlayerNameLength(renameField.getText())) {
             String newName = renameField.getText();
             renamePlayer();
 
