@@ -177,17 +177,20 @@ public class LocalLobbyCtrl implements IViewController {
     }
 
     @FXML
+    void seedOnMouseClicked(){
+        seedField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                seedField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+    }
+
+    @FXML
     void setSeed() {
-        int seedValue;
         if (!seedField.getText().equals("")) {
             String seed = seedField.getText();
-            if(!seed.matches("\\d*")){
-                seedValue = seed.hashCode();
-            }else{
-                seedValue = Integer.parseInt(seed);
-            }
-            seedLabel.setText(String.valueOf(seedValue));
-            game.setMatchSeed(seedValue);
+            seedLabel.setText(seed);
+            game.setMatchSeed(Integer.parseInt(seed));
             seedField.clear();
         }
     }

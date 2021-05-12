@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="takeiteasy.GUI.Controller.LocalLobbyCtrl">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="takeiteasy.GUI.Controller.LocalLobbyCtrl">
    <children>
       <Label layoutX="102.0" layoutY="66.0" text="Players List">
          <font>
@@ -27,7 +27,7 @@
       <Button fx:id="back" layoutX="162.0" layoutY="364.0" mnemonicParsing="false" onAction="#backToMainMenu" text="Main Menu" />
       <Button fx:id="start" layoutX="365.0" layoutY="364.0" mnemonicParsing="false" onAction="#startMatch" text="Start Match" />
       <Button fx:id="setSeed" layoutX="541.0" layoutY="17.0" mnemonicParsing="false" onAction="#setSeed" text="Set" />
-      <TextField fx:id="seedField" layoutX="358.0" layoutY="17.0" />
+      <TextField fx:id="seedField" layoutX="358.0" layoutY="17.0" onMouseClicked="#seedOnMouseClicked" />
       <Label layoutX="310.0" layoutY="21.0" text="Seed" />
       <Label fx:id="seedLabel" layoutX="77.0" layoutY="22.0" text="Not Set" />
       <Label layoutX="25.0" layoutY="21.0" text="Seed:">
