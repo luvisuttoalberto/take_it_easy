@@ -94,7 +94,7 @@ public class LocalLobbyCtrl implements IViewController {
     boolean checkPlayerNameLength(String name){
         return (name.length() < 11);
     }
-    
+
     @FXML
     void addNewPlayer() {
         if (!nameField.getText().equals("") && checkPlayerNameLength(nameField.getText())) {
@@ -152,6 +152,9 @@ public class LocalLobbyCtrl implements IViewController {
             playersListView.setItems(playersNameObservable);
             renameField.clear();
             setVisibility(false);
+        }
+        else {
+            Alert();
         }
         //TODO: change visibility inside or outside of the IF
     }
