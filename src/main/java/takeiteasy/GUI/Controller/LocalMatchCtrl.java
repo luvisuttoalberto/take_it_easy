@@ -48,23 +48,31 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     Map<String, PlayerListEntryCtrl> players;
     TileCtrl currentTileCtrl;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        buildBoard();
-        buildCurrentTilePane();
+    final double tileWidth = 80;
+    final double tileHeight = tileWidth *.5*1.732;
+
+
+
+    void linkStaticButtons(){
+        btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
         btn_backToLobby.setOnMouseReleased(e -> onBackToLobbyRelease());
         btn_backToMenu.setOnMouseReleased(e -> onBackToMenuRelease());
-
-        btn_rematch.setText("Rematch\n(SAME tile pool)");
-        btn_rematchNewSeed.setText("Rematch\n(new tile pool)");
         btn_rematch.setOnMouseReleased(e -> onRematchRelease());
         btn_rematchNewSeed.setOnMouseReleased(e -> onRematchNewSeedRelease());
     }
 
     @Override
+    public void initialize(URL location, ResourceBundle resources){
+        buildBoard();
+        buildCurrentTilePane();
+        linkStaticButtons();
+        btn_rematch.setText("Rematch\n(SAME tile pool)");
+        btn_rematchNewSeed.setText("Rematch\n(new tile pool)");
+    }
+
+    @Override
     public void injectGame(IGame g) {
         this.game = g;
-        linkUI();
     }
 
     @Override
@@ -74,19 +82,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     void buildBoard(){
 
-        double tileWidth = 80;
-
-        double tileHeight = tileWidth*.5*1.732,
-                boardXUnit = tileWidth*.75,
-                boardYUnit = tileHeight;
+        double boardXUnit = tileWidth*.75;
+        double boardYUnit = tileHeight;
 
         tiles = new HashMap<>();
 
         for(HexCoordinates coords : generateCoordinateStandard()){
             TileCtrl t = new TileCtrl(tileWidth,tileHeight);
 
-            double x = coords.getX()+2,
-                    y = 2-(coords.getY()+coords.getX()*.5);
+            //Todo: refactor: extract method?
+            double x = coords.getX() + 2;
+            double y = 2-(coords.getY()+coords.getX()*.5);
 
             t.setLayoutX(boardXUnit * x);
             t.setLayoutY(boardYUnit * y);
@@ -94,25 +100,14 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             pane_boardPane.getChildren().add(t);
             tiles.put(coords, t);
         }
-
-        //todo: Move this to linkui()? If so, we have to call it somewhere
-        btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
     }
 
     void buildCurrentTilePane() {
-        //Todo: maybe change these values
-        double currentTileWidth = 80;
-
-        double currentTileHeight = currentTileWidth*.5*1.732;
-
-        currentTileCtrl = new TileCtrl(currentTileWidth, currentTileHeight);
-
+        currentTileCtrl = new TileCtrl(tileWidth, tileHeight);
         pane_currentTile.getChildren().add(currentTileCtrl);
-
     }
 
     void buildPlayersList(JSONObject gameData){
-        //TODO: should this be converted to an array list, since it is constructed as the JSONArray?
         players = new HashMap<>();
 
         JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
@@ -128,20 +123,12 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         }
     }
 
-    void resetFocusedCoordinateAndChangeFocusedPlayerTo(String playerName){
-        focusedPlayerName = playerName;
-        focusedCoordinates = null;
-    }
-
-    void focusNextPlacingPlayer(JSONObject gameData){
-
-        JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
-        for(int iii = 0; iii < playersData.length(); ++iii){
-            if(playersData.getJSONObject(iii).get("playerState").equals("PLACING")){
-                resetFocusedCoordinateAndChangeFocusedPlayerTo(playersData.getJSONObject(iii).getString("playerName"));
-//                focusedPlayerName = playersData.getJSONObject(iii).getString("playerName");
-                break;
-            }
+    void defocusCoordinates(){
+        if (focusedCoordinates != null) {
+            //graphic defocus
+            tiles.get(focusedCoordinates).resetGraphics();
+            focusedCoordinates = null;
+            btn_placeTile.setDisable(true);
         }
     }
 
@@ -152,28 +139,35 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             return;
         }
 
-        if (focusedCoordinates != null) {
-            //graphic defocus
-            tiles.get(focusedCoordinates).resetGraphics();
-        }
+        defocusCoordinates();
 
         focusedCoordinates = coords;
 
-        if (focusedCoordinates == null) {
-            btn_placeTile.setDisable(true);
-            return;
-        }
-
-        //graphic focus
         if(currentTileData != null){
             tiles.get(focusedCoordinates).setFocusedGraphics(
-            currentTileData.getInt("top"),
-            currentTileData.getInt("left"),
-            currentTileData.getInt("right")
+                currentTileData.getInt("top"),
+                currentTileData.getInt("left"),
+                currentTileData.getInt("right")
             );
         }
 
         btn_placeTile.setDisable(false);
+    }
+
+    void focusPlayerAndDefocusCoordinates(String playerName){
+        focusedPlayerName = playerName;
+        defocusCoordinates();
+    }
+
+    void focusFirstPlacingPlayer(JSONObject gameData){
+
+        JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
+        for(int iii = 0; iii < playersData.length(); ++iii){
+            if(playersData.getJSONObject(iii).get("playerState").equals("PLACING")){
+                focusPlayerAndDefocusCoordinates(playersData.getJSONObject(iii).getString("playerName"));
+                break;
+            }
+        }
     }
 
     ArrayList<String> computeHighestScoringPlayerNames(JSONObject gameData){
@@ -198,8 +192,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     }
 
     void onFocusPlayerRelease(String playerName){
-        resetFocusedCoordinateAndChangeFocusedPlayerTo(playerName);
-//        focusedPlayerName = playerName;
+        focusPlayerAndDefocusCoordinates(playerName);
         refreshView(game.getData());
     }
 
@@ -208,11 +201,12 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         layout_playersPane.getChildren().remove(players.get(playerName));
         players.remove(playerName);
-//        focusedPlayerName = null;
+
+        JSONObject gameData = game.getData();
         if(playerName == focusedPlayerName){
-            resetFocusedCoordinateAndChangeFocusedPlayerTo(null);
+            focusFirstPlacingPlayer(gameData);
         }
-        refreshView(game.getData());
+        refreshView(gameData);
     }
 
 
@@ -221,16 +215,14 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //Note: placement MUST succeed
 
         //reset focus coordinates
-        focusCoordinates(null, null);
-
+        defocusCoordinates();
         //TODO: should we avoid automatic change to next player?
         JSONObject gameData = game.getData();
 
         if(gameData.getJSONObject("gameMatch").getString("matchState") == "FINISH"){
-//            focusedPlayerName = computeHighestScoringPlayerNames(gameData).get(0);
-            resetFocusedCoordinateAndChangeFocusedPlayerTo(computeHighestScoringPlayerNames(gameData).get(0));
+            focusPlayerAndDefocusCoordinates(computeHighestScoringPlayerNames(gameData).get(0));
         } else {
-            focusNextPlacingPlayer(gameData);
+            focusFirstPlacingPlayer(gameData);
         }
         refreshView(gameData);
     }
@@ -273,7 +265,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     void refreshCurrentTilePane(JSONObject gameData){
         JSONObject currentTileData = gameData.getJSONObject("gameMatch").getJSONObject("currentTile");
 
-        //Todo: create specific graphics function
         currentTileCtrl.setPlacedGraphics(
                 currentTileData.getInt("top"),
                 currentTileData.getInt("left"),
@@ -330,13 +321,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         for(HexCoordinates possibleCoord : tiles.keySet()){
 
+            //TODO: extract method during refactoring to make more clear what the function does
+            //TODO: consider introducing function with specific "callback" name (es. on...release) that
+            //      just calls defocusCoordinates/focusCoordinates
+
             if(boardData.opt(possibleCoord.toString()) != null){
                 JSONObject tileData = boardData.getJSONObject(possibleCoord.toString());
 
                 tiles.get(possibleCoord).setPlacedGraphics(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
 
                 if(playerData.get("playerState") == "PLACING") {
-                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(null, null));
+                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> defocusCoordinates());
                 }
                 else{
                     tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> {});
@@ -432,7 +427,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         //TODO: method for first refresh instead of these ifs?
 
         if(focusedPlayerName == null){
-            focusNextPlacingPlayer(gameData);
+            focusFirstPlacingPlayer(gameData);
         }
 
         if(players == null){
@@ -452,9 +447,4 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshMatchInfo(gameData);
 
     }
-
-    void linkUI(){
-        //TODO:
-    }
-
 }
