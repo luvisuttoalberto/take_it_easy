@@ -8,13 +8,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 
 public class PlayerListEntryCtrl extends AnchorPane {
+    public AnchorPane pane_kickDialog;
     Text text_playerName, text_status;
     public Button btn_showKickDialog, btn_focus, btn_kick_confirm, btn_kick_cancel;
-    public AnchorPane pane_kickDialog;
-
-    //TODO: maybe put these into lang file
-    final String txt_statusPlacing = "Placing";
-    final String txt_statusWaitOther = "Waiting";
 
     public PlayerListEntryCtrl(String playerName){
         buildContent(playerName);
@@ -75,20 +71,9 @@ public class PlayerListEntryCtrl extends AnchorPane {
         btn_kick_cancel.setOnMouseReleased(e->pane_kickDialog.setVisible(false));
     }
 
-
-
-    //TODO: graphics, scores
+    //TODO: graphic: change background or text color based on status
     public void setValues(String statusText){
-
-        if(statusText == "PLACING"){
-            text_status.setText(txt_statusPlacing);
-        }
-        else if(statusText == "WAIT_OTHER"){
-            text_status.setText(txt_statusWaitOther);
-        }
-        else{
-            text_status.setText("Score: " + statusText);
-        }
+        text_status.setText(statusText);
     }
 
 }

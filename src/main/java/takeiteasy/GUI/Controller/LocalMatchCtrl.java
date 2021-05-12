@@ -22,6 +22,7 @@ import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 //TODO: Reformat Json fields
 
+
 public class LocalMatchCtrl extends GridPane implements IViewController, Initializable {
 
     public Pane pane_boardPane;
@@ -51,6 +52,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     final double tileWidth = 80;
     final double tileHeight = tileWidth *.5*1.732;
+
+    final String txt_statusPlacing = "Placing";
+    final String txt_statusWaitOther = "Waiting";
 
     void linkStaticButtons(){
         btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
@@ -202,7 +206,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         players.remove(playerName);
 
         JSONObject gameData = game.getData();
-        if(playerName == focusedPlayerName){
+        if(playerName.equals(focusedPlayerName)){
             focusFirstPlacingPlayer(gameData);
         }
         refreshView(gameData);
@@ -252,7 +256,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         JSONObject playerData = null;
         for(int iii = 0; iii < playersData.length(); ++iii){
             playerData = playersData.getJSONObject(iii);
-            if(playerData.getString("playerName") == playerName){
+            if(playerData.getString("playerName").equals(playerName)){
                 break;
             }
         }
@@ -269,6 +273,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         );
     }
 
+    String getFormattedPlayerStatusText(String playerState){
+        //Todo: tidy
+        if(playerState == "PLACING"){
+            return txt_statusPlacing;
+        }
+        else if(playerState == "WAIT_OTHER"){
+            return txt_statusWaitOther;
+        }
+        return "?";
+    }
+
     void refreshPlayersList(JSONObject gameData){
         if(players == null){
             buildPlayersList(gameData);
@@ -282,14 +297,15 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
             String statusText;
             if(matchData.getString("matchState") == "FINISH"){
-                statusText = String.valueOf(playerData.getInt("playerScore"));
+                statusText = "Score: " + playerData.getInt("playerScore");
             }
             else{
-                statusText = playerData.getString("playerState");
+                statusText = getFormattedPlayerStatusText(playerData.getString("playerState"));
             }
             player.setValues(statusText);
 
-            player.btn_focus.setDisable(playerData.getString("playerName") == focusedPlayerName);
+            //Todo: refactor: extract method?
+            player.btn_focus.setDisable(playerData.getString("playerName").equals(focusedPlayerName));
             player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString("matchState") == "FINISH");
             player.pane_kickDialog.setVisible(false);
         }
@@ -394,18 +410,15 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         text_playerName.setText(focusedPlayerName);
 
-        JSONObject focusedPlayerData = getPlayerDataFromPlayerName(
-                gameData.getJSONObject("gameMatch").
-                        getJSONArray("players"),
-                focusedPlayerName
-        );
+        String focusedPlayerState = getPlayerDataFromPlayerName(
+                    gameData.getJSONObject("gameMatch")
+                            .getJSONArray("players"),
+                    focusedPlayerName
+            ).getString("playerState");
 
-        JSONObject currentTileData = gameData.getJSONObject("gameMatch").
-                getJSONObject("currentTile");
-
-        //TODO: Reformat state text
-        text_playerStatus.setText(focusedPlayerData.getString("playerState"));
+        text_playerStatus.setText(getFormattedPlayerStatusText(focusedPlayerState));
     }
+
     void refreshRematchPanel(JSONObject gameData){
         String matchState = gameData.getJSONObject("gameMatch").getString("matchState");
         pane_rematchPanel.setVisible(matchState == "FINISH");

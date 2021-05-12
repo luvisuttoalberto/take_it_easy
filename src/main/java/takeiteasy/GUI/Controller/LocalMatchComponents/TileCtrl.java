@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
-//TODO: see if this needs to be initializable as the localmatchctrl
 public class TileCtrl extends AnchorPane {
 
     public Polygon graphic_hitBox;
@@ -17,7 +16,6 @@ public class TileCtrl extends AnchorPane {
     Text text_top, text_left, text_right;
 
     public TileCtrl(double width, double height) {
-
         double hunit=width*.25, vunit=height*.5;
         buildContent(hunit,vunit);
     }
