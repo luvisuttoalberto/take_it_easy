@@ -34,40 +34,13 @@ public class LocalLobbyCtrl implements IViewController {
     ListView<String> playersListView;
 
     @FXML
-    TextField nameField;
+    TextField nameField, renameField, seedField;
 
     @FXML
-    TextField renameField;
-
-    @FXML
-    Button confirmButton;
-
-    @FXML
-    Button cancel;
-
-    @FXML
-    Button submit;
-
-    @FXML
-    Button rename;
-
-    @FXML
-    Button remove;
-
-    @FXML
-    Button start;
-
-    @FXML
-    Button back;
-
-    @FXML
-    TextField seedField;
+    Button confirmButton, cancel, submit, rename, remove, start, back, setSeed;
 
     @FXML
     Label seedLabel;
-
-    @FXML
-    Button setSeed;
 
     void setVisibility(Boolean bool){
         renameField.setVisible(bool);
