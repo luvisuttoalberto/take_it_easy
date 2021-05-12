@@ -1,13 +1,20 @@
 package takeiteasy.GUI.Controller;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.game.IGame;
 
+//TODO: how about implementing the initializable class
 public class MainMenuCtrl implements IViewController{
     IGame game;
     IViewUpdater vu;
+
+    @FXML
+    Button start;
 
     @Override
     public void injectGame(IGame g){
@@ -22,18 +29,28 @@ public class MainMenuCtrl implements IViewController{
 
     void linkUI(){
         //TODO:link fxml objs actions to callbacks
+        //TODO: do we need this function?
     }
-    public void onStartLocalBtnRelease() {
+
+    @FXML
+    void startLocalMatch(ActionEvent event) {
         game.createLocalLobby();
         vu.updateView();
     }
-    public void onExitBtnRelease() {
+
+    //TODO: adding new credits fxml file to redirect to
+    @FXML
+    void creditsPage(ActionEvent event) {
+        System.out.println("Software Development Methods Course Project");
+    }
+
+    @FXML
+    void exitGame(ActionEvent event) {
         Platform.exit();
     }
 
     @Override
     public void refreshView(JSONObject gamedata) {
-        //MOTD?
-        //VERSION?
+        //TODO: provide a collection of quote of the day or referring to a website.
     }
 }
