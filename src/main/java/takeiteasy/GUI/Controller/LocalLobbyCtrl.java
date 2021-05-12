@@ -16,6 +16,18 @@ public class LocalLobbyCtrl implements IViewController {
     private String oldName;
     private boolean seedFieldFlag = false;
 
+    @FXML
+    ListView<String> playersListView;
+
+    @FXML
+    TextField nameField, renameField, seedField;
+
+    @FXML
+    Button confirmButton, cancel, submit, rename, remove, start, back, setSeed;
+
+    @FXML
+    Label seedLabel;
+
     @Override
     public void injectGame(IGame g) {
         this.game = g;
@@ -28,19 +40,18 @@ public class LocalLobbyCtrl implements IViewController {
 
     @Override
     public void refreshView(JSONObject gamedata) {
+        refreshPlayersList(gamedata);
     }
 
-    @FXML
-    ListView<String> playersListView;
-
-    @FXML
-    TextField nameField, renameField, seedField;
-
-    @FXML
-    Button confirmButton, cancel, submit, rename, remove, start, back, setSeed;
-
-    @FXML
-    Label seedLabel;
+    public void refreshPlayersList(JSONObject gameData) {
+        Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
+        ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
+        while(playersNameKeys.hasNext()) {
+            String nameKey = playersNameKeys.next();
+            playersNameObservable.add(nameKey);
+        }
+        playersListView.setItems(playersNameObservable);
+    }
 
     void setVisibility(Boolean bool){
         renameField.setVisible(bool);
@@ -57,7 +68,7 @@ public class LocalLobbyCtrl implements IViewController {
         back.setDisable(bool);
     }
 
-    void Alert() {
+    void nameLengthAlert() {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setResizable(true);
         errorAlert.setHeaderText("Input not valid");
@@ -77,17 +88,11 @@ public class LocalLobbyCtrl implements IViewController {
 
             //TODO: get players name data from JSON object
             JSONObject gameData = game.getData();
-            Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
-            ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
-            while(playersNameKeys.hasNext()) {
-                String nameKey = playersNameKeys.next();
-                playersNameObservable.add(nameKey);
-            }
-            playersListView.setItems(playersNameObservable);
+            refreshView(gameData);
             nameField.clear();
         }
         else {
-            Alert();
+            nameLengthAlert();
         }
         vu.updateView();
     }
@@ -97,15 +102,8 @@ public class LocalLobbyCtrl implements IViewController {
         String newName = playersListView.getSelectionModel().getSelectedItem();
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
-        Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
-        ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
-        while(playersNameKeys.hasNext()) {
-            String nameKey = playersNameKeys.next();
-            playersNameObservable.add(nameKey);
-        }
-        playersListView.setItems(playersNameObservable);
+        refreshPlayersList(gameData);
     }
-
 
     @FXML
     void confirmRename() {
@@ -117,18 +115,12 @@ public class LocalLobbyCtrl implements IViewController {
             oldName = "";
 
             JSONObject gameData = game.getData();
-            Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
-            ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
-            while(playersNameKeys.hasNext()) {
-                String nameKey = playersNameKeys.next();
-                playersNameObservable.add(nameKey);
-            }
-            playersListView.setItems(playersNameObservable);
+            refreshView(gameData);
             renameField.clear();
             setVisibility(false);
         }
         else {
-            Alert();
+            nameLengthAlert();
         }
         //TODO: change visibility inside or outside of the IF
     }
