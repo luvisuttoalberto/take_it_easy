@@ -38,11 +38,6 @@ public class LocalLobbyCtrl implements IViewController {
         this.vu = vu;
     }
 
-    @Override
-    public void refreshView(JSONObject gamedata) {
-        refreshPlayersList(gamedata);
-    }
-
     public void refreshPlayersList(JSONObject gameData) {
         Iterator<String> playersNameKeys = gameData.getJSONObject("gameMatch").getJSONObject("players").keys();
         ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
@@ -51,6 +46,11 @@ public class LocalLobbyCtrl implements IViewController {
             playersNameObservable.add(nameKey);
         }
         playersListView.setItems(playersNameObservable);
+    }
+
+    @Override
+    public void refreshView(JSONObject gameData) {
+        refreshPlayersList(gameData);
     }
 
     void setVisibility(Boolean bool){
@@ -102,7 +102,7 @@ public class LocalLobbyCtrl implements IViewController {
         String newName = playersListView.getSelectionModel().getSelectedItem();
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
-        refreshPlayersList(gameData);
+        refreshView(gameData);
     }
 
     @FXML
@@ -122,7 +122,6 @@ public class LocalLobbyCtrl implements IViewController {
         else {
             nameLengthAlert();
         }
-        //TODO: change visibility inside or outside of the IF
     }
 
     @FXML
