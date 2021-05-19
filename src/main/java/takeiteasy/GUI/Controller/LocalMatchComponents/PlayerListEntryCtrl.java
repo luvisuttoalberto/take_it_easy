@@ -39,13 +39,17 @@ public class PlayerListEntryCtrl extends AnchorPane {
         HBox layout_kickDialog = new HBox();
         layout_kickDialog.setAlignment(Pos.CENTER);
 
+        pane_kickDialog = new AnchorPane();
+        pane_kickDialog.getChildren().add(layout_kickDialog);
+        setTopAnchor(layout_kickDialog, 0.0);
+        setLeftAnchor(layout_kickDialog, 0.0);
+        setRightAnchor(layout_kickDialog, 0.0);
+        setBottomAnchor(layout_kickDialog, 0.0);
+
         //TODO: kick btns fill all anchorpane
         layout_kickDialog.getChildren().addAll(btn_kick_confirm,btn_kick_cancel);
         HBox.setHgrow(btn_kick_confirm, Priority.ALWAYS);
         HBox.setHgrow(btn_kick_cancel, Priority.ALWAYS);
-
-        pane_kickDialog = new AnchorPane();
-        pane_kickDialog.getChildren().add(layout_kickDialog);
 
         this.getChildren().addAll(btn_focus, btn_showKickDialog, text_status, text_playerName,pane_kickDialog);
 
