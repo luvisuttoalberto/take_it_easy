@@ -32,8 +32,11 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     @FXML
     Label seedLabel;
 
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        
         setSeed.disableProperty().bind(
                 Bindings.isEmpty(seedField.textProperty())
         );
@@ -55,6 +58,13 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         submit.disableProperty().bind(
                 Bindings.isEmpty(nameField.textProperty())
         );
+
+        remove.disableProperty().bind(
+//                Bindings.or(
+                        Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems())
+//                        Bindings.equal(1, Bindings.size(FXCollections.observableList(playersListView.getItems())))
+//                )
+        );
     }
 
     @Override
@@ -75,20 +85,18 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             playersNameObservable.add(playerName);
         }
         playersListView.setItems(playersNameObservable);
+        System.out.println(Bindings.lessThanOrEqual(1, Bindings.size(playersNameObservable)));
     }
 
     void refreshEnabledButtons(){
-
-        // start button
         start.setDisable(playersListView.getItems().isEmpty());
-
-
     }
 
     @Override
     public void refreshView(JSONObject gameData) {
         refreshPlayersList(gameData);
         refreshEnabledButtons();
+//        System.out.println(playersListView.getItems().size());
     }
 
     void setVisibility(Boolean bool){
@@ -100,8 +108,8 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         seedField.setMouseTransparent(bool);
         //submit.setDisable(bool);
         //rename.setDisable(bool);
-        remove.setDisable(bool);
-        start.setDisable(bool);
+        //remove.setDisable(bool);
+        //start.setDisable(bool);
         back.setDisable(bool);
     }
 
@@ -141,7 +149,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
         refreshView(gameData);
-        remove.setDisable(true);
+        //remove.setDisable(true);
 
     }
 
@@ -159,7 +167,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             refreshView(gameData);
             renameField.clear();
             setVisibility(false);
-            remove.setDisable(true);
+            //remove.setDisable(true);
             //rename.setDisable(true);
             //confirmButton.setDisable(true);
         }
@@ -168,11 +176,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         }
     }
 
-    @FXML
-    void playerListOnMouseClicked(){
-        //rename.setDisable(false);
-        remove.setDisable(false);
-    }
 
     @FXML
     void renamePlayer() {
@@ -186,7 +189,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     void cancelRename() {
         renameField.clear();
         setVisibility(false);
-        remove.setDisable(true);
+        //remove.setDisable(true);
         //rename.setDisable(true);
     }
 
