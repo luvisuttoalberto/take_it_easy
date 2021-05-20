@@ -1,17 +1,21 @@
 package takeiteasy.GUI.Controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.game.IGame;
 
-import java.util.Iterator;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class LocalLobbyCtrl implements IViewController {
+
+public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
     IViewUpdater vu;
     private String oldName;
@@ -28,6 +32,19 @@ public class LocalLobbyCtrl implements IViewController {
 
     @FXML
     Label seedLabel;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setSeed.disableProperty().bind(
+                Bindings.isEmpty(seedField.textProperty())
+        );
+
+        seedField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    seedField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+        });
+    }
 
     @Override
     public void injectGame(IGame g) {
@@ -49,9 +66,18 @@ public class LocalLobbyCtrl implements IViewController {
         playersListView.setItems(playersNameObservable);
     }
 
+    void refreshEnabledButtons(){
+
+        // start button
+        start.setDisable(playersListView.getItems().isEmpty());
+
+
+    }
+
     @Override
     public void refreshView(JSONObject gameData) {
         refreshPlayersList(gameData);
+        refreshEnabledButtons();
     }
 
     void setVisibility(Boolean bool){
@@ -61,7 +87,7 @@ public class LocalLobbyCtrl implements IViewController {
         cancel.setVisible(bool);
         nameField.setMouseTransparent(bool);
         seedField.setMouseTransparent(bool);
-        setSeed.setDisable(bool);
+        //setSeed.setDisable(bool);
         submit.setDisable(bool);
         rename.setDisable(bool);
         remove.setDisable(bool);
@@ -82,6 +108,11 @@ public class LocalLobbyCtrl implements IViewController {
     }
 
     @FXML
+    void nameOnMouseClicked(){
+        submit.setDisable(false);
+    }
+
+    @FXML
     void addNewPlayer() {
         if (!nameField.getText().equals("") && checkPlayerNameLength(nameField.getText())) {
             String name = nameField.getText();
@@ -91,6 +122,7 @@ public class LocalLobbyCtrl implements IViewController {
             JSONObject gameData = game.getData();
             refreshView(gameData);
             nameField.clear();
+            submit.setDisable(true);
         }
         else {
             nameLengthAlert();
@@ -103,6 +135,13 @@ public class LocalLobbyCtrl implements IViewController {
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
         refreshView(gameData);
+        remove.setDisable(true);
+        rename.setDisable(true);
+    }
+
+    @FXML
+    void renameOnMouseClicked(){
+        confirmButton.setDisable(false);
     }
 
     @FXML
@@ -118,10 +157,19 @@ public class LocalLobbyCtrl implements IViewController {
             refreshView(gameData);
             renameField.clear();
             setVisibility(false);
+            remove.setDisable(true);
+            rename.setDisable(true);
+            confirmButton.setDisable(true);
         }
         else {
             nameLengthAlert();
         }
+    }
+
+    @FXML
+    void playerListOnMouseClicked(){
+        rename.setDisable(false);
+        remove.setDisable(false);
     }
 
     @FXML
@@ -136,6 +184,8 @@ public class LocalLobbyCtrl implements IViewController {
     void cancelRename() {
         renameField.clear();
         setVisibility(false);
+        remove.setDisable(true);
+        rename.setDisable(true);
     }
 
 
@@ -151,17 +201,18 @@ public class LocalLobbyCtrl implements IViewController {
         vu.updateView();
     }
 
-    @FXML
-    void seedOnMouseClicked(){
-        if(!seedFieldFlag) {
-            seedField.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")) {
-                    seedField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            });
-            seedFieldFlag = true;
-        }
-    }
+//    @FXML
+//    void seedOnMouseClicked(){
+//        if(!seedFieldFlag) {
+//            seedField.textProperty().addListener((observable, oldValue, newValue) -> {
+//                if (!newValue.matches("\\d*")) {
+//                    seedField.setText(newValue.replaceAll("[^\\d]", ""));
+//                }
+//            });
+//            seedFieldFlag = true;
+//            setSeed.setDisable(false);
+//        }
+//    }
 
     @FXML
     void setSeed() {
@@ -170,6 +221,8 @@ public class LocalLobbyCtrl implements IViewController {
             seedLabel.setText(seed);
             game.setMatchSeed(Integer.parseInt(seed));
             seedField.clear();
+            //setSeed.setDisable(true);
         }
     }
+
 }

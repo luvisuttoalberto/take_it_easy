@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="takeiteasy.GUI.Controller.LocalLobbyCtrl">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="takeiteasy.GUI.Controller.LocalLobbyCtrl">
    <children>
       <Label layoutX="102.0" layoutY="66.0" text="Players List">
          <font>
@@ -16,18 +16,18 @@
          </font>
       </Label>
       <Label layoutX="99.0" layoutY="314.0" text="Add New Player:" />
-      <Button fx:id="submit" layoutX="413.0" layoutY="311.0" mnemonicParsing="false" onAction="#addNewPlayer" prefHeight="25.0" prefWidth="80.0" text="Submit" />
-      <TextField fx:id="nameField" layoutX="221.0" layoutY="311.0" prefHeight="25.0" prefWidth="180.0" />
-      <ListView fx:id="playersListView" layoutX="102.0" layoutY="99.0" prefHeight="191.0" prefWidth="300.0" />
-      <Button fx:id="remove" layoutX="413.0" layoutY="101.0" mnemonicParsing="false" onAction="#removePlayer" prefHeight="25.0" prefWidth="80.0" text="Remove" />
-      <Button fx:id="rename" layoutX="413.0" layoutY="186.0" mnemonicParsing="false" onAction="#renamePlayer" prefHeight="25.0" prefWidth="80.0" text="Rename" />
-      <TextField fx:id="renameField" layoutX="412.0" layoutY="239.0" prefHeight="24.0" prefWidth="138.0" visible="false" />
-      <Button fx:id="confirmButton" layoutX="481.0" layoutY="269.0" mnemonicParsing="false" onAction="#confirmRename" text="Confirm" visible="false" />
+      <Button fx:id="submit" disable="true" layoutX="413.0" layoutY="311.0" mnemonicParsing="false" onAction="#addNewPlayer" prefHeight="25.0" prefWidth="80.0" text="Submit" />
+      <TextField fx:id="nameField" layoutX="221.0" layoutY="311.0" onMouseClicked="#nameOnMouseClicked" prefHeight="25.0" prefWidth="180.0" />
+      <ListView fx:id="playersListView" layoutX="102.0" layoutY="99.0" onMouseClicked="#playerListOnMouseClicked" prefHeight="191.0" prefWidth="300.0" />
+      <Button fx:id="remove" disable="true" layoutX="413.0" layoutY="101.0" mnemonicParsing="false" onAction="#removePlayer" prefHeight="25.0" prefWidth="80.0" text="Remove" />
+      <Button fx:id="rename" disable="true" layoutX="413.0" layoutY="186.0" mnemonicParsing="false" onAction="#renamePlayer" prefHeight="25.0" prefWidth="80.0" text="Rename" />
+      <TextField fx:id="renameField" layoutX="412.0" layoutY="239.0" onMouseClicked="#renameOnMouseClicked" prefHeight="24.0" prefWidth="138.0" visible="false" />
+      <Button fx:id="confirmButton" disable="true" layoutX="481.0" layoutY="269.0" mnemonicParsing="false" onAction="#confirmRename" text="Confirm" visible="false" />
       <Button fx:id="cancel" layoutX="412.0" layoutY="269.0" mnemonicParsing="false" onAction="#cancelRename" text="Cancel" visible="false" />
       <Button fx:id="back" layoutX="162.0" layoutY="364.0" mnemonicParsing="false" onAction="#backToMainMenu" text="Main Menu" />
-      <Button fx:id="start" layoutX="365.0" layoutY="364.0" mnemonicParsing="false" onAction="#startMatch" text="Start Match" />
+      <Button fx:id="start" disable="true" layoutX="365.0" layoutY="364.0" mnemonicParsing="false" onAction="#startMatch" text="Start Match" />
       <Button fx:id="setSeed" layoutX="541.0" layoutY="17.0" mnemonicParsing="false" onAction="#setSeed" text="Set" />
-      <TextField fx:id="seedField" layoutX="358.0" layoutY="17.0" onMouseClicked="#seedOnMouseClicked" />
+      <TextField fx:id="seedField" layoutX="358.0" layoutY="17.0" />
       <Label layoutX="310.0" layoutY="21.0" text="Seed" />
       <Label fx:id="seedLabel" layoutX="77.0" layoutY="22.0" text="Not Set" />
       <Label layoutX="25.0" layoutY="21.0" text="Seed:">
