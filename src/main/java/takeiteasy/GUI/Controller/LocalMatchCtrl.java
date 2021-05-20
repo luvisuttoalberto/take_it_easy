@@ -15,6 +15,9 @@ import takeiteasy.GUI.Controller.LocalMatchComponents.TileCtrl;
 import takeiteasy.GUI.IViewUpdater;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.IGame;
+import takeiteasy.gamematch.IGameMatch;
+import takeiteasy.player.IPlayer;
+
 import java.net.URL;
 import java.util.*;
 
@@ -55,6 +58,8 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     final String txt_statusPlacing = "Placing";
     final String txt_statusWaitOther = "Waiting";
+    final String txt_statusWaitMatch = "Waiting for new match";
+
 
     void linkStaticButtons(){
         btn_placeTile.setOnMouseReleased(e -> onPlaceTileRelease());
@@ -166,7 +171,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
         for(int iii = 0; iii < playersData.length(); ++iii){
-            if(playersData.getJSONObject(iii).get("playerState").equals("PLACING")){
+            if(playersData.getJSONObject(iii).get("playerState").equals(IPlayer.State.PLACING.name())){
                 focusPlayerAndDefocusCoordinates(playersData.getJSONObject(iii).getString("playerName"));
                 break;
             }
@@ -220,7 +225,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         JSONObject gameData = game.getData();
 
-        if(gameData.getJSONObject("gameMatch").getString("matchState") == "FINISH"){
+        if(gameData.getJSONObject("gameMatch").getString("matchState").equals(IPlayer.State.PLACING.name())){
             focusPlayerAndDefocusCoordinates(computeHighestScoringPlayerNames(gameData).get(0));
         } else {
             focusFirstPlacingPlayer(gameData);
@@ -275,13 +280,13 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     String getFormattedPlayerStatusText(String playerState){
         //Todo: tidy
-        if(playerState == "PLACING"){
+        if(playerState.equals(IPlayer.State.PLACING.name())){
             return txt_statusPlacing;
         }
-        else if(playerState == "WAIT_OTHER"){
+        else if(playerState.equals(IPlayer.State.WAIT_OTHER.name())){
             return txt_statusWaitOther;
         }
-        return "?";
+        return txt_statusWaitMatch;
     }
 
     void refreshPlayersList(JSONObject gameData){
@@ -296,7 +301,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             PlayerListEntryCtrl player = players.get(playerData.getString("playerName"));
 
             String statusText;
-            if(matchData.getString("matchState") == "FINISH"){
+            if(matchData.getString("matchState").equals(IGameMatch.State.FINISH.name())){
                 statusText = "Score: " + playerData.getInt("playerScore");
             }
             else{
@@ -306,7 +311,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
             //Todo: refactor: extract method?
             player.btn_focus.setDisable(playerData.getString("playerName").equals(focusedPlayerName));
-            player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString("matchState") == "FINISH");
+            player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString("matchState").equals(IGameMatch.State.FINISH.name()));
             player.pane_kickDialog.setVisible(false);
         }
 
@@ -321,7 +326,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         );
 
         //todo: maybe add a graphic change on the text or background
-        btn_placeTile.setDisable(focusedCoordinates == null || playerData.get("playerState") != "PLACING");
+        btn_placeTile.setDisable(focusedCoordinates == null || playerData.get("playerState") != IPlayer.State.PLACING.name());
     }
 
     void refreshBoard(JSONObject gameData){
@@ -349,7 +354,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
                 tiles.get(possibleCoord).setPlacedGraphics(tileData.getInt("top"), tileData.getInt("left"), tileData.getInt("right"));
 
-                if(playerData.get("playerState") == "PLACING") {
+                if(playerData.get("playerState") == IPlayer.State.PLACING.name()) {
                     tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> defocusCoordinates());
                 }
                 else{
@@ -360,7 +365,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 if(possibleCoord != focusedCoordinates){
                     tiles.get(possibleCoord).resetGraphics();
                 }
-                if(playerData.get("playerState") == "PLACING") {
+                if(playerData.get("playerState") == IPlayer.State.PLACING.name()) {
                     tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(possibleCoord, currentTileData));
                 }
                 else{
@@ -375,13 +380,13 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         String matchStateText;
         JSONArray playersData = matchData.getJSONArray("players");
 
-        if(matchData.get("matchState") == "PLAY"){
+        if(matchData.get("matchState") == IGameMatch.State.PLAY.name()){
             int totalNumberOfPlayers = playersData.length();
             int placingPlayers = 0;
 
             //TODO: refactor with streams (probably count())
             for(int iii = 0; iii < playersData.length(); ++iii){
-                if(playersData.getJSONObject(iii).get("playerState") == "PLACING"){
+                if(playersData.getJSONObject(iii).get("playerState") == IPlayer.State.PLACING.name()){
                     placingPlayers++;
                 }
             }
@@ -421,7 +426,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     void refreshRematchPanel(JSONObject gameData){
         String matchState = gameData.getJSONObject("gameMatch").getString("matchState");
-        pane_rematchPanel.setVisible(matchState == "FINISH");
+        pane_rematchPanel.setVisible(matchState.equals(IGameMatch.State.FINISH.name()));
     }
 
     @Override
