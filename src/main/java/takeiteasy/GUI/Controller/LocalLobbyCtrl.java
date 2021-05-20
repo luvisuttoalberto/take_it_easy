@@ -47,6 +47,10 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         rename.disableProperty().bind(
             Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems())
         );
+
+        confirmButton.disableProperty().bind(
+                Bindings.isEmpty(renameField.textProperty())
+        );
     }
 
     @Override
@@ -138,14 +142,10 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         JSONObject gameData = game.getData();
         refreshView(gameData);
         remove.setDisable(true);
-        //rename.setDisable(true);
-    }
 
-    @FXML
-    void renameOnMouseClicked(){
-        confirmButton.setDisable(false);
     }
-
+    
+    //TODO: check if name is already present
     @FXML
     void confirmRename() {
         if (!renameField.getText().equals("") && checkPlayerNameLength(renameField.getText())) {
@@ -161,7 +161,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             setVisibility(false);
             remove.setDisable(true);
             //rename.setDisable(true);
-            confirmButton.setDisable(true);
+            //confirmButton.setDisable(true);
         }
         else {
             nameLengthAlert();
