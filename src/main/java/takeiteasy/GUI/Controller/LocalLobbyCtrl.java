@@ -19,7 +19,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
     IViewUpdater vu;
     private String oldName;
-    private boolean seedFieldFlag = false;
 
     @FXML
     ListView<String> playersListView;
@@ -44,6 +43,10 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
                     seedField.setText(newValue.replaceAll("[^\\d]", ""));
                 }
         });
+
+        rename.disableProperty().bind(
+            Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems())
+        );
     }
 
     @Override
@@ -87,9 +90,8 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         cancel.setVisible(bool);
         nameField.setMouseTransparent(bool);
         seedField.setMouseTransparent(bool);
-        //setSeed.setDisable(bool);
         submit.setDisable(bool);
-        rename.setDisable(bool);
+        //rename.setDisable(bool);
         remove.setDisable(bool);
         start.setDisable(bool);
         back.setDisable(bool);
@@ -136,7 +138,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         JSONObject gameData = game.getData();
         refreshView(gameData);
         remove.setDisable(true);
-        rename.setDisable(true);
+        //rename.setDisable(true);
     }
 
     @FXML
@@ -158,7 +160,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             renameField.clear();
             setVisibility(false);
             remove.setDisable(true);
-            rename.setDisable(true);
+            //rename.setDisable(true);
             confirmButton.setDisable(true);
         }
         else {
@@ -168,7 +170,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     @FXML
     void playerListOnMouseClicked(){
-        rename.setDisable(false);
+        //rename.setDisable(false);
         remove.setDisable(false);
     }
 
@@ -185,7 +187,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         renameField.clear();
         setVisibility(false);
         remove.setDisable(true);
-        rename.setDisable(true);
+        //rename.setDisable(true);
     }
 
 
@@ -201,18 +203,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         vu.updateView();
     }
 
-//    @FXML
-//    void seedOnMouseClicked(){
-//        if(!seedFieldFlag) {
-//            seedField.textProperty().addListener((observable, oldValue, newValue) -> {
-//                if (!newValue.matches("\\d*")) {
-//                    seedField.setText(newValue.replaceAll("[^\\d]", ""));
-//                }
-//            });
-//            seedFieldFlag = true;
-//            setSeed.setDisable(false);
-//        }
-//    }
 
     @FXML
     void setSeed() {
@@ -221,7 +211,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             seedLabel.setText(seed);
             game.setMatchSeed(Integer.parseInt(seed));
             seedField.clear();
-            //setSeed.setDisable(true);
         }
     }
 
