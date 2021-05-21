@@ -1,6 +1,7 @@
 package takeiteasy.GUI.Controller;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,11 +15,11 @@ import takeiteasy.game.IGame;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
     IViewUpdater vu;
     private String oldName;
+    public final Integer MAX_NAME_LENGTH = 10;
 
     @FXML
     ListView<String> playersListView;
@@ -32,10 +33,20 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     @FXML
     Label seedLabel;
 
-
+    ObservableList<String> playersNameObservable;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        playersNameObservable = FXCollections.observableArrayList();
+
+        playersListView.setItems(playersNameObservable);
+
+        IntegerBinding sizeOfListViewBinding = Bindings.size(playersNameObservable);
+
+        start.disableProperty().bind(
+                sizeOfListViewBinding.isEqualTo(0)
+        );
         
         setSeed.disableProperty().bind(
                 Bindings.isEmpty(seedField.textProperty())
@@ -51,19 +62,27 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems())
         );
 
-        confirmButton.disableProperty().bind(
-                Bindings.isEmpty(renameField.textProperty())
+        renameField.textProperty().addListener((observable, oldValue, newValue) ->
+                confirmButton.setDisable(
+                                newValue.isEmpty() ||
+                                newValue.length() > MAX_NAME_LENGTH ||
+                                playersNameObservable.stream().anyMatch(x -> x.contentEquals(newValue))
+                )
         );
 
-        submit.disableProperty().bind(
-                Bindings.isEmpty(nameField.textProperty())
+        nameField.textProperty().addListener((observable, oldValue, newValue) ->
+                submit.setDisable(
+                                newValue.isEmpty() ||
+                                newValue.length() > MAX_NAME_LENGTH ||
+                                playersNameObservable.stream().anyMatch(x -> x.contentEquals(newValue))
+                )
         );
 
         remove.disableProperty().bind(
-//                Bindings.or(
-                        Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems())
-//                        Bindings.equal(1, Bindings.size(FXCollections.observableList(playersListView.getItems())))
-//                )
+                Bindings.or(
+                        Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems()),
+                        Bindings.lessThanOrEqual(sizeOfListViewBinding, 1)
+                )
         );
     }
 
@@ -78,25 +97,18 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     public void refreshPlayersList(JSONObject gameData) {
-        ObservableList<String> playersNameObservable = FXCollections.observableArrayList();
+        playersNameObservable.clear();
         JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
         for (int iii = 0; iii < playersData.length(); ++iii){
             String playerName = playersData.getJSONObject(iii).getString("playerName");
             playersNameObservable.add(playerName);
         }
-        playersListView.setItems(playersNameObservable);
-        System.out.println(Bindings.lessThanOrEqual(1, Bindings.size(playersNameObservable)));
-    }
-
-    void refreshEnabledButtons(){
-        start.setDisable(playersListView.getItems().isEmpty());
+        playersListView.refresh();
     }
 
     @Override
     public void refreshView(JSONObject gameData) {
         refreshPlayersList(gameData);
-        refreshEnabledButtons();
-//        System.out.println(playersListView.getItems().size());
     }
 
     void setVisibility(Boolean bool){
@@ -106,41 +118,17 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         cancel.setVisible(bool);
         nameField.setMouseTransparent(bool);
         seedField.setMouseTransparent(bool);
-        //submit.setDisable(bool);
-        //rename.setDisable(bool);
-        //remove.setDisable(bool);
-        //start.setDisable(bool);
         back.setDisable(bool);
     }
 
-    void nameLengthAlert() {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setResizable(true);
-        errorAlert.setHeaderText("Input not valid");
-        errorAlert.setContentText("The name must be between 1 and 10 characters");
-        errorAlert.showAndWait();
-    }
-
-    boolean checkPlayerNameLength(String name){
-        return (name.length() < 11);
-    }
-
-    //TODO: check if name is already present
     @FXML
     void addNewPlayer() {
-        if (!nameField.getText().equals("") && checkPlayerNameLength(nameField.getText())) {
-            String name = nameField.getText();
-            game.addPlayer(name);
+        String name = nameField.getText();
+        game.addPlayer(name);
 
-            //TODO: get players name data from JSON object
-            JSONObject gameData = game.getData();
-            refreshView(gameData);
-            nameField.clear();
-            //submit.setDisable(true);
-        }
-        else {
-            nameLengthAlert();
-        }
+        JSONObject gameData = game.getData();
+        refreshView(gameData);
+        nameField.clear();
     }
 
     @FXML
@@ -149,31 +137,20 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
         refreshView(gameData);
-        //remove.setDisable(true);
-
     }
 
-    //TODO: check if name is already present
     @FXML
     void confirmRename() {
-        if (!renameField.getText().equals("") && checkPlayerNameLength(renameField.getText())) {
-            String newName = renameField.getText();
-            renamePlayer();
+        String newName = renameField.getText();
+        renamePlayer();
 
-            game.renamePlayer(oldName, newName);
-            oldName = "";
+        game.renamePlayer(oldName, newName);
+        oldName = "";
 
-            JSONObject gameData = game.getData();
-            refreshView(gameData);
-            renameField.clear();
-            setVisibility(false);
-            //remove.setDisable(true);
-            //rename.setDisable(true);
-            //confirmButton.setDisable(true);
-        }
-        else {
-            nameLengthAlert();
-        }
+        JSONObject gameData = game.getData();
+        refreshView(gameData);
+        renameField.clear();
+        setVisibility(false);
     }
 
 
@@ -189,8 +166,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     void cancelRename() {
         renameField.clear();
         setVisibility(false);
-        //remove.setDisable(true);
-        //rename.setDisable(true);
     }
 
 
