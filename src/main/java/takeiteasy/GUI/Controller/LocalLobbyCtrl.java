@@ -204,10 +204,8 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     @FXML
     void onRenamePanelShowRelease() {
-        if (playersListView.getSelectionModel().getSelectedItem() != null) {
-            oldName = playersListView.getSelectionModel().getSelectedItem();
-            setRenamePanelVisibility(true);
-        }
+        oldName = playersListView.getSelectionModel().getSelectedItem();
+        setRenamePanelVisibility(true);
     }
 
     @FXML
@@ -234,12 +232,10 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     @FXML
     void onSetSeedRelease() {
-        if (!textField_seed.getText().equals("")) {
-            String seed = textField_seed.getText();
-            label_seed.setText(seed);
-            game.setMatchSeed(Integer.parseInt(seed));
-            textField_seed.clear();
-        }
+        String seed = textField_seed.getText();
+        label_seed.setText(seed);
+        game.setMatchSeed(Integer.parseInt(seed));
+        textField_seed.clear();
     }
 
 }
