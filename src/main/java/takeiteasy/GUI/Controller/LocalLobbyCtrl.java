@@ -28,46 +28,47 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     ListView<String> playersListView;
 
     @FXML
-    TextField textField_newPlayer, textField_renamePlayer, textField_poolSeed;
+    TextField textField_newPlayer, textField_renamePlayer, textField_seed;
 
     @FXML
-    Button confirmButton, cancel, submit, rename, remove, start, back, setSeed;
+    Button btn_renameConfirm, btn_renameCancel, btn_addNewPlayer,
+            btn_renamePanelShow, btn_removePlayer, btn_startMatch, btn_backToMenu, btn_setSeed;
 
     @FXML
-    Label seedLabel;
+    Label label_seed;
 
-    ObservableList<String> playersNameObservable;
+    ObservableList<String> playerNamesObservable;
 
     Boolean isNameInvalid(String name){
         return name.isEmpty() ||
                 name.length() > MAX_NAME_LENGTH ||
-                playersNameObservable.stream().anyMatch(x -> x.contentEquals(name));
+                playerNamesObservable.stream().anyMatch(x -> x.contentEquals(name));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        playersNameObservable = FXCollections.observableArrayList();
+        playerNamesObservable = FXCollections.observableArrayList();
 
-        playersListView.setItems(playersNameObservable);
+        playersListView.setItems(playerNamesObservable);
 
-        IntegerBinding sizeOfListViewBinding = Bindings.size(playersNameObservable);
+        IntegerBinding sizeOfListViewBinding = Bindings.size(playerNamesObservable);
 
-        start.disableProperty().bind(
+        btn_startMatch.disableProperty().bind(
                 sizeOfListViewBinding.isEqualTo(0)
         );
         
-        setSeed.disableProperty().bind(
-                Bindings.isEmpty(textField_poolSeed.textProperty())
+        btn_setSeed.disableProperty().bind(
+                Bindings.isEmpty(textField_seed.textProperty())
         );
 
-        textField_poolSeed.textProperty().addListener((observable, oldValue, newValue) -> {
+        textField_seed.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*")) {
-                    textField_poolSeed.setText(newValue.replaceAll("[^\\d]", ""));
+                    textField_seed.setText(newValue.replaceAll("[^\\d]", ""));
                 }
         });
 
-        rename.disableProperty().bind(
+        btn_renamePanelShow.disableProperty().bind(
             Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems())
         );
 
@@ -77,7 +78,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
         textField_renamePlayer.textProperty().addListener((observable, oldValue, newValue) -> {
                     boolean nameIsInvalid = isNameInvalid(newValue);
-                    confirmButton.setDisable(nameIsInvalid);
+                    btn_renameConfirm.setDisable(nameIsInvalid);
                     if(nameIsInvalid){
                         tt_textField_renamePlayer.show(textField_renamePlayer,textField_renamePlayer.localToScene(0.0, 0.0).getX()
                                         + textField_renamePlayer.getScene().getX() + textField_renamePlayer.getScene().getWindow().getX(), textField_renamePlayer.localToScene(0.0, 0.0).getY()
@@ -97,7 +98,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
         textField_newPlayer.textProperty().addListener((observable, oldValue, newValue) -> {
                     boolean nameIsInvalid = isNameInvalid(newValue);
-                    submit.setDisable(nameIsInvalid);
+                    btn_addNewPlayer.setDisable(nameIsInvalid);
                     if(nameIsInvalid){
                         tt_textField_newPlayer.show(textField_newPlayer,textField_newPlayer.localToScene(0.0, 0.0).getX()
                                 + textField_newPlayer.getScene().getX() + textField_newPlayer.getScene().getWindow().getX(), textField_newPlayer.localToScene(0.0, 0.0).getY()
@@ -111,7 +112,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
                 }
         );
 
-        remove.disableProperty().bind(
+        btn_removePlayer.disableProperty().bind(
                 Bindings.or(
                         Bindings.isEmpty(playersListView.getSelectionModel().getSelectedItems()),
                         Bindings.lessThanOrEqual(sizeOfListViewBinding, 1)
@@ -130,11 +131,11 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     public void refreshPlayersList(JSONObject gameData) {
-        playersNameObservable.clear();
+        playerNamesObservable.clear();
         JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
         for (int iii = 0; iii < playersData.length(); ++iii){
             String playerName = playersData.getJSONObject(iii).getString("playerName");
-            playersNameObservable.add(playerName);
+            playerNamesObservable.add(playerName);
         }
         playersListView.refresh();
     }
@@ -155,12 +156,12 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     void setRenamePanelVisibility(Boolean isVisible){
         textField_renamePlayer.setVisible(isVisible);
-        confirmButton.setVisible(isVisible);
+        btn_renameConfirm.setVisible(isVisible);
         playersListView.setMouseTransparent(isVisible);
-        cancel.setVisible(isVisible);
+        btn_renameCancel.setVisible(isVisible);
         textField_newPlayer.setMouseTransparent(isVisible);
-        textField_poolSeed.setMouseTransparent(isVisible);
-        back.setDisable(isVisible);
+        textField_seed.setMouseTransparent(isVisible);
+        btn_backToMenu.setDisable(isVisible);
         if(!isVisible){
             textField_renamePlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
             tt_textField_renamePlayer.hide();
@@ -169,7 +170,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     @FXML
-    void addNewPlayer() {
+    void onAddNewPlayerRelease() {
         String name = textField_newPlayer.getText();
         game.addPlayer(name);
 
@@ -179,7 +180,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     @FXML
-    void removePlayer() {
+    void onRemovePlayerRelease() {
         String newName = playersListView.getSelectionModel().getSelectedItem();
         game.removePlayer(newName);
         JSONObject gameData = game.getData();
@@ -187,9 +188,9 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     @FXML
-    void confirmRename() {
+    void onRenameConfirmRelease() {
         String newName = textField_renamePlayer.getText();
-        renamePlayer();
+        onRenamePanelShowRelease();
 
         game.renamePlayer(oldName, newName);
         oldName = "";
@@ -202,7 +203,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
 
     @FXML
-    void renamePlayer() {
+    void onRenamePanelShowRelease() {
         if (playersListView.getSelectionModel().getSelectedItem() != null) {
             oldName = playersListView.getSelectionModel().getSelectedItem();
             setRenamePanelVisibility(true);
@@ -210,21 +211,21 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     @FXML
-    void cancelRename() {
+    void onRenameCancelRelease() {
         textField_renamePlayer.clear();
         setRenamePanelVisibility(false);
     }
 
 
     @FXML
-    void startMatch() {
+    void onStartMatchRelease() {
         resetTooltips();
         game.startLocalMatch();
         vu.updateView();
     }
 
     @FXML
-    void backToMainMenu() {
+    void onBackToMenuRelease() {
         resetTooltips();
         game.backToTheMainMenu();
         vu.updateView();
@@ -232,12 +233,12 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
 
     @FXML
-    void setSeed() {
-        if (!textField_poolSeed.getText().equals("")) {
-            String seed = textField_poolSeed.getText();
-            seedLabel.setText(seed);
+    void onSetSeedRelease() {
+        if (!textField_seed.getText().equals("")) {
+            String seed = textField_seed.getText();
+            label_seed.setText(seed);
             game.setMatchSeed(Integer.parseInt(seed));
-            textField_poolSeed.clear();
+            textField_seed.clear();
         }
     }
 
