@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import takeiteasy.tilepool.Tile;
+import takeiteasy.JSONKeys;
 
 public class TileTest {
 
@@ -14,8 +15,8 @@ public class TileTest {
         Integer right = 3;
         Tile tile = new Tile(top,left,right);
         JSONObject tileData = tile.getData();
-        assertEquals(top, tileData.get("top"));
-        assertEquals(left, tileData.get("left"));
-        assertEquals(right, tileData.get("right"));
+        assertEquals(top, tileData.get(JSONKeys.TILE_TOP));
+        assertEquals(left, tileData.get(JSONKeys.TILE_LEFT));
+        assertEquals(right, tileData.get(JSONKeys.TILE_RIGHT));
     }
 }
