@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import takeiteasy.GUI.Controller.IViewController;
+import takeiteasy.JSONKeys;
 import takeiteasy.game.Game;
 import takeiteasy.game.IGame;
 
@@ -40,20 +41,20 @@ public class FXApplication extends Application implements IViewUpdater{
         JSONObject gameData = game.getData();
 
         // take context from json
-        IOContext newContext = null;
-        String gs = gameData.getString("gameState");
-        if(gs == IGame.State.MAIN_MENU.name()){
+        IOContext newContext;
+        String gameState = gameData.getString(JSONKeys.GAME_STATE);
+        if(gameState.equals(IGame.State.MAIN_MENU.name())){
             newContext = IOContext.MainMenu;
         }
-        else if(gs == IGame.State.LOCAL_LOBBY.name()){
+        else if(gameState.equals(IGame.State.LOCAL_LOBBY.name())){
             newContext = IOContext.LocalLobby;
         }
-        else if(gs == IGame.State.LOCAL_MATCH.name()){
+        else if(gameState.equals(IGame.State.LOCAL_MATCH.name())){
             newContext = IOContext.LocalMatch;
         }
         else{
             //DEBUG:
-            System.out.println("Invalid game state: " + gs);
+            System.out.println("Invalid game state: " + gameState);
             return;
         }
 
@@ -83,7 +84,7 @@ public class FXApplication extends Application implements IViewUpdater{
                 break;
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Parent node = null;
+        Parent node;
         try {
             node = loader.load();
         } catch (IOException e) {
