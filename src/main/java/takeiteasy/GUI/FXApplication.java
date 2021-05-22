@@ -30,9 +30,6 @@ public class FXApplication extends Application implements IViewUpdater{
 
         // Initialize game
         game = new Game();
-        directlyToLocalMatch(game);
-        //TODO: Link game to networking?
-
         stage = s;
         updateView();
 
@@ -73,12 +70,17 @@ public class FXApplication extends Application implements IViewUpdater{
     void loadScene(IOContext iocontext){
 
         String fxmlPath="";
-        //TODO:do we want scene titles/sizes?
         switch (iocontext){
-            //TODO: change : back to -> if this doesn't work BEFORE MERGING!!!!!!
-            case MainMenu : fxmlPath = "/fxml/main_menu.fxml";
-            case LocalLobby : fxmlPath = "/fxml/local_lobby.fxml";
-            case LocalMatch : fxmlPath = "/fxml/local_match.fxml";
+
+            case MainMenu :
+                fxmlPath = "/fxml/main_menu.fxml";
+                break;
+            case LocalLobby :
+                fxmlPath = "/fxml/local_lobby.fxml";
+                break;
+            case LocalMatch :
+                fxmlPath = "/fxml/local_match.fxml";
+                break;
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent node = null;
@@ -87,7 +89,6 @@ public class FXApplication extends Application implements IViewUpdater{
         } catch (IOException e) {
             e.printStackTrace();
             return;
-            //TODO: is this right?
         }
 
         Scene scene = new Scene(node);
@@ -101,25 +102,6 @@ public class FXApplication extends Application implements IViewUpdater{
         stage.setTitle("Take it Easy");
         stage.setScene(scene);
         stage.show();
-    }
-
-    private void directlyToLocalMatch(IGame game){
-        game.createLocalLobby();
-
-        //TODO: check player ordering when generating JSON
-        game.addPlayer("Dario");
-        game.addPlayer("Carlos");
-        game.addPlayer("Dario2");
-        game.addPlayer("Carlos2");
-        game.addPlayer("Dario3");
-        game.addPlayer("Carlos3");
-        game.addPlayer("Dario4");
-        game.addPlayer("Carlos4");
-        game.addPlayer("Dario5");
-        game.addPlayer("Carlos5");
-        game.addPlayer("Dario6");
-        game.addPlayer("Carlos6");
-        game.startLocalMatch();
     }
 
 }
