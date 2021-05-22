@@ -1,6 +1,7 @@
 package unittests.player;
 
 import org.json.JSONObject;
+import takeiteasy.JSONKeys;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.*;
@@ -31,9 +32,9 @@ public class PlayerTest {
     public void testConsistentGetData(){
         Player player = new Player("Carlos");
         JSONObject playerData = player.getData();
-        assertNotNull(playerData.opt("playerScore"));
-        assertNotNull(playerData.opt("playerState"));
-        assertNotNull(playerData.opt("playerBoard"));
+        assertNotNull(playerData.opt(JSONKeys.PLAYER_SCORE));
+        assertNotNull(playerData.opt(JSONKeys.PLAYER_STATE));
+        assertNotNull(playerData.opt(JSONKeys.PLAYER_BOARD));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class PlayerTest {
             assertDoesNotThrow(()->player.placeTile(expectedTile, coords));
 
             JSONObject data = player.getData();
-            JSONObject boardData = data.getJSONObject("playerBoard");
+            JSONObject boardData = data.getJSONObject(JSONKeys.PLAYER_BOARD);
             JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
             assertEquals(IPlayer.State.WAIT_OTHER, player.getState());
             JSONAssert.assertEquals(expectedTileData, insertedTileData, true);
@@ -97,22 +98,22 @@ public class PlayerTest {
             ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
             player.startMatch();
             JSONObject playerData = player.getData();
-            assertEquals("PLACING", playerData.get("playerState"));
+            assertEquals("PLACING", playerData.get(JSONKeys.PLAYER_STATE));
             JSONObject boardData = new JSONObject();
             for(int i = 0; i < list.size(); ++i) {
                 player.placeTile(list.get(i).tile, list.get(i).coordinate);
                 boardData.put(list.get(i).coordinate.toString(), list.get(i).tile.getData());
                 if (i == list.size() - 1) break;
                 playerData = player.getData();
-                assertEquals("WAIT_OTHER", playerData.get("playerState"));
+                assertEquals("WAIT_OTHER", playerData.get(JSONKeys.PLAYER_STATE));
                 player.transitionFromWaitingPlayersToPlacing();
             }
             playerData = player.getData();
-            JSONAssert.assertEquals(boardData, playerData.getJSONObject("playerBoard"), true);
+            JSONAssert.assertEquals(boardData, playerData.getJSONObject(JSONKeys.PLAYER_BOARD), true);
             player.endMatch();
             playerData = player.getData();
-            assertEquals("WAIT_MATCH", playerData.get("playerState"));
-            assertEquals(score, playerData.get("playerScore"));
+            assertEquals("WAIT_MATCH", playerData.get(JSONKeys.PLAYER_STATE));
+            assertEquals(score, playerData.get(JSONKeys.PLAYER_SCORE));
         }
         catch (Exception e) {
             fail();
@@ -130,7 +131,7 @@ public class PlayerTest {
             player.reset();
             JSONObject data = player.getData();
             assertEquals(IPlayer.State.WAIT_MATCH, player.getState());
-            assertTrue(data.getJSONObject("playerBoard").isEmpty());
+            assertTrue(data.getJSONObject(JSONKeys.PLAYER_BOARD).isEmpty());
         }
         catch (Exception e) {
             fail();
