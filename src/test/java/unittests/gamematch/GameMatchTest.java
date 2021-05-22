@@ -38,7 +38,7 @@ public class GameMatchTest {
 
         JSONObject data = gm.getData();
         assertEquals("SETUP", data.get(JSONKeys.MATCH_STATE));
-        assertTrue(data.getJSONArray(JSONKeys.MATCH_PLAYERS).toString().contains(plyName));
+        assertTrue(data.getJSONArray(JSONKeys.MATCH_PLAYERS).toString().contains("\"playerName\":\""+plyName+"\""));
     }
 
     @Test
@@ -167,8 +167,8 @@ public class GameMatchTest {
         assertDoesNotThrow( () -> gm.setPlayerName(oldName, newName));
 
         JSONArray players = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS);
-        assertTrue(players.toString().contains(newName));
-        assertFalse(players.toString().contains(oldName));
+        assertTrue(players.toString().contains("\"playerName\":\""+newName+"\""));
+        assertFalse(players.toString().contains("\"playerName\":\""+oldName+"\""));
     }
 
     @Test
@@ -209,8 +209,8 @@ public class GameMatchTest {
         }
         assertDoesNotThrow( () -> gm.removePlayer(plyName));
 
-        JSONObject data = gm.getData();
-        assertFalse(data.getJSONArray(JSONKeys.MATCH_PLAYERS).toString().contains(plyName));
+        JSONArray players = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS);
+        assertFalse(players.toString().contains("\"playerName\":\""+plyName+"\""));
     }
 
     @Test
