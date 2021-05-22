@@ -13,4 +13,8 @@ public class JSONKeys {
     public static final String PLAYER_STATE = "playerState";
     public static final String PLAYER_BOARD = "playerBoard";
     public static final String PLAYER_SCORE = "playerScore";
+
+    public static final String TILE_TOP = "top";
+    public static final String TILE_LEFT = "left";
+    public static final String TILE_RIGHT = "right";
 }

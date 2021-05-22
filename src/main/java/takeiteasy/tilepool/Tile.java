@@ -1,6 +1,7 @@
 package takeiteasy.tilepool;
 
 import org.json.JSONObject;
+import takeiteasy.JSONKeys;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -58,9 +59,9 @@ public class Tile {
 
     public JSONObject getData(){
         JSONObject tileData = new JSONObject();
-        tileData.put("top", top);
-        tileData.put("left", left);
-        tileData.put("right", right);
+        tileData.put(JSONKeys.TILE_TOP, top);
+        tileData.put(JSONKeys.TILE_LEFT, left);
+        tileData.put(JSONKeys.TILE_RIGHT, right);
         return tileData;
     }
 }
