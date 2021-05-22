@@ -137,7 +137,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
             String playerName = playersData.getJSONObject(iii).getString("playerName");
             playerNamesObservable.add(playerName);
         }
-        playersListView.refresh();
     }
 
     void resetTooltips(){
@@ -161,12 +160,10 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         btn_renameCancel.setVisible(isVisible);
         textField_newPlayer.setMouseTransparent(isVisible);
         textField_seed.setMouseTransparent(isVisible);
-        btn_backToMenu.setDisable(isVisible);
         if(!isVisible){
             textField_renamePlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
             tt_textField_renamePlayer.hide();
         }
-
     }
 
     @FXML
