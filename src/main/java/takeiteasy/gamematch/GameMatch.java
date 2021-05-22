@@ -2,6 +2,7 @@ package takeiteasy.gamematch;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
 import takeiteasy.player.*;
 import takeiteasy.tilepool.*;
@@ -175,19 +176,16 @@ public class GameMatch implements IGameMatch{
 
     @Override
     public JSONObject getData() {
-        JSONObject data = new JSONObject();
+        JSONObject matchData = new JSONObject();
         JSONArray playersData = new JSONArray();
         for(IPlayer p : players){
             playersData.put(p.getData());
         }
-        data.put("players", playersData);
+        matchData.put(JSONKeys.MATCH_PLAYERS, playersData);
+        matchData.put(JSONKeys.MATCH_CURRENT_TILE, tilePool.getTile(currentTileIndex).getData());
+        matchData.put(JSONKeys.MATCH_SEED, tilePool.getSeed());
+        matchData.put(JSONKeys.MATCH_STATE, state.name());
 
-        data.put("currentTile", tilePool.getTile(currentTileIndex).getData());
-
-        data.put("seed", tilePool.getSeed());
-
-        data.put("matchState", state.name());
-
-        return data;
+        return matchData;
     }
 }

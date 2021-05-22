@@ -1,6 +1,7 @@
 package takeiteasy.player;
 
 import org.json.JSONObject;
+import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
 import takeiteasy.tilepool.Tile;
 
@@ -79,10 +80,10 @@ public class Player implements IPlayer{
     @Override
     public JSONObject getData(){
         JSONObject data = new JSONObject();
-        data.put("playerName", Name);
-        data.put("playerState", playerState.name());
-        data.put("playerBoard", playerBoard.getData());
-        data.put("playerScore", playerBoard.computeScore());
+        data.put(JSONKeys.PLAYER_NAME, Name);
+        data.put(JSONKeys.PLAYER_STATE, playerState.name());
+        data.put(JSONKeys.PLAYER_BOARD, playerBoard.getData());
+        data.put(JSONKeys.PLAYER_SCORE, playerBoard.computeScore());
         return data;
     }
 

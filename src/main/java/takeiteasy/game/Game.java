@@ -1,6 +1,7 @@
 package takeiteasy.game;
 
 import org.json.JSONObject;
+import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
@@ -113,10 +114,10 @@ public class Game implements IGame{
     public JSONObject getData() {
         JSONObject data = new JSONObject();
 
-        data.put("gameState", state.name());
+        data.put(JSONKeys.GAME_STATE, state.name());
 
         if(gameMatch != null){
-            data.put("gameMatch", gameMatch.getData());
+            data.put(JSONKeys.GAME_MATCH, gameMatch.getData());
         }
 
         return data;
