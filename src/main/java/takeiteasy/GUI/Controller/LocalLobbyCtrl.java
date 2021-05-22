@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
+import takeiteasy.JSONKeys;
 import takeiteasy.game.IGame;
 
 import java.net.URL;
@@ -132,9 +133,9 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     public void refreshPlayersList(JSONObject gameData) {
         playerNamesObservable.clear();
-        JSONArray playersData = gameData.getJSONObject("gameMatch").getJSONArray("players");
+        JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
         for (int iii = 0; iii < playersData.length(); ++iii){
-            String playerName = playersData.getJSONObject(iii).getString("playerName");
+            String playerName = playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME);
             playerNamesObservable.add(playerName);
         }
     }
