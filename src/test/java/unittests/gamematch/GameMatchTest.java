@@ -2,6 +2,7 @@ package unittests.gamematch;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import takeiteasy.JSONKeys;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.HexCoordinates;
@@ -21,10 +22,11 @@ public class GameMatchTest {
     public void testConsistentGetData(){
         GameMatch gm = new GameMatch();
         JSONObject data = gm.getData();
-        assertNotNull(data.opt("players"));
-        assertNotNull(data.opt("currentTile"));
-        assertNotNull(data.opt("seed"));
-        assertNotNull(data.opt("matchState"));
+
+        assertNotNull(data.opt(JSONKeys.MATCH_PLAYERS));
+        assertNotNull(data.opt(JSONKeys.MATCH_CURRENT_TILE));
+        assertNotNull(data.opt(JSONKeys.MATCH_SEED));
+        assertNotNull(data.opt(JSONKeys.MATCH_STATE));
     }
 
     @Test
@@ -35,8 +37,8 @@ public class GameMatchTest {
         assertDoesNotThrow(() -> gm.addPlayer(plyName));
 
         JSONObject data = gm.getData();
-        assertEquals("SETUP", data.get("matchState"));
-        assertTrue(data.getJSONArray("players").toString().contains(plyName));
+        assertEquals("SETUP", data.get(JSONKeys.MATCH_STATE));
+        assertTrue(data.getJSONArray(JSONKeys.MATCH_PLAYERS).toString().contains(plyName));
     }
 
     @Test
@@ -58,7 +60,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         assertDoesNotThrow(() -> gm.setTilePoolSeed(tilePoolSeed));
-        assertEquals(tilePoolSeed, gm.getData().get("seed"));
+        assertEquals(tilePoolSeed, gm.getData().get(JSONKeys.MATCH_SEED));
     }
 
     @Test
@@ -71,7 +73,7 @@ public class GameMatchTest {
         catch (Exception ignored){
         }
         assertDoesNotThrow(gm::startMatch);
-        assertEquals("PLAY", gm.getData().get("matchState"));
+        assertEquals("PLAY", gm.getData().get(JSONKeys.MATCH_STATE));
     }
 
     @Test
@@ -86,12 +88,12 @@ public class GameMatchTest {
             assertDoesNotThrow( () -> gm.positionCurrentTileOnPlayerBoard(name, coords));
 
             JSONObject data = gm.getData();
-            JSONObject playersData = data.getJSONObject("players");
+            JSONObject playersData = data.getJSONObject(JSONKeys.MATCH_PLAYERS);
             JSONObject playerData = playersData.getJSONObject(name);
-            JSONObject boardData = playerData.getJSONObject("playerBoard");
+            JSONObject boardData = playerData.getJSONObject(JSONKeys.PLAYER_BOARD);
             JSONObject insertedTileData = boardData.getJSONObject(coords.toString());
 
-            JSONObject currentTileData = data.getJSONObject("currentTile");
+            JSONObject currentTileData = data.getJSONObject(JSONKeys.MATCH_CURRENT_TILE);
 
             JSONAssert.assertEquals(currentTileData, insertedTileData, true);
         }
@@ -123,7 +125,7 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         assertDoesNotThrow(() -> SimulateCompleteGameMatch(gm, name, tilePoolSeed));
-        assertEquals("FINISH", gm.getData().get("matchState"));
+        assertEquals("FINISH", gm.getData().get(JSONKeys.MATCH_STATE));
     }
 
     @Test
@@ -164,7 +166,7 @@ public class GameMatchTest {
 
         assertDoesNotThrow( () -> gm.setPlayerName(oldName, newName));
 
-        JSONArray players = gm.getData().getJSONArray("players");
+        JSONArray players = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS);
         assertTrue(players.toString().contains(newName));
         assertFalse(players.toString().contains(oldName));
     }
@@ -208,7 +210,7 @@ public class GameMatchTest {
         assertDoesNotThrow( () -> gm.removePlayer(plyName));
 
         JSONObject data = gm.getData();
-        assertFalse(data.getJSONArray("players").toString().contains(plyName));
+        assertFalse(data.getJSONArray(JSONKeys.MATCH_PLAYERS).toString().contains(plyName));
     }
 
     @Test
@@ -301,7 +303,7 @@ public class GameMatchTest {
         GameMatch gm = new GameMatch();
 
         assertThrows(NotEnoughPlayersException.class, gm::startMatch);
-        assertEquals("SETUP", gm.getData().get("matchState"));
+        assertEquals("SETUP", gm.getData().get(JSONKeys.MATCH_STATE));
     }
 
     @Test
@@ -363,8 +365,8 @@ public class GameMatchTest {
 
         assertDoesNotThrow(gm::backToSetup);
 
-        assertEquals("SETUP", gm.getData().get("matchState"));
-        JSONObject boardData = gm.getData().getJSONArray("players").getJSONObject(0).getJSONObject("playerBoard");
+        assertEquals("SETUP", gm.getData().get(JSONKeys.MATCH_STATE));
+        JSONObject boardData = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS).getJSONObject(0).getJSONObject(JSONKeys.PLAYER_BOARD);
         assertTrue(boardData.isEmpty());
     }
 
@@ -463,9 +465,9 @@ public class GameMatchTest {
             gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(18).coordinate);
 
             gm.endMatch();
-            JSONArray playersData = gm.getData().getJSONArray("players");
-            assertEquals(finalScore, playersData.getJSONObject(0).getInt("playerScore"));
-            assertEquals(otherFinalScore, playersData.getJSONObject(1).getInt("playerScore"));
+            JSONArray playersData = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS);
+            assertEquals(finalScore, playersData.getJSONObject(0).getInt(JSONKeys.PLAYER_SCORE));
+            assertEquals(otherFinalScore, playersData.getJSONObject(1).getInt(JSONKeys.PLAYER_SCORE));
         }
         catch (Exception e){
             fail();
