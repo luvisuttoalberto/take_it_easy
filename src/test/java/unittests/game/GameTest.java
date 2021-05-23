@@ -49,9 +49,7 @@ public class GameTest {
         JSONObject data = game.getData();
         JSONArray players = data.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
 
-        assertTrue(players.toString().contains(name));
-        //TODO: maybe the following line might be better
-        //        assertTrue(players.toString().contains("\"playerName\":\""+name+"\""));
+        assertTrue(players.toString().contains("\"playerName\":\""+name+"\""));
     }
 
     @Test
@@ -114,7 +112,6 @@ public class GameTest {
 
         JSONObject data = game.getData();
         JSONArray players = data.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
-//        List<String> playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(2, players.length());
 
@@ -122,11 +119,10 @@ public class GameTest {
 
         data = game.getData();
         players = data.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
-//        playerNames = new ArrayList<>(players.keySet());
 
         assertEquals(1, players.length());
-        assertTrue(players.toString().contains(otherName));
-        assertFalse(players.toString().contains(name));
+        assertTrue(players.toString().contains("\"playerName\":\""+otherName+"\""));
+        assertFalse(players.toString().contains("\"playerName\":\""+name+"\""));
     }
 
     @Test
@@ -143,8 +139,8 @@ public class GameTest {
 
         assertEquals(newName, players.getJSONObject(0).get(JSONKeys.PLAYER_NAME));
         assertEquals(1, players.length());
-        assertTrue(players.toString().contains(newName));
-        assertFalse(players.toString().contains(oldName));
+        assertTrue(players.toString().contains("\"playerName\":\""+newName+"\""));
+        assertFalse(players.toString().contains("\"playerName\":\""+oldName+"\""));
     }
 
     @Test
