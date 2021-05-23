@@ -18,7 +18,7 @@ public class FXApplication extends Application implements IViewUpdater{
     enum IOContext {
         MainMenu,
         LocalLobby,
-        LocalMatch
+        LocalMatch,
     }
 
     private IGame game;
