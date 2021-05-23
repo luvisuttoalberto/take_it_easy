@@ -3,6 +3,9 @@ package takeiteasy.game;
 import org.json.JSONObject;
 import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
+import takeiteasy.board.exceptions.BadHexCoordinatesException;
+import takeiteasy.board.exceptions.CoordinatesOccupidedException;
+import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.*;
 import takeiteasy.player.InvalidPlayerStateException;
 

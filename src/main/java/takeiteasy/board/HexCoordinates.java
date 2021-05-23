@@ -1,5 +1,7 @@
 package takeiteasy.board;
 
+import takeiteasy.board.exceptions.BadHexCoordinatesException;
+
 public class HexCoordinates {
     private Integer x;
     private Integer y;

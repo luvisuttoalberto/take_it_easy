@@ -1,5 +1,6 @@
 package takeiteasy.board;
 import org.json.JSONObject;
+import takeiteasy.board.exceptions.*;
 import takeiteasy.tilepool.Tile;
 
 public interface IBoard {

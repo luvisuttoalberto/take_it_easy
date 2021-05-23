@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.JSONKeys;
 import org.junit.jupiter.api.Test;
-import takeiteasy.board.BadHexCoordinatesException;
+import takeiteasy.board.exceptions.BadHexCoordinatesException;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.game.Game;
 import takeiteasy.tilepool.Tile;

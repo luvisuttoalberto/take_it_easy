@@ -1,21 +1,28 @@
 package takeiteasy.board;
 
+import javafx.util.Pair;
 import org.json.JSONObject;
+import takeiteasy.board.exceptions.*;
 import takeiteasy.tilepool.Tile;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class BoardVanilla implements IBoard {
 
-    private Tile[][] tileStorage = new Tile[5][5];
+    final Tile[][] tileStorage = new Tile[5][5];
 
-    private Boolean areCoordinatesInRange(HexCoordinates coordinates){
+    Boolean areCoordinatesInRange(HexCoordinates coordinates){
         return (-3<coordinates.getX() && coordinates.getX()<3) &&
                (-3<coordinates.getY() && coordinates.getY()<3) &&
                (-3<coordinates.getZ() && coordinates.getZ()<3);
     }
 
-    private Integer[] getStorageIndicesFromCoordinates(HexCoordinates coordinates){
+    Integer[] getStorageIndicesFromCoordinates(HexCoordinates coordinates){
         return new Integer[]{coordinates.getX()+2,coordinates.getY()+2};
     }
 
@@ -43,42 +50,31 @@ public class BoardVanilla implements IBoard {
         return this.tileStorage[storageIdx[0]][storageIdx[1]];
     }
 
+    //TODO: REFACTOR THIS LOT WHICH IS EVIL
     public enum RowOrientation{
         TOP,
         LEFT,
         RIGHT
     }
 
-    private Integer getTileNumberAtOrientation(Tile tile, RowOrientation orientation){
-        switch (orientation) {
-            case LEFT :
-                return tile.getLeft();
-
-            case RIGHT :
-                return tile.getRight();
-
-            default :
-                return tile.getTop();
-
-        }
+    Integer getTileNumberAtOrientation(Tile tile, RowOrientation orientation){
+        return switch (orientation) {
+            case LEFT -> tile.getLeft();
+            case RIGHT -> tile.getRight();
+            default -> tile.getTop();
+        };
     }
 
-    private Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
-        switch (counterRotation){
-            case LEFT :
-                return this.getTile(coordinates.rotateRight());
-
-            case RIGHT :
-                return this.getTile(coordinates.rotateLeft());
-
-            default :
-                return this.getTile(coordinates);
-
-        }
+    Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
+        return switch (counterRotation) {
+            case LEFT -> this.getTile(coordinates.rotateRight());
+            case RIGHT -> this.getTile(coordinates.rotateLeft());
+            default -> this.getTile(coordinates);
+        };
     }
 
     //TODO: remove comments
-    private Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
+    Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
 
         // Get coordinates of first tile in the row
         Integer x0 = rowIndex,
@@ -114,66 +110,30 @@ public class BoardVanilla implements IBoard {
 
         return score;
     }
+    //--------
 
     @Override
     public Integer computeScore() {
-        Integer score = 0;
-        for (RowOrientation orientation : RowOrientation.values()) {
-            for (int i=-2;i<3;++i){
-                score += computeRowScore(i,orientation);
-            }
-        }
-        return score;
+        return Arrays.stream(RowOrientation.values()).flatMap(ro ->
+                IntStream.rangeClosed(-2,2).mapToObj(iii-> new Pair<>(iii,ro))).
+                mapToInt(pair->computeRowScore(pair.getKey(),pair.getValue())).sum();
     }
 
     @Override
     public JSONObject getData() {
         JSONObject boardData = new JSONObject();
-        HexCoordinates[] coords = generateCoordinateStandard();
-        for(HexCoordinates c : coords){
-            try{
-                Tile tile = getTile(c);
-                if(tile != null){
-                    boardData.put(c.toString(), tile.getData());
-                }
-            }
-            catch (OutOfBoardCoordinatesException ignored){
-            }
-        }
+
+        Arrays.stream(generateCoordinateStandard()).map(hc -> {
+            try {return new Pair<>(hc,getTile(hc));}
+            catch (OutOfBoardCoordinatesException ignored) {}
+            return null;
+        }).
+        filter(hc_t->hc_t.getValue()!=null).
+        forEach(hc_t->boardData.put(
+                hc_t.getKey().toString(),
+                hc_t.getValue().getData())
+         );
+
         return boardData;
     }
-
-    //TODO: remove? Not during MERGE
-//    private String stringifyTileContentAtStorageCoordinates(int i, int j){
-//        Tile res = tileStorage[i][j];
-//        if(res == null){
-//            return ".....";
-//        }
-//        return res.toString();
-//    }
-
-    //TODO: remove?
-//    public void printBoard(){
-//        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,0) + "|");
-//        for(int i = 0; i < 4; ++i){
-//            System.out.println("      |" + stringifyTileContentAtStorageCoordinates(1,i+1) + "|     |" +
-//                                           stringifyTileContentAtStorageCoordinates(3,i) + "|");
-//            if(i < 3){
-//                System.out.println("|" + stringifyTileContentAtStorageCoordinates(0,i+2) + "|     |" +
-//                                         stringifyTileContentAtStorageCoordinates(2,i+1) + "|     |" +
-//                                         stringifyTileContentAtStorageCoordinates(4,i) + "|");
-//            }
-//        }
-//        System.out.println("            |" + stringifyTileContentAtStorageCoordinates(2,4) + "|");
-//    }
-
-    //TODO:DEBUG
-//    public void printMatrixBoard(){
-//        for(int i = 0; i < 5; i++){
-//            for(int j = 0; j < 5; j++){
-//                System.out.print(stringifyTileContentAtStorageCoordinates(i,j));
-//            }
-//            System.out.print("\n");
-//        }
-//    }
 }
