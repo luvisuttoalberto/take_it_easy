@@ -7,7 +7,6 @@ import takeiteasy.tilepool.Tile;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
@@ -50,30 +49,28 @@ public class BoardVanilla implements IBoard {
         return this.tileStorage[storageIdx[0]][storageIdx[1]];
     }
 
-    //TODO: REFACTOR THIS LOT WHICH IS EVIL
-    public enum RowOrientation{
+    enum RowOrientation{
         TOP,
         LEFT,
         RIGHT
     }
 
     Integer getTileNumberAtOrientation(Tile tile, RowOrientation orientation){
-        return switch (orientation) {
-            case LEFT -> tile.getLeft();
-            case RIGHT -> tile.getRight();
-            default -> tile.getTop();
-        };
+        switch (orientation) {
+            case LEFT  : return tile.getLeft();
+            case RIGHT : return tile.getRight();
+            default    : return tile.getTop();
+        }
     }
 
     Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
-        return switch (counterRotation) {
-            case LEFT -> this.getTile(coordinates.rotateRight());
-            case RIGHT -> this.getTile(coordinates.rotateLeft());
-            default -> this.getTile(coordinates);
-        };
+        switch (counterRotation) {
+            case LEFT  : return getTile(coordinates.rotateRight());
+            case RIGHT : return getTile(coordinates.rotateLeft());
+            default    : return getTile(coordinates);
+        }
     }
 
-    //TODO: remove comments
     Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
 
         // Get coordinates of first tile in the row
@@ -98,7 +95,6 @@ public class BoardVanilla implements IBoard {
                 Integer cellValue = this.getTileNumberAtOrientation(tile,rowOrientation);
 
                 if (!cellValue.equals(rowNumber)) {
-                    // Differing value, no points
                     return 0;
                 }
             }
@@ -124,15 +120,16 @@ public class BoardVanilla implements IBoard {
         JSONObject boardData = new JSONObject();
 
         Arrays.stream(generateCoordinateStandard()).map(hc -> {
-            try {return new Pair<>(hc,getTile(hc));}
-            catch (OutOfBoardCoordinatesException ignored) {}
-            return null;
-        }).
-        filter(hc_t->hc_t.getValue()!=null).
-        forEach(hc_t->boardData.put(
-                hc_t.getKey().toString(),
-                hc_t.getValue().getData())
-         );
+                try { return new Pair<>(hc, getTile(hc)); }
+                catch (OutOfBoardCoordinatesException ignored) {}
+                return null;
+            }).
+            filter(Objects::nonNull).
+            filter(hc_t->hc_t.getValue()!=null).
+            forEach(hc_t->boardData.put(
+                    hc_t.getKey().toString(),
+                    hc_t.getValue().getData())
+             );
 
         return boardData;
     }
