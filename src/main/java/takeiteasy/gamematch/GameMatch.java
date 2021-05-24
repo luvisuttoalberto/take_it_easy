@@ -4,9 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
-import takeiteasy.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.board.exceptions.CoordinatesOccupidedException;
-import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.board.exceptions.*;
 import takeiteasy.gamematch.exceptions.*;
 import takeiteasy.player.*;
 import takeiteasy.player.exceptions.InvalidPlayerStateException;
@@ -25,6 +23,18 @@ public class GameMatch implements IGameMatch{
         tilePool = new TilePool();
         state = State.SETUP;
         currentTileIndex = 0;
+    }
+
+    private Boolean areAllPlayersInState(IPlayer.State state){
+        return players.stream().allMatch(p -> p.getState() == state);
+    }
+
+    private Boolean isThereAPlayerInState(IPlayer.State state){
+        return players.stream().anyMatch(p -> p.getState() == state);
+    }
+
+    private Boolean isTilePoolDepleted(){
+        return currentTileIndex >= tilePool.getSize() - 1;
     }
 
     @Override
@@ -64,11 +74,13 @@ public class GameMatch implements IGameMatch{
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
         }
+
         Integer playerIndex = retrievePlayerIndexFromName(oldName);
         try {
             retrievePlayerIndexFromName(newName);
             throw new PlayersWithSameNameNotAllowedException(newName);
-        } catch (PlayerNameNotFoundException ignored){
+        }
+        catch (PlayerNameNotFoundException ignored){
             players.get(playerIndex).setName(newName);
         }
     }
@@ -80,17 +92,15 @@ public class GameMatch implements IGameMatch{
             throw new NotEnoughPlayersException();
         }
         players.removeElementAt(playerIndex);
-        for(IPlayer player : players){
-            if(player.getState() != IPlayer.State.WAIT_OTHER){
-                return;
-            }
+
+        if(areAllPlayersInState(IPlayer.State.WAIT_OTHER)){
+            throw new LastPlacingPlayerRemovedException();
         }
 
-        throw new LastPlacingPlayerRemovedException();
     }
 
     @Override
-    public void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException {
+    public void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException {
 
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
@@ -98,9 +108,10 @@ public class GameMatch implements IGameMatch{
         if(players.size() < 1){
             throw new NotEnoughPlayersException();
         }
-        for(IPlayer p : players){
-            p.startMatch();
-        }
+        players.forEach(p -> {
+            try{p.startMatch();}
+            catch (InvalidPlayerStateException ignored){}
+        });
         state = State.PLAY;
     }
 
@@ -114,33 +125,22 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayersNotReadyForNextTileException, TilePoolDepletedException {
+    public void dealNextTile() throws InvalidMatchStateException, PlayersNotReadyForNextTileException, TilePoolDepletedException {
         if (state != State.PLAY){
             throw new InvalidMatchStateException();
         }
-        //TODO: This part of the code is never reached!!!
-//        if (players.size() < 1){
-//            throw new NotEnoughPlayersException();
-//        }
-        for (IPlayer p : players){
-            IPlayer.State playerState = p.getState();
-            if (playerState == IPlayer.State.PLACING){
-                throw new PlayersNotReadyForNextTileException();
-            }
+        if(isThereAPlayerInState(IPlayer.State.PLACING)){
+            throw new PlayersNotReadyForNextTileException();
         }
-        if (currentTileIndex >= tilePool.getSize() - 1){
+        if (isTilePoolDepleted()){
             throw new TilePoolDepletedException();
         }
 
-        // update currentTileIndex and player states
         ++currentTileIndex;
-        for (IPlayer p : players){
-            try{
-                p.transitionFromWaitingPlayersToPlacing();
-            }
-            catch (InvalidPlayerStateException ignored){
-            }
-        }
+        players.forEach(p -> {
+            try {p.transitionFromWaitingPlayersToPlacing();}
+            catch (InvalidPlayerStateException ignored) {}
+        });
     }
 
     @Override
@@ -156,25 +156,24 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException {
+    public void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException {
 
         if(state != State.PLAY){
             throw new InvalidMatchStateException();
         }
 
-        if(currentTileIndex < tilePool.getSize() - 1){
+        if(!isTilePoolDepleted()){
             throw new TilePoolNotDepletedException();
         }
 
-        for(IPlayer p : players){
-            if(p.getState() != IPlayer.State.WAIT_OTHER){
-                throw new PlayersNotReadyToEndMatchException();
-            }
+        if(!areAllPlayersInState(IPlayer.State.WAIT_OTHER)){
+            throw new PlayersNotReadyToEndMatchException();
         }
 
-        for(IPlayer p : players){
-            p.endMatch();
-        }
+        players.forEach(p -> {
+            try{p.endMatch();}
+            catch (InvalidPlayerStateException ignored){}
+        });
 
         state = State.FINISH;
     }
@@ -183,9 +182,8 @@ public class GameMatch implements IGameMatch{
     public JSONObject getData() {
         JSONObject matchData = new JSONObject();
         JSONArray playersData = new JSONArray();
-        for(IPlayer p : players){
-            playersData.put(p.getData());
-        }
+        players.forEach(p -> playersData.put(p.getData()));
+
         matchData.put(JSONKeys.MATCH_PLAYERS, playersData);
         matchData.put(JSONKeys.MATCH_CURRENT_TILE, tilePool.getTile(currentTileIndex).getData());
         matchData.put(JSONKeys.MATCH_SEED, tilePool.getSeed());

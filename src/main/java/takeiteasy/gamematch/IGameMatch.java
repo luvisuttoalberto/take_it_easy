@@ -22,15 +22,15 @@ public interface IGameMatch {
     void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException, PlayersWithSameNameNotAllowedException;
     void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException, LastPlacingPlayerRemovedException;
     void setTilePoolSeed(long seed) throws InvalidMatchStateException;
-    void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException, InvalidPlayerStateException;
+    void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException;
 
     void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException;
 
-    void dealNextTile() throws InvalidMatchStateException, NotEnoughPlayersException, PlayersNotReadyForNextTileException, TilePoolDepletedException;
+    void dealNextTile() throws InvalidMatchStateException, PlayersNotReadyForNextTileException, TilePoolDepletedException;
 
     void backToSetup() throws InvalidMatchStateException;
 
-    void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException, InvalidPlayerStateException;
+    void endMatch() throws InvalidMatchStateException, TilePoolNotDepletedException, PlayersNotReadyToEndMatchException;
 
     JSONObject getData();
 
