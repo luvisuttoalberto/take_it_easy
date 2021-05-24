@@ -28,19 +28,19 @@ public class HexCoordinates {
 
 
     public HexCoordinates rotateLeft() {
-        Integer buffer = this.x;
-        this.x = this.y;
-        this.y = this.z;
-        this.z = buffer;
+        Integer buffer = x;
+        x = y;
+        y = z;
+        z = buffer;
 
         return this;
     }
 
     public HexCoordinates rotateRight() {
-        Integer buffer = this.x;
-        this.x = this.z;
-        this.z = this.y;
-        this.y = buffer;
+        Integer buffer = x;
+        x = z;
+        z = y;
+        y = buffer;
 
         return this;
     }

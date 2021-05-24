@@ -3,16 +3,14 @@ package takeiteasy.game;
 import org.json.JSONObject;
 import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
-import takeiteasy.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.board.exceptions.CoordinatesOccupidedException;
-import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.board.exceptions.*;
 import takeiteasy.gamematch.*;
 import takeiteasy.gamematch.exceptions.*;
 import takeiteasy.player.exceptions.InvalidPlayerStateException;
 
 public class Game implements IGame{
-    private IGameMatch gameMatch;
-    private State state = State.MAIN_MENU;
+    IGameMatch gameMatch;
+    State state = State.MAIN_MENU;
 
     @Override
     public void createLocalLobby() {
@@ -106,7 +104,7 @@ public class Game implements IGame{
         }
     }
 
-    private void endMatch() {
+    void endMatch() {
         try{
             gameMatch.endMatch();
         }
