@@ -3,18 +3,17 @@ package takeiteasy.player;
 import org.json.JSONObject;
 import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
-import takeiteasy.board.exceptions.CoordinatesOccupidedException;
-import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.board.exceptions.*;
 import takeiteasy.tilepool.Tile;
 
 public class Player implements IPlayer{
 
-    private String Name;
-    private State playerState;
-    private IBoard playerBoard;
+    String name;
+    State playerState;
+    IBoard playerBoard;
 
     public Player(String name) {
-        Name = name;
+        this.name = name;
         this.playerState = State.WAIT_MATCH;
         this.playerBoard = new BoardVanilla();
     }
@@ -26,11 +25,11 @@ public class Player implements IPlayer{
 
     @Override
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     @Override
-    public String getName() { return Name; }
+    public String getName() { return name; }
 
     @Override
     public void reset() {
@@ -82,19 +81,11 @@ public class Player implements IPlayer{
     @Override
     public JSONObject getData(){
         JSONObject data = new JSONObject();
-        data.put(JSONKeys.PLAYER_NAME, Name);
+        data.put(JSONKeys.PLAYER_NAME, name);
         data.put(JSONKeys.PLAYER_STATE, playerState.name());
         data.put(JSONKeys.PLAYER_BOARD, playerBoard.getData());
         data.put(JSONKeys.PLAYER_SCORE, playerBoard.computeScore());
         return data;
     }
 
-//    //TODO: Remove?
-//    private HexCoordinates getCoordinatesFromUser() throws BadHexCoordinatesException {
-//        Scanner sc = new Scanner(System.in);
-//        Integer index1 = sc.nextInt();
-//        Integer index2 = sc.nextInt();
-//        Integer index3 = sc.nextInt();
-//        return new HexCoordinates(index1, index2, index3);
-//    }
 }
