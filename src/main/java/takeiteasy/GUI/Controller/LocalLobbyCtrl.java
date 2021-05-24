@@ -15,6 +15,7 @@ import takeiteasy.game.IGame;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.StreamSupport;
 
 public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
@@ -134,10 +135,16 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     public void refreshPlayersList(JSONObject gameData) {
         playerNamesObservable.clear();
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
-        for (int iii = 0; iii < playersData.length(); ++iii){
-            String playerName = playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME);
-            playerNamesObservable.add(playerName);
-        }
+
+        //TODO: verify if this stream makes sense, or if it is better to keep the for loop in order to make it more understandable
+        StreamSupport.stream(playersData.spliterator(), false)
+                .map(playerData -> (JSONObject) playerData)
+                .forEach(playerData -> playerNamesObservable.add(playerData.getString(JSONKeys.PLAYER_NAME)));
+
+//        for (int iii = 0; iii < playersData.length(); ++iii){
+//            String playerName = playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME);
+//            playerNamesObservable.add(playerName);
+//        }
     }
 
     void resetTooltips(){
@@ -145,7 +152,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         tt_textField_newPlayer.hide();
         textField_renamePlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
         tt_textField_renamePlayer.hide();
-
     }
 
     @Override
