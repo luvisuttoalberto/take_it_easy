@@ -21,7 +21,9 @@ import takeiteasy.player.IPlayer;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
@@ -185,20 +187,32 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).
                 getJSONArray(JSONKeys.MATCH_PLAYERS);
 
-        ArrayList<String> winners = new ArrayList<>();
-        int bestScore = 0;
-        for(int iii = 0; iii < playersData.length(); ++iii){
-            int currentPlayerScore = playersData.getJSONObject(iii).
-                    getInt(JSONKeys.PLAYER_SCORE);
-            if(currentPlayerScore > bestScore){
-                bestScore = currentPlayerScore;
-                winners.clear();
-                winners.add(playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME));
-            }
-            else if(currentPlayerScore == bestScore){
-                winners.add(playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME));
-            }
-        }
+        int bestScore = IntStream.range(0, playersData.length())
+                .map(iii -> playersData.getJSONObject(iii).getInt(JSONKeys.PLAYER_SCORE))
+                .max().getAsInt();
+
+        //Todo: Maybe convert the arrayList into a List to avoid the explicit cast
+        ArrayList<String> winners = (ArrayList<String>) StreamSupport.stream(playersData.spliterator(), false)
+                .map(playerData -> (JSONObject) playerData)
+                .filter(playerData -> playerData.getInt(JSONKeys.PLAYER_SCORE) == bestScore)
+                .map(playerData -> playerData.getString(JSONKeys.PLAYER_NAME))
+                .collect(Collectors.toList());
+
+//        ArrayList<String> winners = (ArrayList<String>) IntStream.range(0, playersData.length())
+//                .filter(iii -> playersData.getJSONObject(iii).getInt(JSONKeys.PLAYER_SCORE) == finalBestScore)
+//                .collect(Collectors.toList(playersData.getJSONObject(iii).getJSONObject(JSONKeys.PLAYER_NAME)));
+//        for(int iii = 0; iii < playersData.length(); ++iii){
+//            int currentPlayerScore = playersData.getJSONObject(iii).
+//                    getInt(JSONKeys.PLAYER_SCORE);
+//            if(currentPlayerScore > bestScore){
+//                bestScore = currentPlayerScore;
+//                winners.clear();
+//                winners.add(playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME));
+//            }
+//            else if(currentPlayerScore == bestScore){
+//                winners.add(playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME));
+//            }
+//        }
         return winners;
     }
 
