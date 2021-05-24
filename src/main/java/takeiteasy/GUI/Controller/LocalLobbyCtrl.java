@@ -137,6 +137,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
 
         //TODO: verify if this stream makes sense, or if it is better to keep the for loop in order to make it more understandable
+        //      alternatively, take a look at how the stream is implemented in buildPlayersList in localmatchctrl
         StreamSupport.stream(playersData.spliterator(), false)
                 .map(playerData -> (JSONObject) playerData)
                 .forEach(playerData -> playerNamesObservable.add(playerData.getString(JSONKeys.PLAYER_NAME)));

@@ -21,6 +21,7 @@ import takeiteasy.player.IPlayer;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
@@ -122,16 +123,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         players = new HashMap<>();
 
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
-        for (int iii = 0; iii < playersData.length(); ++iii){
 
-            String playerName = playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME);
-            PlayerListEntryCtrl pe = new PlayerListEntryCtrl(playerName);
-
-            players.put(playerName, pe);
-            pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
-            pe.btn_kick_confirm.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
-            layout_playersPane.getChildren().add(pe);
-        }
+        //TODO: verify if this is better than the stream used in refreshPlayersList in localLobby
+        IntStream.range(0, playersData.length())
+                .mapToObj(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME))
+                .forEach(playerName -> {
+                    PlayerListEntryCtrl pe = new PlayerListEntryCtrl(playerName);
+                    players.put(playerName, pe);
+                    pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
+                    pe.btn_kick_confirm.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
+                    layout_playersPane.getChildren().add(pe);
+                });
     }
 
     void defocusCoordinates(){
