@@ -25,17 +25,15 @@ public class GameMatch implements IGameMatch{
         currentTileIndex = 0;
     }
 
-    private Boolean areAllPlayersInState(IPlayer.State state){
+    Boolean areAllPlayersInState(IPlayer.State state){
         return players.stream().allMatch(p -> p.getState() == state);
     }
 
-    //TODO: maybe this can be substituted by the AND of
-    //      areAllPlayersInState(WAIT_OTHER) AND areAllPlayersInState(WAIT_MATCH)
-    private Boolean isThereAPlayerInState(IPlayer.State state){
+    Boolean isThereAPlayerInState(IPlayer.State state){
         return players.stream().anyMatch(p -> p.getState() == state);
     }
 
-    private Boolean isTilePoolDepleted(){
+    Boolean isTilePoolDepleted(){
         return currentTileIndex >= tilePool.getSize() - 1;
     }
 
@@ -51,7 +49,7 @@ public class GameMatch implements IGameMatch{
         return players.stream().anyMatch(p -> p.getName().equals(playerName));
     }
 
-    private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
+    Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
 
         for (int i = 0; i < players.size(); ++i){
             if (players.get(i).getName().equals(playerName)){
@@ -124,7 +122,7 @@ public class GameMatch implements IGameMatch{
         state = State.PLAY;
     }
 
-    private Tile getCurrentTile() {
+    Tile getCurrentTile() {
         return tilePool.getTile(currentTileIndex);
     }
 
@@ -157,7 +155,7 @@ public class GameMatch implements IGameMatch{
         if(state == State.SETUP){
             throw new InvalidMatchStateException();
         }
-        
+
         currentTileIndex = 0;
 
         //TODO: should this be converted as intellij suggests?
