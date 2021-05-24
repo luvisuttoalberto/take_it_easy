@@ -68,13 +68,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         btn_rematchNewSeed.setOnMouseReleased(e -> onRematchNewSeedRelease());
     }
 
+    void setRematchButtonsText(){
+        btn_rematch.setText("Rematch\n(SAME tile pool)");
+        btn_rematchNewSeed.setText("Rematch\n(new tile pool)");
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources){
         buildBoard();
         buildCurrentTilePane();
         linkStaticButtons();
-        btn_rematch.setText("Rematch\n(SAME tile pool)");
-        btn_rematchNewSeed.setText("Rematch\n(new tile pool)");
+        setRematchButtonsText();
     }
 
     @Override
@@ -95,11 +99,11 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         tiles = new HashMap<>();
 
         for(HexCoordinates coords : generateCoordinateStandard()){
-            TileCtrl t = new TileCtrl(tileWidth,tileHeight);
+            TileCtrl t = new TileCtrl(tileWidth, tileHeight);
 
             //Todo: refactor: extract method?
             double x = coords.getX() + 2;
-            double y = 2-(coords.getY()+coords.getX()*.5);
+            double y = 2 - (coords.getY() + coords.getX()*.5);
 
             t.setLayoutX(boardXUnit * x);
             t.setLayoutY(boardYUnit * y);
