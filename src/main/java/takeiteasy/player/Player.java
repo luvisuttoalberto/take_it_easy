@@ -5,6 +5,7 @@ import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
 import takeiteasy.board.exceptions.CoordinatesOccupidedException;
 import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.player.exceptions.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
 public class Player implements IPlayer{

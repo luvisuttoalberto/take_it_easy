@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.HexCoordinates;
 import takeiteasy.gamematch.*;
+import takeiteasy.gamematch.exceptions.*;
 import takeiteasy.tilepool.*;
 import unittests.utility.*;
 

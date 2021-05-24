@@ -7,7 +7,8 @@ import takeiteasy.board.exceptions.BadHexCoordinatesException;
 import takeiteasy.board.exceptions.CoordinatesOccupidedException;
 import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.*;
-import takeiteasy.player.InvalidPlayerStateException;
+import takeiteasy.gamematch.exceptions.*;
+import takeiteasy.player.exceptions.InvalidPlayerStateException;
 
 public class Game implements IGame{
     private IGameMatch gameMatch;

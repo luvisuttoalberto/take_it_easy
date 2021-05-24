@@ -4,6 +4,7 @@ import takeiteasy.board.*;
 import takeiteasy.board.exceptions.BadHexCoordinatesException;
 import takeiteasy.board.exceptions.CoordinatesOccupidedException;
 import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.player.exceptions.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 
 public interface IPlayer {
