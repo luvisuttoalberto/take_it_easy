@@ -178,33 +178,28 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         String name = textField_newPlayer.getText();
         game.addPlayer(name);
 
-        JSONObject gameData = game.getData();
         textField_newPlayer.clear();
-        refreshView(gameData);
+        refreshView(game.getData());
     }
 
     @FXML
     void onRemovePlayerRelease() {
         String newName = playersListView.getSelectionModel().getSelectedItem();
         game.removePlayer(newName);
-        JSONObject gameData = game.getData();
-        refreshView(gameData);
+        refreshView(game.getData());
     }
 
     @FXML
     void onRenameConfirmRelease() {
         String newName = textField_renamePlayer.getText();
-        onRenamePanelShowRelease();
 
         game.renamePlayer(oldName, newName);
         oldName = "";
 
-        JSONObject gameData = game.getData();
         textField_renamePlayer.clear();
         setRenamePanelVisibility(false);
-        refreshView(gameData);
+        refreshView(game.getData());
     }
-
 
     @FXML
     void onRenamePanelShowRelease() {
@@ -217,7 +212,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         textField_renamePlayer.clear();
         setRenamePanelVisibility(false);
     }
-
 
     @FXML
     void onStartMatchRelease() {
@@ -233,7 +227,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         vu.updateView();
     }
 
-
     @FXML
     void onSetSeedRelease() {
         String seed = textField_seed.getText();
@@ -241,5 +234,4 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         game.setMatchSeed(Integer.parseInt(seed));
         textField_seed.clear();
     }
-
 }
