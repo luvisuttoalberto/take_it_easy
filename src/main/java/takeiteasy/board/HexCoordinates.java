@@ -3,9 +3,7 @@ package takeiteasy.board;
 import takeiteasy.board.exceptions.BadHexCoordinatesException;
 
 public class HexCoordinates {
-    private Integer x;
-    private Integer y;
-    private Integer z;
+    Integer x, y, z;
 
     public HexCoordinates(Integer x, Integer y, Integer z) throws BadHexCoordinatesException {
         if (x + y + z != 0) {
