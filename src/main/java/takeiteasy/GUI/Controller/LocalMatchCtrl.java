@@ -325,24 +325,42 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         JSONObject matchData = gameData.getJSONObject(JSONKeys.GAME_MATCH);
         JSONArray playersData = matchData.getJSONArray(JSONKeys.MATCH_PLAYERS);
-        for (int iii = 0; iii < playersData.length(); ++iii){
-            JSONObject playerData = playersData.getJSONObject(iii);
-            PlayerListEntryCtrl player = players.get(playerData.getString(JSONKeys.PLAYER_NAME));
+        IntStream.range(0, playersData.length())
+                .mapToObj(playersData::getJSONObject)
+                .forEach(playerData -> {
+                    PlayerListEntryCtrl player = players.get(playerData.getString(JSONKeys.PLAYER_NAME));
 
-            String statusText;
-            if(matchData.getString(JSONKeys.MATCH_STATE).equals(IGameMatch.State.FINISH.name())){
-                statusText = "Score: " + playerData.getInt(JSONKeys.PLAYER_SCORE);
-            }
-            else{
-                statusText = getFormattedPlayerStatusText(playerData.getString(JSONKeys.PLAYER_STATE));
-            }
-            player.setValues(statusText);
+                    String statusText;
+                    if(isGameMatchInState(IGameMatch.State.FINISH)){
+                        statusText = "Score: " + playerData.getInt(JSONKeys.PLAYER_SCORE);
+                    }
+                    else{
+                        statusText = getFormattedPlayerStatusText(playerData.getString(JSONKeys.PLAYER_STATE));
+                    }
+                    player.setValues(statusText);
 
-            //Todo: refactor: extract method?
-            player.btn_focus.setDisable(playerData.getString(JSONKeys.PLAYER_NAME).equals(focusedPlayerName));
-            player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString(JSONKeys.MATCH_STATE).equals(IGameMatch.State.FINISH.name()));
-            player.pane_kickDialog.setVisible(false);
-        }
+                    //Todo: refactor: extract method?
+                    player.btn_focus.setDisable(playerData.getString(JSONKeys.PLAYER_NAME).equals(focusedPlayerName));
+                    player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString(JSONKeys.MATCH_STATE).equals(IGameMatch.State.FINISH.name()));
+                    player.pane_kickDialog.setVisible(false);
+                });
+//        for (int iii = 0; iii < playersData.length(); ++iii){
+//            JSONObject playerData = playersData.getJSONObject(iii);
+//            PlayerListEntryCtrl player = players.get(playerData.getString(JSONKeys.PLAYER_NAME));
+//
+//            String statusText;
+//            if(isGameMatchInState(IGameMatch.State.FINISH)){
+//                statusText = "Score: " + playerData.getInt(JSONKeys.PLAYER_SCORE);
+//            }
+//            else{
+//                statusText = getFormattedPlayerStatusText(playerData.getString(JSONKeys.PLAYER_STATE));
+//            }
+//            player.setValues(statusText);
+//
+//            player.btn_focus.setDisable(playerData.getString(JSONKeys.PLAYER_NAME).equals(focusedPlayerName));
+//            player.btn_showKickDialog.setDisable(players.size()<2 || matchData.getString(JSONKeys.MATCH_STATE).equals(IGameMatch.State.FINISH.name()));
+//            player.pane_kickDialog.setVisible(false);
+//        }
 
     }
 
