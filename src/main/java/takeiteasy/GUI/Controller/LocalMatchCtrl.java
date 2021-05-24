@@ -234,6 +234,12 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshView(gameData);
     }
 
+    Boolean isGameMatchInState(IGameMatch.State state){
+        return game.getData()
+                .getJSONObject(JSONKeys.GAME_MATCH)
+                .getString(JSONKeys.MATCH_STATE)
+                .equals(state.name());
+    }
 
     void onPlaceTileRelease(){
         game.playerPlacesTileAt(focusedPlayerName, focusedCoordinates);
@@ -242,9 +248,10 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         JSONObject gameData = game.getData();
 
-        if(gameData.getJSONObject(JSONKeys.GAME_MATCH).getString(JSONKeys.MATCH_STATE).equals(IPlayer.State.PLACING.name())){
+        if(isGameMatchInState(IGameMatch.State.FINISH)){
             focusPlayerAndDefocusCoordinates(computeHighestScoringPlayerNames(gameData).get(0));
-        } else {
+        }
+        else {
             focusFirstPlacingPlayer(gameData);
         }
         refreshView(gameData);
