@@ -281,15 +281,20 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshView(game.getData());
     }
 
+    //Todo: should this be converted to gameData instead of playersData?
     JSONObject getPlayerDataFromPlayerName(JSONArray playersData, String playerName){
-        JSONObject playerData = null;
-        for(int iii = 0; iii < playersData.length(); ++iii){
-            playerData = playersData.getJSONObject(iii);
-            if(playerData.getString(JSONKeys.PLAYER_NAME).equals(playerName)){
-                break;
-            }
-        }
-        return playerData;
+        int playerIndex = IntStream.range(0, playersData.length())
+                .filter(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME).equals(playerName))
+                .findFirst()
+                .getAsInt();
+//        for(int iii = 0; iii < playersData.length(); ++iii){
+//            playerData = playersData.getJSONObject(iii);
+//            if(playerData.getString(JSONKeys.PLAYER_NAME).equals(playerName)){
+//                break;
+//            }
+//        }
+
+        return playersData.getJSONObject(playerIndex);
     }
 
     void refreshCurrentTilePane(JSONObject gameData){
