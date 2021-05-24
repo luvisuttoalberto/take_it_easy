@@ -13,7 +13,6 @@ public interface IGameMatch {
     enum State{
         SETUP,
         PLAY,
-        PAUSE,
         FINISH
     }
 

@@ -11,6 +11,7 @@ import takeiteasy.player.exceptions.InvalidPlayerStateException;
 import takeiteasy.tilepool.*;
 
 import java.util.Vector;
+import java.util.stream.IntStream;
 
 public class GameMatch implements IGameMatch{
 
@@ -37,26 +38,24 @@ public class GameMatch implements IGameMatch{
         return currentTileIndex >= tilePool.getSize() - 1;
     }
 
+    Boolean isThereAPlayerNamed(String playerName){
+        return players.stream().anyMatch(p -> p.getName().equals(playerName));
+    }
+
+    Integer retrievePlayerIndexFromName(String playerName){
+
+        return IntStream.range(0, players.size())
+                .filter(index -> players.get(index).getName().equals(playerName))
+                .findFirst()
+                .getAsInt();
+    }
+
     @Override
     public void setTilePoolSeed(long seed) throws InvalidMatchStateException {
         if(state != State.SETUP) {
             throw new InvalidMatchStateException();
         }
         tilePool.reset(seed);
-    }
-
-    Boolean isThereAPlayerNamed(String playerName){
-        return players.stream().anyMatch(p -> p.getName().equals(playerName));
-    }
-
-    Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
-
-        for (int i = 0; i < players.size(); ++i){
-            if (players.get(i).getName().equals(playerName)){
-                return i;
-            }
-        }
-        throw new PlayerNameNotFoundException(playerName);
     }
 
     @Override
@@ -81,24 +80,29 @@ public class GameMatch implements IGameMatch{
             throw new InvalidMatchStateException();
         }
 
-        //TODO: this throws an exception if oldName isn't found; should we do this explicitly?
-        Integer playerIndex = retrievePlayerIndexFromName(oldName);
+        if(!isThereAPlayerNamed(oldName)){
+            throw new PlayerNameNotFoundException(oldName);
+        }
 
         if(isThereAPlayerNamed(newName)){
             throw new PlayersWithSameNameNotAllowedException(newName);
         }
-        else{
-            players.get(playerIndex).setName(newName);
-        }
+
+        players.get(retrievePlayerIndexFromName(oldName)).setName(newName);
     }
 
     @Override
     public void removePlayer(String playerName) throws PlayerNameNotFoundException, NotEnoughPlayersException, LastPlacingPlayerRemovedException {
-        Integer playerIndex = retrievePlayerIndexFromName(playerName);
+
+        if(!isThereAPlayerNamed(playerName)){
+            throw new PlayerNameNotFoundException(playerName);
+        }
+
         if(players.size() <= 1){
             throw new NotEnoughPlayersException();
         }
-        players.removeElementAt(playerIndex);
+
+        players.removeElementAt(retrievePlayerIndexFromName(playerName));
 
         if(areAllPlayersInState(IPlayer.State.WAIT_OTHER)){
             throw new LastPlacingPlayerRemovedException();
@@ -128,6 +132,10 @@ public class GameMatch implements IGameMatch{
 
     @Override
     public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
+        if(!isThereAPlayerNamed(playerName)){
+            throw new PlayerNameNotFoundException(playerName);
+        }
+
         players.get(retrievePlayerIndexFromName(playerName)).placeTile(getCurrentTile(), coordinates);
     }
 
@@ -158,8 +166,7 @@ public class GameMatch implements IGameMatch{
 
         currentTileIndex = 0;
 
-        //TODO: should this be converted as intellij suggests?
-        players.forEach(p -> p.reset());
+        players.forEach(IPlayer::reset);
 
         state = State.SETUP;
     }
