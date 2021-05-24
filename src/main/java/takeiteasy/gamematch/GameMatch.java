@@ -29,6 +29,8 @@ public class GameMatch implements IGameMatch{
         return players.stream().allMatch(p -> p.getState() == state);
     }
 
+    //TODO: maybe this can be substituted by the AND of
+    //      areAllPlayersInState(WAIT_OTHER) AND areAllPlayersInState(WAIT_MATCH)
     private Boolean isThereAPlayerInState(IPlayer.State state){
         return players.stream().anyMatch(p -> p.getState() == state);
     }
@@ -45,6 +47,10 @@ public class GameMatch implements IGameMatch{
         tilePool.reset(seed);
     }
 
+    Boolean isThereAPlayerNamed(String playerName){
+        return players.stream().anyMatch(p -> p.getName().equals(playerName));
+    }
+
     private Integer retrievePlayerIndexFromName(String playerName) throws PlayerNameNotFoundException {
 
         for (int i = 0; i < players.size(); ++i){
@@ -57,30 +63,33 @@ public class GameMatch implements IGameMatch{
 
     @Override
     public void addPlayer(String playerName) throws PlayersWithSameNameNotAllowedException, InvalidMatchStateException {
+
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
         }
-        try{
-            retrievePlayerIndexFromName(playerName);
+
+        if(isThereAPlayerNamed(playerName)){
             throw new PlayersWithSameNameNotAllowedException(playerName);
         }
-        catch (PlayerNameNotFoundException e){
+        else{
             players.add(new Player(playerName));
         }
     }
 
     @Override
     public void setPlayerName(String oldName, String newName) throws PlayerNameNotFoundException, InvalidMatchStateException, PlayersWithSameNameNotAllowedException {
+
         if(state != State.SETUP){
             throw new InvalidMatchStateException();
         }
 
+        //TODO: this throws an exception if oldName isn't found; should we do this explicitly?
         Integer playerIndex = retrievePlayerIndexFromName(oldName);
-        try {
-            retrievePlayerIndexFromName(newName);
+
+        if(isThereAPlayerNamed(newName)){
             throw new PlayersWithSameNameNotAllowedException(newName);
         }
-        catch (PlayerNameNotFoundException ignored){
+        else{
             players.get(playerIndex).setName(newName);
         }
     }
@@ -148,10 +157,12 @@ public class GameMatch implements IGameMatch{
         if(state == State.SETUP){
             throw new InvalidMatchStateException();
         }
+        
         currentTileIndex = 0;
-        for(IPlayer p : players){
-            p.reset();
-        }
+
+        //TODO: should this be converted as intellij suggests?
+        players.forEach(p -> p.reset());
+
         state = State.SETUP;
     }
 
