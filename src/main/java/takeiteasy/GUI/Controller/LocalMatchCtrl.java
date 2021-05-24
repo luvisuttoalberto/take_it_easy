@@ -175,12 +175,10 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     void focusFirstPlacingPlayer(JSONObject gameData){
 
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
-        for(int iii = 0; iii < playersData.length(); ++iii){
-            if(playersData.getJSONObject(iii).get(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name())){
-                focusPlayerAndDefocusCoordinates(playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME));
-                break;
-            }
-        }
+        IntStream.range(0, playersData.length())
+                .filter(iii -> playersData.getJSONObject(iii).get(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name()))
+                .findFirst()
+                .ifPresent(iii -> focusPlayerAndDefocusCoordinates(playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME)));
     }
 
     ArrayList<String> computeHighestScoringPlayerNames(JSONObject gameData){
