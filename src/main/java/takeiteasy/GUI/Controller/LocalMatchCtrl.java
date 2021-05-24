@@ -98,19 +98,19 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         tiles = new HashMap<>();
 
-        for(HexCoordinates coords : generateCoordinateStandard()){
-            TileCtrl t = new TileCtrl(tileWidth, tileHeight);
+        Arrays.stream(generateCoordinateStandard())
+                .forEach(coords -> {
+                    TileCtrl t = new TileCtrl(tileWidth, tileHeight);
 
-            //Todo: refactor: extract method?
-            double x = coords.getX() + 2;
-            double y = 2 - (coords.getY() + coords.getX()*.5);
+                    //Todo: refactor: extract method?
+                    double x = coords.getX() + 2;
+                    double y = 2 - (coords.getY() + coords.getX() * .5);
 
-            t.setLayoutX(boardXUnit * x);
-            t.setLayoutY(boardYUnit * y);
-
-            pane_boardPane.getChildren().add(t);
-            tiles.put(coords, t);
-        }
+                    t.setLayoutX(boardXUnit * x);
+                    t.setLayoutY(boardYUnit * y);
+                    pane_boardPane.getChildren().add(t);
+                    tiles.put(coords, t);
+                });
     }
 
     void buildCurrentTilePane() {
