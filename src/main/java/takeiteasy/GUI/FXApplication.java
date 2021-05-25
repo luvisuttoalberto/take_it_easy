@@ -20,7 +20,7 @@ public class FXApplication extends Application implements IViewUpdater{
         LocalLobby,
         LocalMatch,
     }
-
+    //Todo: remove private?
     private IGame game;
     private Stage stage;
     private IViewController currentViewCtrl;
