@@ -132,7 +132,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
+    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException {
         if(!isThereAPlayerNamed(playerName)){
             throw new PlayerNameNotFoundException(playerName);
         }

@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import takeiteasy.JSONKeys;
 import takeiteasy.board.*;
 import takeiteasy.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.board.exceptions.CoordinatesOccupidedException;
+import takeiteasy.board.exceptions.CoordinatesOccupiedException;
 import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.*;
 import takeiteasy.gamematch.exceptions.*;
@@ -88,7 +88,7 @@ public class Game implements IGame{
             gameMatch.dealNextTile();
         }
         catch(  PlayerNameNotFoundException | BadHexCoordinatesException | OutOfBoardCoordinatesException |
-                InvalidPlayerStateException | CoordinatesOccupidedException | InvalidMatchStateException |
+                InvalidPlayerStateException | CoordinatesOccupiedException | InvalidMatchStateException |
                 PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){

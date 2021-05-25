@@ -3,7 +3,7 @@ package takeiteasy.gamematch;
 import org.json.JSONObject;
 import takeiteasy.board.*;
 import takeiteasy.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.board.exceptions.CoordinatesOccupidedException;
+import takeiteasy.board.exceptions.CoordinatesOccupiedException;
 import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.exceptions.*;
 import takeiteasy.player.exceptions.InvalidPlayerStateException;
@@ -23,7 +23,7 @@ public interface IGameMatch {
     void setTilePoolSeed(long seed) throws InvalidMatchStateException;
     void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException;
 
-    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException;
+    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException;
 
     void dealNextTile() throws InvalidMatchStateException, PlayersNotReadyForNextTileException, TilePoolDepletedException;
 

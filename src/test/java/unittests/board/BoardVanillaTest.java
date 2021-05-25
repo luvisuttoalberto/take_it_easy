@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import takeiteasy.board.*;
-import takeiteasy.board.exceptions.CoordinatesOccupidedException;
+import takeiteasy.board.exceptions.CoordinatesOccupiedException;
 import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.tilepool.Tile;
 
@@ -75,7 +75,7 @@ public class BoardVanillaTest {
             Tile tile = new Tile(1,2,3);
 
             board.placeTile(tile,coords);
-            assertThrows(CoordinatesOccupidedException.class, ()-> board.placeTile(tile,coords));
+            assertThrows(CoordinatesOccupiedException.class, ()-> board.placeTile(tile,coords));
         }
         catch (Exception ignored){
         }

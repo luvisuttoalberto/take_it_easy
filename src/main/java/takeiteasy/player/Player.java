@@ -49,7 +49,7 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void placeTile(Tile tile, HexCoordinates coordinates) throws OutOfBoardCoordinatesException, CoordinatesOccupidedException, InvalidPlayerStateException {
+    public void placeTile(Tile tile, HexCoordinates coordinates) throws OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException {
         if (playerState == State.PLACING) {
             playerBoard.placeTile(tile, coordinates);
             playerState = State.WAIT_OTHER;
