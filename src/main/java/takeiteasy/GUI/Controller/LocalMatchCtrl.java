@@ -234,6 +234,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     void onBackToLobbyRelease(){
         game.backToLocalLobby();
+        game.setMatchSeed(new Random().nextLong());
         vu.updateView();
     }
 

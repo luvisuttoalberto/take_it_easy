@@ -21,42 +21,40 @@ public class FXApplication extends Application implements IViewUpdater{
         LocalMatch,
     }
 
-    private IGame game;
-    private Stage stage;
-    private IViewController currentViewCtrl;
-    private IOContext currentContext = null;
+    IGame game;
+    Stage stage;
+    IViewController currentViewCtrl;
+    IOContext currentContext = null;
 
     @Override
     public void start(Stage s) throws Exception {
 
-        // Initialize game
         game = new Game();
+
         stage = s;
+        stage.setResizable(false);
+        stage.setTitle("Take it Easy");
+
         updateView();
 
+    }
+
+    IOContext getIOContextFromGameData(JSONObject gameData){
+        String gameState = gameData.getString(JSONKeys.GAME_STATE);
+        if(gameState.equals(IGame.State.LOCAL_LOBBY.name())){
+            return IOContext.LocalLobby;
+        }
+        else if(gameState.equals(IGame.State.LOCAL_MATCH.name())){
+            return IOContext.LocalMatch;
+        }
+        return IOContext.MainMenu;
     }
 
     @Override
     public void updateView(){
         JSONObject gameData = game.getData();
 
-        // take context from json
-        IOContext newContext;
-        String gameState = gameData.getString(JSONKeys.GAME_STATE);
-        if(gameState.equals(IGame.State.MAIN_MENU.name())){
-            newContext = IOContext.MainMenu;
-        }
-        else if(gameState.equals(IGame.State.LOCAL_LOBBY.name())){
-            newContext = IOContext.LocalLobby;
-        }
-        else if(gameState.equals(IGame.State.LOCAL_MATCH.name())){
-            newContext = IOContext.LocalMatch;
-        }
-        else{
-            //DEBUG:
-            System.out.println("Invalid game state: " + gameState);
-            return;
-        }
+        IOContext newContext = getIOContextFromGameData(gameData);
 
         // Load new scene if it changed
         if (newContext != currentContext){
@@ -68,22 +66,17 @@ public class FXApplication extends Application implements IViewUpdater{
     }
 
 
+    String getFxmlPathFromIOContext(IOContext iocontext){
+        switch (iocontext){
+            case LocalLobby : return "/fxml/local_lobby.fxml";
+            case LocalMatch : return "/fxml/local_match.fxml";
+            default : return "/fxml/main_menu.fxml";
+        }
+    }
+
     void loadScene(IOContext iocontext){
 
-        String fxmlPath="";
-        switch (iocontext){
-
-            case MainMenu :
-                fxmlPath = "/fxml/main_menu.fxml";
-                break;
-            case LocalLobby :
-                fxmlPath = "/fxml/local_lobby.fxml";
-                break;
-            case LocalMatch :
-                fxmlPath = "/fxml/local_match.fxml";
-                break;
-        }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(getFxmlPathFromIOContext(iocontext)));
         Parent node;
         try {
             node = loader.load();
@@ -100,7 +93,6 @@ public class FXApplication extends Application implements IViewUpdater{
 
         currentContext = iocontext;
 
-        stage.setTitle("Take it Easy");
         stage.setScene(scene);
         stage.show();
     }
