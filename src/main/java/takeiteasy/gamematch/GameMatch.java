@@ -68,9 +68,8 @@ public class GameMatch implements IGameMatch{
         if(isThereAPlayerNamed(playerName)){
             throw new PlayersWithSameNameNotAllowedException(playerName);
         }
-        else{
-            players.add(new Player(playerName));
-        }
+
+        players.add(new Player(playerName));
     }
 
     @Override
@@ -119,10 +118,12 @@ public class GameMatch implements IGameMatch{
         if(players.size() < 1){
             throw new NotEnoughPlayersException();
         }
+
         players.forEach(p -> {
             try{p.startMatch();}
             catch (InvalidPlayerStateException ignored){}
         });
+
         state = State.PLAY;
     }
 

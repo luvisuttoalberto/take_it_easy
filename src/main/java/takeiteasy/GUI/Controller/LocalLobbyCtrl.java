@@ -15,7 +15,7 @@ import takeiteasy.game.IGame;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.StreamSupport;
+import java.util.stream.IntStream;
 
 public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
@@ -136,16 +136,9 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         playerNamesObservable.clear();
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
 
-        //TODO: verify if this stream makes sense, or if it is better to keep the for loop in order to make it more understandable
-        //      alternatively, take a look at how the stream is implemented in buildPlayersList in localmatchctrl
-        StreamSupport.stream(playersData.spliterator(), false)
-                .map(playerData -> (JSONObject) playerData)
-                .forEach(playerData -> playerNamesObservable.add(playerData.getString(JSONKeys.PLAYER_NAME)));
-
-//        for (int iii = 0; iii < playersData.length(); ++iii){
-//            String playerName = playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME);
-//            playerNamesObservable.add(playerName);
-//        }
+        IntStream.range(0, playersData.length())
+                .mapToObj(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME))
+                .forEach(playerName -> playerNamesObservable.add(playerName));
     }
 
     void resetTooltips(){
