@@ -197,6 +197,37 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 .collect(Collectors.toList());
     }
 
+    Boolean isGameMatchInState(IGameMatch.State state){
+        return game.getData()
+                .getJSONObject(JSONKeys.GAME_MATCH)
+                .getString(JSONKeys.MATCH_STATE)
+                .equals(state.name());
+    }
+
+    Boolean isThereATileAtCoordinates(HexCoordinates coordinates, JSONObject boardData){
+        return boardData.opt(coordinates.toString()) != null;
+    }
+
+    JSONObject getPlayerDataFromPlayerName(JSONArray playersData, String playerName){
+        int playerIndex = IntStream.range(0, playersData.length())
+                .filter(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME).equals(playerName))
+                .findFirst()
+                .getAsInt();
+
+        return playersData.getJSONObject(playerIndex);
+    }
+
+    String getFormattedPlayerStatusText(String playerState){
+        //Todo: tidy
+        if(playerState.equals(IPlayer.State.PLACING.name())){
+            return txt_statusPlacing;
+        }
+        else if(playerState.equals(IPlayer.State.WAIT_OTHER.name())){
+            return txt_statusWaitOther;
+        }
+        return txt_statusWaitMatch;
+    }
+
     void onFocusPlayerRelease(String playerName){
         focusPlayerAndDefocusCoordinates(playerName);
         refreshView(game.getData());
@@ -213,13 +244,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             focusFirstPlacingPlayer(gameData);
         }
         refreshView(gameData);
-    }
-
-    Boolean isGameMatchInState(IGameMatch.State state){
-        return game.getData()
-                .getJSONObject(JSONKeys.GAME_MATCH)
-                .getString(JSONKeys.MATCH_STATE)
-                .equals(state.name());
     }
 
     void onPlaceTileRelease(){
@@ -262,15 +286,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshView(game.getData());
     }
 
-    JSONObject getPlayerDataFromPlayerName(JSONArray playersData, String playerName){
-        int playerIndex = IntStream.range(0, playersData.length())
-                .filter(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME).equals(playerName))
-                .findFirst()
-                .getAsInt();
-
-        return playersData.getJSONObject(playerIndex);
-    }
-
     void refreshCurrentTilePane(JSONObject gameData){
         JSONObject currentTileData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONObject(JSONKeys.MATCH_CURRENT_TILE);
 
@@ -279,17 +294,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 currentTileData.getInt(JSONKeys.TILE_LEFT),
                 currentTileData.getInt(JSONKeys.TILE_RIGHT)
         );
-    }
-
-    String getFormattedPlayerStatusText(String playerState){
-        //Todo: tidy
-        if(playerState.equals(IPlayer.State.PLACING.name())){
-            return txt_statusPlacing;
-        }
-        else if(playerState.equals(IPlayer.State.WAIT_OTHER.name())){
-            return txt_statusWaitOther;
-        }
-        return txt_statusWaitMatch;
     }
 
     void refreshPlayersListEntry(PlayerListEntryCtrl player, JSONObject playerData){
@@ -335,10 +339,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         btn_placeTile.setDisable(focusedCoordinates == null || playerData.getString(JSONKeys.PLAYER_STATE) != IPlayer.State.PLACING.name());
     }
 
-    Boolean isThereATileAtCoordinates(HexCoordinates coordinates, JSONObject boardData){
-        return boardData.opt(coordinates.toString()) != null;
-    }
-
     void refreshTileGraphics(JSONObject boardData, HexCoordinates coordinates){
         if(isThereATileAtCoordinates(coordinates, boardData)){
             JSONObject tileData = boardData.getJSONObject(coordinates.toString());
@@ -360,7 +360,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         if (playerData.getString(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name())) {
 
             JSONObject boardData = playerData.getJSONObject(JSONKeys.PLAYER_BOARD);
-            
+
             if(isThereATileAtCoordinates(coordinates, boardData)){
                 tiles.get(coordinates).graphic_hitBox.setOnMouseReleased(e -> defocusCoordinates());
             }
@@ -401,6 +401,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         String matchStateText;
         JSONArray playersData = matchData.getJSONArray(JSONKeys.MATCH_PLAYERS);
 
+        //Todo: should we extract two methods here? One for play and the other for finish
         if(isGameMatchInState(IGameMatch.State.PLAY)){
             int totalNumberOfPlayers = playersData.length();
             int placingPlayers = (int) IntStream.range(0, playersData.length())
@@ -441,8 +442,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         text_playerStatus.setText(getFormattedPlayerStatusText(focusedPlayerState));
     }
 
-    void refreshRematchPanel(JSONObject gameData){
-//        String matchState = gameData.getJSONObject(JSONKeys.GAME_MATCH).getString(JSONKeys.MATCH_STATE);
+    void refreshRematchPanel(){
         pane_rematchPanel.setVisible(isGameMatchInState(IGameMatch.State.FINISH));
     }
 
@@ -453,7 +453,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshCurrentTilePane(gameData);
         refreshPlayersList(gameData);
         refreshPlacingButton(gameData);
-        refreshRematchPanel(gameData);
+        refreshRematchPanel();
         refreshCurrentPlayerInfo(gameData);
         refreshMatchInfo(gameData);
 
