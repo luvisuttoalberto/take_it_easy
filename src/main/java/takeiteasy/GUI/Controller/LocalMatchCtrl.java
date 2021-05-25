@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
@@ -340,6 +339,44 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         return boardData.opt(coordinates.toString()) != null;
     }
 
+    void refreshTileGraphics(JSONObject boardData, HexCoordinates coordinates){
+        if(isThereATileAtCoordinates(coordinates, boardData)){
+            JSONObject tileData = boardData.getJSONObject(coordinates.toString());
+
+            tiles.get(coordinates).setPlacedGraphics(
+                    tileData.getInt(JSONKeys.TILE_TOP),
+                    tileData.getInt(JSONKeys.TILE_LEFT),
+                    tileData.getInt(JSONKeys.TILE_RIGHT)
+            );
+        }
+        else{
+            if (coordinates != focusedCoordinates) {
+                tiles.get(coordinates).resetGraphics();
+            }
+        }
+    }
+
+    void refreshTileCallbackFunction(JSONObject playerData, HexCoordinates coordinates){
+        if (playerData.getString(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name())) {
+
+            JSONObject boardData = playerData.getJSONObject(JSONKeys.PLAYER_BOARD);
+            
+            if(isThereATileAtCoordinates(coordinates, boardData)){
+                tiles.get(coordinates).graphic_hitBox.setOnMouseReleased(e -> defocusCoordinates());
+            }
+            else{
+                JSONObject currentTileData = game.getData()
+                        .getJSONObject(JSONKeys.GAME_MATCH)
+                        .getJSONObject(JSONKeys.MATCH_CURRENT_TILE);
+
+                tiles.get(coordinates).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(coordinates, currentTileData));
+            }
+        }
+        else{
+            tiles.get(coordinates).graphic_hitBox.setOnMouseReleased(e -> {});
+        }
+    }
+
     void refreshBoard(JSONObject gameData){
         if(focusedPlayerName == null){
             focusFirstPlacingPlayer(gameData);
@@ -352,39 +389,10 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         );
 
         JSONObject boardData = playerData.getJSONObject(JSONKeys.PLAYER_BOARD);
-        JSONObject currentTileData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONObject(JSONKeys.MATCH_CURRENT_TILE);
 
-        //TODO: refactor: extract method to make more clear what the function does
-        //TODO: consider introducing function with specific "callback" name (es. on...release) that
-        //      just calls defocusCoordinates/focusCoordinates
         tiles.keySet().forEach(possibleCoord -> {
-            if (isThereATileAtCoordinates(possibleCoord, boardData)) {
-                JSONObject tileData = boardData.getJSONObject(possibleCoord.toString());
-
-                tiles.get(possibleCoord).setPlacedGraphics(
-                        tileData.getInt(JSONKeys.TILE_TOP),
-                        tileData.getInt(JSONKeys.TILE_LEFT),
-                        tileData.getInt(JSONKeys.TILE_RIGHT)
-                );
-
-                if (playerData.getString(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name())) {
-                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> defocusCoordinates());
-                }
-                else {
-                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> {});
-                }
-            }
-            else {
-                if (possibleCoord != focusedCoordinates) {
-                    tiles.get(possibleCoord).resetGraphics();
-                }
-                if (playerData.getString(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name())) {
-                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> focusCoordinates(possibleCoord, currentTileData));
-                }
-                else {
-                    tiles.get(possibleCoord).graphic_hitBox.setOnMouseReleased(e -> {});
-                }
-            }
+            refreshTileGraphics(boardData, possibleCoord);
+            refreshTileCallbackFunction(playerData, possibleCoord);
         });
     }
 
