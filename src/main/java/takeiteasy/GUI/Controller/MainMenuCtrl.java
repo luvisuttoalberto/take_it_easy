@@ -46,7 +46,7 @@ public class MainMenuCtrl implements IViewController{
     }
 
     @Override
-    public void refreshView(JSONObject gamedata) {
+    public void refreshView(JSONObject gameData) {
         //TODO: provide a collection of quote of the day or referring to a website.
     }
 }

@@ -26,14 +26,14 @@ public class BoardVanilla implements IBoard {
     }
 
     @Override
-    public void placeTile(Tile tile, HexCoordinates coordinates) throws OutOfBoardCoordinatesException, CoordinatesOccupidedException {
+    public void placeTile(Tile tile, HexCoordinates coordinates) throws OutOfBoardCoordinatesException, CoordinatesOccupiedException {
         if (!areCoordinatesInRange(coordinates)) {
             throw new OutOfBoardCoordinatesException();
         }
 
         Integer[] storageIdx = this.getStorageIndicesFromCoordinates(coordinates);
         if(this.tileStorage[storageIdx[0]][storageIdx[1]] != null){
-            throw new CoordinatesOccupidedException();
+            throw new CoordinatesOccupiedException();
         }
 
         this.tileStorage[storageIdx[0]][storageIdx[1]] = tile;

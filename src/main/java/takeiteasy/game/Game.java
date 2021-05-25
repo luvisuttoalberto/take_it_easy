@@ -69,7 +69,7 @@ public class Game implements IGame{
             gameMatch.startMatch();
             state = State.LOCAL_MATCH;
         }
-        catch(InvalidMatchStateException | NotEnoughPlayersException | InvalidPlayerStateException ignored){
+        catch(InvalidMatchStateException | NotEnoughPlayersException ignored){
         }
     }
 
@@ -86,8 +86,8 @@ public class Game implements IGame{
             gameMatch.dealNextTile();
         }
         catch(  PlayerNameNotFoundException | BadHexCoordinatesException | OutOfBoardCoordinatesException |
-                InvalidPlayerStateException | CoordinatesOccupidedException | InvalidMatchStateException |
-                NotEnoughPlayersException | PlayersNotReadyForNextTileException ignored){
+                InvalidPlayerStateException | CoordinatesOccupiedException | InvalidMatchStateException |
+                PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){
             endMatch();
@@ -108,7 +108,7 @@ public class Game implements IGame{
         try{
             gameMatch.endMatch();
         }
-        catch (PlayersNotReadyToEndMatchException | InvalidPlayerStateException | TilePoolNotDepletedException | InvalidMatchStateException ignored) {
+        catch (PlayersNotReadyToEndMatchException | TilePoolNotDepletedException | InvalidMatchStateException ignored) {
         }
     }
 
