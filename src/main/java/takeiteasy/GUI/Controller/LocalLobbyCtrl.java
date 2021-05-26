@@ -20,8 +20,11 @@ import java.util.stream.IntStream;
 public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
     IViewUpdater vu;
+
     public final Integer MAX_NAME_LENGTH = 10;
     final String TOOLTIPTEXT_RENAMEFIELD = "Name must be between 1 and " + MAX_NAME_LENGTH +" character and must be unique.";
+    final String TEXTFIELD_STYLE_ERR = "-fx-background-color: yellow; -fx-text-fill: red;";
+    final String TEXTFIELD_STYLE_DEFAULT = "-fx-background-color: white; -fx-text-fill: black;";
 
     Tooltip tt_textField_renamePlayer, tt_textField_newPlayer;
 
@@ -42,7 +45,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
                 playerNamesObservable.stream().anyMatch(x -> x.contentEquals(name));
     }
 
-    void setTooltipOnTextField(TextField textField, Tooltip tooltip, Button button){
+    void setupTooltipOnTextField(TextField textField, Tooltip tooltip, Button button){
         textField.setTooltip(tooltip);
 
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -57,10 +60,10 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
                                         + textField.getScene().getY()
                                         + textField.getScene().getWindow().getY()
                                         - textField.getHeight());
-                        textField.setStyle("-fx-background-color: yellow; -fx-text-fill: red;");
+                        textField.setStyle(TEXTFIELD_STYLE_ERR);
                     }
                     else{
-                        textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+                        textField.setStyle(TEXTFIELD_STYLE_DEFAULT);
                         tooltip.hide();
                     }
         });
@@ -95,11 +98,11 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
         tt_textField_renamePlayer = new Tooltip();
         tt_textField_renamePlayer.setText(TOOLTIPTEXT_RENAMEFIELD);
-        setTooltipOnTextField(textField_renamePlayer, tt_textField_renamePlayer, btn_renameConfirm);
+        setupTooltipOnTextField(textField_renamePlayer, tt_textField_renamePlayer, btn_renameConfirm);
 
         tt_textField_newPlayer = new Tooltip();
         tt_textField_newPlayer.setText(TOOLTIPTEXT_RENAMEFIELD);
-        setTooltipOnTextField(textField_newPlayer, tt_textField_newPlayer, btn_addNewPlayer);
+        setupTooltipOnTextField(textField_newPlayer, tt_textField_newPlayer, btn_addNewPlayer);
 
         btn_removePlayer.disableProperty().bind(
                 Bindings.or(
@@ -129,9 +132,9 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     }
 
     void resetTooltips(){
-        textField_newPlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+        textField_newPlayer.setStyle(TEXTFIELD_STYLE_DEFAULT);
         tt_textField_newPlayer.hide();
-        textField_renamePlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+        textField_renamePlayer.setStyle(TEXTFIELD_STYLE_DEFAULT);
         tt_textField_renamePlayer.hide();
     }
 
@@ -149,7 +152,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         textField_newPlayer.setMouseTransparent(isVisible);
         textField_seed.setMouseTransparent(isVisible);
         if(!isVisible){
-            textField_renamePlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            textField_renamePlayer.setStyle(TEXTFIELD_STYLE_DEFAULT);
             tt_textField_renamePlayer.hide();
         }
     }
