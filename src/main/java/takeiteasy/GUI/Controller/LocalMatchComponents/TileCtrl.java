@@ -27,12 +27,12 @@ public class TileCtrl extends AnchorPane {
     }
 
     public void setPlacedGraphics(Integer top, Integer left, Integer right){
-        graphic_bg.setFill(Color.AQUA);
+        graphic_bg.setFill(Color.GREENYELLOW);
         setValues(top, left, right);
     }
 
     public void setFocusedGraphics(Integer top, Integer left, Integer right) {
-        graphic_bg.setFill(Color.RED);
+        graphic_bg.setFill(Color.YELLOW);
         setValues(top, left, right);
     }
 
