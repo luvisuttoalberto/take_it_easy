@@ -24,35 +24,26 @@ public final class Utility {
         return tiles;
     }
 
-    private static HexCoordinates[] generateCoordinateSequence54(){
+    static HexCoordinates[] generateCoordinateSequence(Integer score){
         HexCoordinates[] coords = generateCoordinateStandard();
-        Collections.swap(Arrays.asList(coords), 7,11);
-        Collections.swap(Arrays.asList(coords), 13,17);
-        return coords;
-    }
-
-    private static HexCoordinates[] generateCoordinateSequence27(){
-        HexCoordinates[] coords = generateCoordinateStandard();
-        Collections.swap(Arrays.asList(coords), 7,11);
+        if(score == 27 || score == 54){
+            Collections.swap(Arrays.asList(coords), 7,11);
+        }
+        if(score == 54){
+            Collections.swap(Arrays.asList(coords), 13,17);
+        }
         return coords;
     }
 
 
     public static ArrayList<Pair<Tile, HexCoordinates>> getTilesAndCoordinatesBoard11(Integer score){
         Tile[] tiles = generateTileListFromSeed(11);
-        HexCoordinates[] coords;
-        if (score == 27){
-            coords = generateCoordinateSequence27();
-        }
-        else {
-            coords = generateCoordinateSequence54();
-        }
-        ArrayList<Pair<Tile, HexCoordinates>> pairs = new ArrayList<>();
-        for (int i = 0; i < 19; ++i) {
-            Pair<Tile, HexCoordinates> pair = new Pair<>(tiles[i], coords[i]);
-            pairs.add(pair);
-        }
+        HexCoordinates[] coords = generateCoordinateSequence(score);
 
+        ArrayList<Pair<Tile, HexCoordinates>> pairs = new ArrayList<>();
+        IntStream.range(0, tiles.length)
+                .forEach(iii -> pairs.add(new Pair<>(tiles[iii], coords[iii])));
+        
         return pairs;
     }
 
