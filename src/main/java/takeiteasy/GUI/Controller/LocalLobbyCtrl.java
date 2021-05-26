@@ -63,8 +63,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
                         textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
                         tooltip.hide();
                     }
-                }
-        );
+        });
     }
 
     @Override

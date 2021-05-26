@@ -43,12 +43,12 @@ public class BoardVanillaTest {
 
     @Test
     public void placeTileValidTileAndGetItBack(){
+        BoardVanilla board = new BoardVanilla();
+        Tile tile = new Tile(1, 2, 3);
         try {
-            BoardVanilla b = new BoardVanilla();
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            Tile tile = new Tile(1, 2, 3);
-            b.placeTile(tile, coords);
-            assertEquals(tile, b.getTile(coords));
+            board.placeTile(tile, coords);
+            assertEquals(tile, board.getTile(coords));
         }
         catch(Exception e){
             fail();
@@ -69,11 +69,10 @@ public class BoardVanillaTest {
 
     @Test
     public void placeTileAtOccupiedPosition() {
+        BoardVanilla board = new BoardVanilla();
         try{
-            BoardVanilla board = new BoardVanilla();
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
             Tile tile = new Tile(1,2,3);
-
             board.placeTile(tile,coords);
             assertThrows(CoordinatesOccupiedException.class, ()-> board.placeTile(tile,coords));
         }
@@ -100,14 +99,11 @@ public class BoardVanillaTest {
     public void testComputeScore() {
         BoardVanilla board = new BoardVanilla();
         Integer score = 54;
-        try {
-            ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
-            for (Pair<Tile, HexCoordinates> tileHexCoordinatesPair : list) {
-                board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
-            }
-            assertEquals(score, board.computeScore());
-        }
-        catch(Exception ignored){
-        }
+        ArrayList<Pair<Tile, HexCoordinates>> list = getTilesAndCoordinatesBoard11(score);
+        list.forEach(tileHexCoordinatesPair -> {
+            try {board.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);}
+            catch (Exception ignored) {}
+        });
+        assertEquals(score, board.computeScore());
     }
 }
