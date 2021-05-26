@@ -1,7 +1,12 @@
 package unittests.utility;
 
 import takeiteasy.board.*;
+import takeiteasy.board.exceptions.BadHexCoordinatesException;
+import takeiteasy.board.exceptions.CoordinatesOccupiedException;
+import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.GameMatch;
+import takeiteasy.gamematch.exceptions.PlayerNameNotFoundException;
+import takeiteasy.player.exceptions.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 import takeiteasy.tilepool.TilePool;
 import static takeiteasy.utility.Utility.*;
@@ -9,6 +14,7 @@ import static takeiteasy.utility.Utility.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -56,18 +62,22 @@ public final class Utility {
     }
 
     public static void SimulateCompleteGameMatch(GameMatch gm, String name, long tilePoolSeed) {
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
         try {
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
             gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
-            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+            IntStream.range(0, tilesAndCoords.size()-1)
+                    .mapToObj(iii -> tilesAndCoords.get(iii).coordinate)
+                    .forEach(coordinate -> {
+                        try {
+                            gm.positionCurrentTileOnPlayerBoard(name, coordinate);
+                            gm.dealNextTile();
+                        }
+                        catch (Exception ignored) {}
+                    });
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(tilesAndCoords.size() - 1).coordinate);
             gm.endMatch();
         }
         catch(Exception e){
