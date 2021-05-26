@@ -51,3 +51,29 @@ We used the `javafx` and `json` libraries to implement this project.
 
 ## Architecture Overview
 
+The codebase is organized in packages:
+- `takeiteasy.core` cointains the **core game engine** that runs the game logic
+- `takeiteasy.GUI` cointains the javafx **GUI implementation**, which uses the `IGame` interface to control the game and retrieves its state (as a JSON file), acting as client. We strived to keep the game and GUI logic separated.
+- `unittests` cointains all the tests pertaining the core game engine
+- `takeiteasy.utility` cointains a single utility class that provides facilities to generate the standard set of hexagonal coordinates.  
+
+The JSON interface is detailed in the `takeiteasy.JSONKeys` class and acts as a reference for any GUI implementation that may be used to interface with the core engine.
+
+The application entrypoint is defined in the `takeiteasy.Main` class, which simply launches the `takeiteasy.GUI.FXApplication`.
+
+Here's a brief overview of the main packages:
+### Core Game Engine
+
+#### `takeiteasy.core.board`
+- `HexCoordinates`  
+  Class representing a set of three hexagonal coordinates, used to map tiles to positions on each player's board. [This website](https://www.redblobgames.com/grids/hexagons/) offered precious insight in designing this class. 
+- `IBoard`  
+  Public interface of the generic game board, that grants the fullfillment of the Open-Closed SOLID principle (there are several variation of the classic Take It Easy rules that require different boards)
+- `BoardVanilla`  
+  Class implementing the board for playing a 'classic' Take It Easy game. Features methods for placing and retrieving tiles and for computing the score.
+#### `takeiteasy.core.game`
+#### `takeiteasy.core.gamematch`
+#### `takeiteasy.core.player`
+#### `takeiteasy.core.tilepool`
+
+### GUI
