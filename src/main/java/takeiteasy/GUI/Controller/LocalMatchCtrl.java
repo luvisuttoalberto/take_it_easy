@@ -30,24 +30,22 @@ import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class LocalMatchCtrl extends GridPane implements IViewController, Initializable {
 
-    //Todo: change all publics with FXML
-    @FXML
-    Pane pane_boardPane;
+    @FXML Pane pane_boardPane;
 
-    public Button btn_placeTile;
+    @FXML Button btn_placeTile;
 
-    public Text text_playerName;
-    public Text text_playerStatus;
-    public Text text_matchStatus;
+    @FXML Text text_playerName;
+    @FXML Text text_playerStatus;
+    @FXML Text text_matchStatus;
 
-    public ScrollPane pane_playersPane;
-    public VBox layout_playersPane;
-    public Pane pane_currentTile;
-    public Button btn_backToLobby;
-    public Button btn_backToMenu;
-    public Button btn_rematch;
-    public Button btn_rematchNewSeed;
-    public HBox pane_rematchPanel;
+    @FXML ScrollPane pane_playersPane;
+    @FXML VBox layout_playersPane;
+    @FXML Pane pane_currentTile;
+    @FXML Button btn_backToLobby;
+    @FXML Button btn_backToMenu;
+    @FXML Button btn_rematch;
+    @FXML Button btn_rematchNewSeed;
+    @FXML HBox pane_rematchPanel;
 
     IGame game;
     IViewUpdater vu;
@@ -59,6 +57,8 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     final double TILE_WIDTH = 80;
     final double TILE_HEIGHT = TILE_WIDTH *.5*1.732;
+    final double BOARD_X_UNIT = TILE_WIDTH *.75;
+    final double BOARD_Y_UNIT = TILE_HEIGHT;
 
     final String PLAYER_STATUS_TEXT_PLACING = "Placing";
     final String PLAYER_STATUS_TEXT_WAIT_OTHER = "Waiting";
@@ -69,36 +69,26 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         this.game = g;
     }
 
-    void generateGraphicTileAtCoordinates(HexCoordinates coordinates){
-
-    }
-
     @Override
     public void injectViewUpdater(IViewUpdater vu) {
         this.vu = vu;
     }
 
+    void buildGraphicTileFromHexCoordinates(HexCoordinates coordinates){
+        TileCtrl t = new TileCtrl(TILE_WIDTH, TILE_HEIGHT);
+
+        double x = coordinates.getX() + 2;
+        double y = 2 - (coordinates.getY() + coordinates.getX() * .5);
+
+        t.setLayoutX(BOARD_X_UNIT * x);
+        t.setLayoutY(BOARD_Y_UNIT * y);
+        pane_boardPane.getChildren().add(t);
+        tiles.put(coordinates, t);
+    }
+
     void buildBoard(){
-
-        //Todo: make these const and extract them
-        double boardXUnit = TILE_WIDTH *.75;
-        double boardYUnit = TILE_HEIGHT;
-
         tiles = new HashMap<>();
-
-        Arrays.stream(generateCoordinateStandard())
-                .forEach(coords -> {
-                    //TOdo: extract the whole method
-                    TileCtrl t = new TileCtrl(TILE_WIDTH, TILE_HEIGHT);
-
-                    double x = coords.getX() + 2;
-                    double y = 2 - (coords.getY() + coords.getX() * .5);
-
-                    t.setLayoutX(boardXUnit * x);
-                    t.setLayoutY(boardYUnit * y);
-                    pane_boardPane.getChildren().add(t);
-                    tiles.put(coords, t);
-                });
+        Arrays.stream(generateCoordinateStandard()).forEach(this::buildGraphicTileFromHexCoordinates);
     }
 
     void buildCurrentTilePane() {
@@ -127,6 +117,14 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         setRematchButtonsText();
     }
 
+    void buildPlayerListEntry(String playerName){
+        PlayerListEntryCtrl pe = new PlayerListEntryCtrl(playerName);
+        players.put(playerName, pe);
+        pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
+        pe.btn_kick_confirm.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
+        layout_playersPane.getChildren().add(pe);
+    }
+
     void buildPlayersList(JSONObject gameData){
         players = new HashMap<>();
 
@@ -134,13 +132,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         IntStream.range(0, playersData.length())
                 .mapToObj(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME))
-                .forEach(playerName -> {
-                    PlayerListEntryCtrl pe = new PlayerListEntryCtrl(playerName);
-                    players.put(playerName, pe);
-                    pe.btn_focus.setOnMouseReleased(e -> onFocusPlayerRelease(playerName));
-                    pe.btn_kick_confirm.setOnMouseReleased(e -> onKickPlayerRelease(playerName));
-                    layout_playersPane.getChildren().add(pe);
-                });
+                .forEach(this::buildPlayerListEntry);
     }
 
     void defocusCoordinates(){
@@ -178,8 +170,6 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         defocusCoordinates();
     }
 
-
-
     void focusFirstPlacingPlayer(JSONObject gameData){
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
         IntStream.range(0, playersData.length())
@@ -189,50 +179,13 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
                 .ifPresent(playerData -> focusPlayerAndDefocusCoordinates(playerData.getString(JSONKeys.PLAYER_NAME)));
     }
 
-    List<String> computeHighestScoringPlayerNames(JSONObject gameData){
-        JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).
-                getJSONArray(JSONKeys.MATCH_PLAYERS);
-
-        int bestScore = IntStream.range(0, playersData.length())
-                .map(iii -> playersData.getJSONObject(iii).getInt(JSONKeys.PLAYER_SCORE))
-                .max().getAsInt();
-
-        return IntStream.range(0, playersData.length())
-                .mapToObj(playersData::getJSONObject)
-                .filter(playerData -> playerData.getInt(JSONKeys.PLAYER_SCORE) == bestScore)
-                .map(playerData -> playerData.getString(JSONKeys.PLAYER_NAME))
-                .collect(Collectors.toList());
-    }
-
-    Boolean isGameMatchInState(IGameMatch.State state){
-        return game.getData()
-                .getJSONObject(JSONKeys.GAME_MATCH)
-                .getString(JSONKeys.MATCH_STATE)
-                .equals(state.name());
-    }
-
-    Boolean isThereATileAtCoordinates(HexCoordinates coordinates, JSONObject boardData){
-        return boardData.opt(coordinates.toString()) != null;
-    }
-
-    JSONObject getPlayerDataFromPlayerName(JSONArray playersData, String playerName){
+    JSONObject retrievePlayerDataFromPlayerName(JSONArray playersData, String playerName){
         int playerIndex = IntStream.range(0, playersData.length())
                 .filter(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_NAME).equals(playerName))
                 .findFirst()
                 .getAsInt();
 
         return playersData.getJSONObject(playerIndex);
-    }
-
-    String getFormattedPlayerStatusText(String playerState){
-        //Todo: substitute with a swith
-        if(playerState.equals(IPlayer.State.PLACING.name())){
-            return PLAYER_STATUS_TEXT_PLACING;
-        }
-        else if(playerState.equals(IPlayer.State.WAIT_OTHER.name())){
-            return PLAYER_STATUS_TEXT_WAIT_OTHER;
-        }
-        return PLAYER_STATUS_TEXT_WAIT_MATCH;
     }
 
     void onFocusPlayerRelease(String playerName){
@@ -253,6 +206,32 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshView(gameData);
     }
 
+    Boolean isGameMatchInState(IGameMatch.State state, JSONObject gameData){
+        return gameData
+                .getJSONObject(JSONKeys.GAME_MATCH)
+                .getString(JSONKeys.MATCH_STATE)
+                .equals(state.name());
+    }
+
+    int computeHighestScore(JSONArray playersData){
+        return IntStream.range(0, playersData.length())
+                .map(iii -> playersData.getJSONObject(iii).getInt(JSONKeys.PLAYER_SCORE))
+                .max().getAsInt();
+    }
+
+    List<String> computeHighestScoringPlayerNames(JSONObject gameData){
+        JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).
+                getJSONArray(JSONKeys.MATCH_PLAYERS);
+
+        int bestScore = computeHighestScore(playersData);
+
+        return IntStream.range(0, playersData.length())
+                .mapToObj(playersData::getJSONObject)
+                .filter(playerData -> playerData.getInt(JSONKeys.PLAYER_SCORE) == bestScore)
+                .map(playerData -> playerData.getString(JSONKeys.PLAYER_NAME))
+                .collect(Collectors.toList());
+    }
+
     void onPlaceTileRelease(){
         game.playerPlacesTileAt(focusedPlayerName, focusedCoordinates);
 
@@ -260,7 +239,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         JSONObject gameData = game.getData();
 
-        if(isGameMatchInState(IGameMatch.State.FINISH)){
+        if(isGameMatchInState(IGameMatch.State.FINISH, gameData)){
             focusPlayerAndDefocusCoordinates(computeHighestScoringPlayerNames(gameData).get(0));
         }
         else {
@@ -304,10 +283,38 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         );
     }
 
-    void refreshPlayersListEntry(PlayerListEntryCtrl player, JSONObject playerData){
-        player.btn_focus.setDisable(playerData.getString(JSONKeys.PLAYER_NAME).equals(focusedPlayerName));
-        player.btn_showKickDialog.setDisable(players.size()<2 || isGameMatchInState(IGameMatch.State.FINISH));
-        player.pane_kickDialog.setVisible(false);
+    String computeFormattedPlayerStatusText(String playerState){
+        if(playerState.equals(IPlayer.State.PLACING.name())){
+            return PLAYER_STATUS_TEXT_PLACING;
+        }
+        else if(playerState.equals(IPlayer.State.WAIT_OTHER.name())){
+            return PLAYER_STATUS_TEXT_WAIT_OTHER;
+        }
+        return PLAYER_STATUS_TEXT_WAIT_MATCH;
+    }
+
+    void refreshPlayerListEntryStatusText(String playerName, JSONObject gameData){
+        PlayerListEntryCtrl playerCtrl = players.get(playerName);
+        JSONObject playerData = retrievePlayerDataFromPlayerName(
+                gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS),
+                playerName);
+
+        String statusText;
+        if(isGameMatchInState(IGameMatch.State.FINISH, gameData)){
+            statusText = "Score: " + playerData.getInt(JSONKeys.PLAYER_SCORE);
+        }
+        else{
+            statusText = computeFormattedPlayerStatusText(playerData.getString(JSONKeys.PLAYER_STATE));
+        }
+        playerCtrl.setValues(statusText);
+    }
+
+    void refreshPlayerListEntryControls(String playerName,JSONObject gameData){
+        PlayerListEntryCtrl playerCtrl = players.get(playerName);
+
+        playerCtrl.btn_focus.setDisable(playerName.equals(focusedPlayerName));
+        playerCtrl.btn_showKickDialog.setDisable(players.size()<2 || isGameMatchInState(IGameMatch.State.FINISH,gameData));
+        playerCtrl.pane_kickDialog.setVisible(false);
     }
 
     void refreshPlayersList(JSONObject gameData){
@@ -315,36 +322,32 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             buildPlayersList(gameData);
         }
 
-        JSONObject matchData = gameData.getJSONObject(JSONKeys.GAME_MATCH);
-        JSONArray playersData = matchData.getJSONArray(JSONKeys.MATCH_PLAYERS);
+        JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
+
         IntStream.range(0, playersData.length())
                 .mapToObj(playersData::getJSONObject)
-                .forEach(playerData -> {
-                    PlayerListEntryCtrl player = players.get(playerData.getString(JSONKeys.PLAYER_NAME));
-
-                    String statusText;
-                    if(isGameMatchInState(IGameMatch.State.FINISH)){
-                        statusText = "Score: " + playerData.getInt(JSONKeys.PLAYER_SCORE);
-                    }
-                    else{
-                        statusText = getFormattedPlayerStatusText(playerData.getString(JSONKeys.PLAYER_STATE));
-                    }
-                    player.setValues(statusText);
-
-                    refreshPlayersListEntry(player, playerData);
+                .map(playerData -> playerData.getString(JSONKeys.PLAYER_NAME))
+                .forEach(playerName -> {
+                    refreshPlayerListEntryStatusText(playerName, gameData);
+                    refreshPlayerListEntryControls(playerName, gameData);
                 });
     }
 
     void refreshPlacingButton(JSONObject gameData){
 
-        JSONObject playerData = getPlayerDataFromPlayerName(
+        JSONObject playerData = retrievePlayerDataFromPlayerName(
                 gameData.getJSONObject(JSONKeys.GAME_MATCH).
                         getJSONArray(JSONKeys.MATCH_PLAYERS),
                 focusedPlayerName
         );
 
-        //todo: maybe add a graphic change on the text or background
-        btn_placeTile.setDisable(focusedCoordinates == null || playerData.getString(JSONKeys.PLAYER_STATE) != IPlayer.State.PLACING.name());
+        btn_placeTile.setDisable(
+                focusedCoordinates == null ||
+                !playerData.getString(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name()));
+    }
+
+    Boolean isThereATileAtCoordinates(HexCoordinates coordinates, JSONObject boardData){
+        return boardData.opt(coordinates.toString()) != null;
     }
 
     void refreshTileGraphics(JSONObject boardData, HexCoordinates coordinates){
@@ -390,7 +393,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
             focusFirstPlacingPlayer(gameData);
         }
 
-        JSONObject playerData = getPlayerDataFromPlayerName(
+        JSONObject playerData = retrievePlayerDataFromPlayerName(
                 gameData.getJSONObject(JSONKeys.GAME_MATCH)
                         .getJSONArray(JSONKeys.MATCH_PLAYERS),
                 focusedPlayerName
@@ -404,34 +407,49 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         });
     }
 
-    void refreshMatchInfo(JSONObject gameData){
-        JSONObject matchData = gameData.getJSONObject(JSONKeys.GAME_MATCH);
-        String matchStateText;
-        JSONArray playersData = matchData.getJSONArray(JSONKeys.MATCH_PLAYERS);
+    int computeNumberOfPlacingPlayers(JSONArray playersData){
+        return (int) IntStream.range(0, playersData.length())
+                .filter(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_STATE).
+                        equals(IPlayer.State.PLACING.name()))
+                .count();
+    }
 
-        //Todo: extract two methods, one for play and the other for finish
-        if(isGameMatchInState(IGameMatch.State.PLAY)){
-            int totalNumberOfPlayers = playersData.length();
-            int placingPlayers = (int) IntStream.range(0, playersData.length())
-                    .filter(iii -> playersData.getJSONObject(iii).getString(JSONKeys.PLAYER_STATE).equals(IPlayer.State.PLACING.name()))
-                    .count();
+    String computeMatchInfoTextDuringPlay(int totalPlayers, int placingPlayers){
+        return placingPlayers + " player"+ (placingPlayers>1?"s":"") +
+                " out of " + totalPlayers + (placingPlayers>1?" are":" is") + " still placing.";
+    }
 
-            matchStateText = placingPlayers + " player"+
-                    (placingPlayers>1?"s":"") +
-                    " out of " + totalNumberOfPlayers + (placingPlayers>1?" are":" is") + " still placing.";
+    String computeMatchInfoTextDuringFinish(List<String> winners, int bestScore){
+        String matchStateText ="";
+        //NOTE: winners always has size()>0
+        if(winners.size()>2){
+            matchStateText += winners.size() + " players tied for first place";
         }
-        // else match is finished
+        else if(winners.size()==2){
+            matchStateText += winners.get(0) + " and " + winners.get(1) + " tied for first place";
+        }
         else{
-            List<String> winners = computeHighestScoringPlayerNames(gameData);
+            matchStateText = "The winner is " + winners.get(0);
+        }
 
-            if(winners.size()>1){
-                matchStateText = "TIE!";
-            }
-            else{
-                int bestScore = getPlayerDataFromPlayerName(playersData, winners.get(0)).getInt(JSONKeys.PLAYER_SCORE);
-                matchStateText = "The winner is " + winners.get(0) +
-                        " with a score of "+ bestScore + "!";
-            }
+        return matchStateText + " with a score of "+ bestScore + "!";
+    }
+
+    void refreshMatchInfo(JSONObject gameData){
+
+        JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
+
+        String matchStateText;
+        //NOTE: Match is either in PLAY or FINISH
+        if(isGameMatchInState(IGameMatch.State.PLAY, gameData)){
+            matchStateText = computeMatchInfoTextDuringPlay(
+                    playersData.length(),
+                    computeNumberOfPlacingPlayers(playersData));
+        }
+        else{
+            matchStateText = computeMatchInfoTextDuringFinish(
+                    computeHighestScoringPlayerNames(gameData),
+                    computeHighestScore(playersData));
         }
 
         text_matchStatus.setText(matchStateText);
@@ -441,17 +459,17 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         text_playerName.setText(focusedPlayerName);
 
-        String focusedPlayerState = getPlayerDataFromPlayerName(
+        String focusedPlayerState = retrievePlayerDataFromPlayerName(
                     gameData.getJSONObject(JSONKeys.GAME_MATCH)
                             .getJSONArray(JSONKeys.MATCH_PLAYERS),
                     focusedPlayerName
             ).getString(JSONKeys.PLAYER_STATE);
 
-        text_playerStatus.setText(getFormattedPlayerStatusText(focusedPlayerState));
+        text_playerStatus.setText(computeFormattedPlayerStatusText(focusedPlayerState));
     }
 
-    void refreshRematchPanel(){
-        pane_rematchPanel.setVisible(isGameMatchInState(IGameMatch.State.FINISH));
+    void refreshRematchPanel(JSONObject gameData){
+        pane_rematchPanel.setVisible(isGameMatchInState(IGameMatch.State.FINISH,gameData));
     }
 
     @Override
@@ -461,7 +479,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         refreshCurrentTilePane(gameData);
         refreshPlayersList(gameData);
         refreshPlacingButton(gameData);
-        refreshRematchPanel();
+        refreshRematchPanel(gameData);
         refreshCurrentPlayerInfo(gameData);
         refreshMatchInfo(gameData);
 
