@@ -73,7 +73,7 @@
          </font>
       </Label>
    </AnchorPane>
- <AnchorPane fx:id="howToPlayPane" minHeight="0.0" minWidth="0.0" prefHeight="409.0" prefWidth="597.0">
+ <AnchorPane fx:id="howToPlayPane" minHeight="0.0" minWidth="0.0" prefHeight="409.0" prefWidth="597.0" visible="false">
       <children>
          <Label layoutX="202.0" layoutY="13.0" text="How To Play!">
             <font>
