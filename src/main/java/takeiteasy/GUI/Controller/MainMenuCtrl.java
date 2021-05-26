@@ -11,6 +11,8 @@ public class MainMenuCtrl implements IViewController{
     IGame game;
     IViewUpdater vu;
 
+    //Todo: add a title to the main menu and modify credits
+    //Todo: instructions?
     @FXML
     AnchorPane creditsPane;
 
@@ -46,7 +48,5 @@ public class MainMenuCtrl implements IViewController{
     }
 
     @Override
-    public void refreshView(JSONObject gameData) {
-        //TODO: provide a collection of quote of the day or referring to a website.
-    }
+    public void refreshView(JSONObject gameData) {}
 }

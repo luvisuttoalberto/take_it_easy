@@ -59,7 +59,6 @@ public class Player implements IPlayer{
         }
     }
 
-    //Todo: maybe these two methods can be merged in a single method that takes the desired state as a parameter
     @Override
     public void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException {
         if (playerState == State.WAIT_OTHER) {

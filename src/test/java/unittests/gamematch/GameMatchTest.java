@@ -439,7 +439,6 @@ public class GameMatchTest {
         assertThrows(InvalidMatchStateException.class, gm::endMatch);
     }
 
-    //TODO: is this test useful???
     @Test
     public void test2PMatch(){
         GameMatch gm = new GameMatch();

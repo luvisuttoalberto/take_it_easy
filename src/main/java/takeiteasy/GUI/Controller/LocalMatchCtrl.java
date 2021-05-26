@@ -1,5 +1,6 @@
 package takeiteasy.GUI.Controller;
 
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -29,7 +30,9 @@ import static takeiteasy.utility.Utility.generateCoordinateStandard;
 
 public class LocalMatchCtrl extends GridPane implements IViewController, Initializable {
 
-    public Pane pane_boardPane;
+    //Todo: change all publics with FXML
+    @FXML
+    Pane pane_boardPane;
 
     public Button btn_placeTile;
 
@@ -66,6 +69,10 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         this.game = g;
     }
 
+    void generateGraphicTileAtCoordinates(HexCoordinates coordinates){
+
+    }
+
     @Override
     public void injectViewUpdater(IViewUpdater vu) {
         this.vu = vu;
@@ -73,6 +80,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
     void buildBoard(){
 
+        //Todo: make these const and extract them
         double boardXUnit = TILE_WIDTH *.75;
         double boardYUnit = TILE_HEIGHT;
 
@@ -80,9 +88,9 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
 
         Arrays.stream(generateCoordinateStandard())
                 .forEach(coords -> {
+                    //TOdo: extract the whole method
                     TileCtrl t = new TileCtrl(TILE_WIDTH, TILE_HEIGHT);
 
-                    //Todo: refactor: extract two methods
                     double x = coords.getX() + 2;
                     double y = 2 - (coords.getY() + coords.getX() * .5);
 
@@ -217,7 +225,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     }
 
     String getFormattedPlayerStatusText(String playerState){
-        //Todo: tidy
+        //Todo: substitute with a swith
         if(playerState.equals(IPlayer.State.PLACING.name())){
             return PLAYER_STATUS_TEXT_PLACING;
         }
@@ -401,7 +409,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
         String matchStateText;
         JSONArray playersData = matchData.getJSONArray(JSONKeys.MATCH_PLAYERS);
 
-        //Todo: should we extract two methods here? One for play and the other for finish
+        //Todo: extract two methods, one for play and the other for finish
         if(isGameMatchInState(IGameMatch.State.PLAY)){
             int totalNumberOfPlayers = playersData.length();
             int placingPlayers = (int) IntStream.range(0, playersData.length())

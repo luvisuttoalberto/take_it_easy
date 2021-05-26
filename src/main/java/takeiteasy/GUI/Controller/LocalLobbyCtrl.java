@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 public class LocalLobbyCtrl implements IViewController, Initializable {
     IGame game;
     IViewUpdater vu;
-    private String oldName;
     public final Integer MAX_NAME_LENGTH = 10;
     final String TOOLTIPTEXT_RENAMEFIELD = "Name must be between 1 and " + MAX_NAME_LENGTH +" character and must be unique.";
 
@@ -187,8 +186,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     void onRenameConfirmRelease() {
         String newName = textField_renamePlayer.getText();
 
-        game.renamePlayer(oldName, newName);
-        oldName = "";
+        game.renamePlayer(playersListView.getSelectionModel().getSelectedItem(), newName);
 
         textField_renamePlayer.clear();
         setRenamePanelVisibility(false);
@@ -197,7 +195,6 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     @FXML
     void onRenamePanelShowRelease() {
-        oldName = playersListView.getSelectionModel().getSelectedItem();
         setRenamePanelVisibility(true);
     }
 

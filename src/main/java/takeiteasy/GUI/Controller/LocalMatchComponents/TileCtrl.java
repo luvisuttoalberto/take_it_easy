@@ -108,7 +108,6 @@ public class TileCtrl extends AnchorPane {
 
         this.getChildren().addAll(graphic_bg,layout_text, graphic_hitBox);
 
-        //TODO: these can be better
         setTopAnchor(layout_text,vunit*.1);
         setBottomAnchor(layout_text,vunit*.5);
         setLeftAnchor(layout_text,hunit*.9);

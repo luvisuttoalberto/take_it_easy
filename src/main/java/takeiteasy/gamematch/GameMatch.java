@@ -15,12 +15,13 @@ import java.util.stream.IntStream;
 
 public class GameMatch implements IGameMatch{
 
-    Vector<IPlayer> players = new Vector<>();
+    Vector<IPlayer> players;
     TilePool tilePool;
     State state;
     Integer currentTileIndex;
 
     public GameMatch() {
+        players  = new Vector<>();
         tilePool = new TilePool();
         state = State.SETUP;
         currentTileIndex = 0;
