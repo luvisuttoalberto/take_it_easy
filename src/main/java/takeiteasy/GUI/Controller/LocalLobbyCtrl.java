@@ -22,11 +22,13 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     IViewUpdater vu;
 
     public final Integer MAX_NAME_LENGTH = 10;
-    final String TOOLTIPTEXT_RENAMEFIELD = "Name must be between 1 and " + MAX_NAME_LENGTH +" character and must be unique.";
+    public final Integer MAX_DIGITS = 10;
+    final String TOOLTIPTEXT_SETSEEDFIELD = "Seed must be a number with minimum 1 and maximum " + MAX_DIGITS +" digits.";
+    final String TOOLTIPTEXT_RENAMEFIELD = "Name must be between 1 and " + MAX_NAME_LENGTH +" characters and must be unique.";
     final String TEXTFIELD_STYLE_ERR = "-fx-background-color: yellow; -fx-text-fill: red;";
     final String TEXTFIELD_STYLE_DEFAULT = "-fx-background-color: white; -fx-text-fill: black;";
 
-    Tooltip tt_textField_renamePlayer, tt_textField_newPlayer;
+    Tooltip tt_textField_renamePlayer, tt_textField_newPlayer, tt_textField_setSeed;
 
     @FXML ListView<String> playersListView;
 
@@ -45,28 +47,26 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
                 playerNamesObservable.stream().anyMatch(x -> x.contentEquals(name));
     }
 
-    void setupTooltipOnTextField(TextField textField, Tooltip tooltip, Button button){
-        textField.setTooltip(tooltip);
-
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    boolean nameIsInvalid = isNameInvalid(newValue);
-                    button.setDisable(nameIsInvalid);
-                    if(nameIsInvalid){
-                        tooltip.show(textField,
-                                textField.localToScene(0.0, 0.0).getX()
-                                        + textField.getScene().getX()
-                                        + textField.getScene().getWindow().getX(),
-                                textField.localToScene(0.0, 0.0).getY()
-                                        + textField.getScene().getY()
-                                        + textField.getScene().getWindow().getY()
-                                        - textField.getHeight());
-                        textField.setStyle(TEXTFIELD_STYLE_ERR);
-                    }
-                    else{
-                        textField.setStyle(TEXTFIELD_STYLE_DEFAULT);
-                        tooltip.hide();
-                    }
-        });
+    Boolean isSeedInvalid(String seed){
+        return seed.isEmpty() || seed.length() > MAX_DIGITS || !seed.matches("\\d*");
+    }
+    void setupTooltipOnTextField(TextField textField, Tooltip tooltip, Button button, Boolean isValid){
+        button.setDisable(isValid);
+        if(isValid){
+            tooltip.show(textField,
+                    textField.localToScene(0.0, 0.0).getX()
+                            + textField.getScene().getX()
+                            + textField.getScene().getWindow().getX(),
+                    textField.localToScene(0.0, 0.0).getY()
+                            + textField.getScene().getY()
+                            + textField.getScene().getWindow().getY()
+                            - textField.getHeight());
+            textField.setStyle(TEXTFIELD_STYLE_ERR);
+        }
+        else{
+            textField.setStyle(TEXTFIELD_STYLE_DEFAULT);
+            tooltip.hide();
+        }
     }
 
     @Override
@@ -81,15 +81,13 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         btn_startMatch.disableProperty().bind(
                 sizeOfListViewBinding.isEqualTo(0)
         );
-        
-        btn_setSeed.disableProperty().bind(
-                Bindings.isEmpty(textField_seed.textProperty())
-        );
 
+        tt_textField_setSeed = new Tooltip();
+        tt_textField_setSeed.setText(TOOLTIPTEXT_SETSEEDFIELD);
+        textField_seed.setTooltip(tt_textField_setSeed);
         textField_seed.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")) {
-                    textField_seed.setText(newValue.replaceAll("[^\\d]", ""));
-                }
+            boolean seedIsInvalid = isSeedInvalid(newValue);
+            setupTooltipOnTextField(textField_seed, tt_textField_setSeed, btn_setSeed, seedIsInvalid);
         });
 
         btn_renamePanelShow.disableProperty().bind(
@@ -98,11 +96,19 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
         tt_textField_renamePlayer = new Tooltip();
         tt_textField_renamePlayer.setText(TOOLTIPTEXT_RENAMEFIELD);
-        setupTooltipOnTextField(textField_renamePlayer, tt_textField_renamePlayer, btn_renameConfirm);
+        textField_renamePlayer.setTooltip(tt_textField_renamePlayer);
+        textField_renamePlayer.textProperty().addListener((observable, oldValue, newValue) -> {
+            boolean nameIsInvalid = isNameInvalid(newValue);
+            setupTooltipOnTextField(textField_renamePlayer, tt_textField_renamePlayer, btn_renameConfirm, nameIsInvalid);
+        });
 
         tt_textField_newPlayer = new Tooltip();
         tt_textField_newPlayer.setText(TOOLTIPTEXT_RENAMEFIELD);
-        setupTooltipOnTextField(textField_newPlayer, tt_textField_newPlayer, btn_addNewPlayer);
+        textField_newPlayer.setTooltip(tt_textField_newPlayer);
+        textField_newPlayer.textProperty().addListener((observable, oldValue, newValue) -> {
+            boolean nameIsInvalid = isNameInvalid(newValue);
+            setupTooltipOnTextField(textField_newPlayer, tt_textField_newPlayer, btn_addNewPlayer, nameIsInvalid);
+        });
 
         btn_removePlayer.disableProperty().bind(
                 Bindings.or(
@@ -136,10 +142,18 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         tt_textField_newPlayer.hide();
         textField_renamePlayer.setStyle(TEXTFIELD_STYLE_DEFAULT);
         tt_textField_renamePlayer.hide();
+        textField_seed.setStyle(TEXTFIELD_STYLE_DEFAULT);
+        tt_textField_setSeed.hide();
+    }
+
+    void refreshSeedLabel(JSONObject gameData) {
+        long seed = gameData.getJSONObject(JSONKeys.GAME_MATCH).getLong(JSONKeys.MATCH_SEED);
+        label_seed.setText(String.valueOf(seed));
     }
 
     @Override
     public void refreshView(JSONObject gameData) {
+        refreshSeedLabel(gameData);
         refreshPlayersList(gameData);
         resetTooltips();
     }
@@ -212,8 +226,8 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
     @FXML
     void onSetSeedRelease() {
         String seed = textField_seed.getText();
-        label_seed.setText(seed);
-        game.setMatchSeed(Integer.parseInt(seed));
+        game.setMatchSeed(Long.parseLong(seed));
         textField_seed.clear();
+        refreshView(game.getData());
     }
 }
