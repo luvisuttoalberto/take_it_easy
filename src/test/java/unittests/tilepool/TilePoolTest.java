@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import takeiteasy.tilepool.*;
 
-import java.util.Random;
+import java.util.stream.IntStream;
 
 public class TilePoolTest {
 
@@ -17,15 +17,9 @@ public class TilePoolTest {
 
     @Test
     public void testTileInBound(){
-        try{
-            TilePool pool = new TilePool(19);
-            for(int i = 0; i < pool.getSize(); ++i){
-                Tile t = pool.getTile(i);
-            }
-        }
-        catch (Exception E){
-            fail();
-        }
+        TilePool pool = new TilePool(19);
+        IntStream.range(0, pool.getSize())
+                .forEach(assertDoesNotThrow(() -> pool::getTile));
     }
 
     @Test
@@ -36,30 +30,18 @@ public class TilePoolTest {
         TilePool tilePool2 = new TilePool(seed);
         Integer size = tilePool1.getSize();
 
-        Random rand = new Random();
-        int index = rand.nextInt(size);
-        Tile t1 = tilePool1.getTile(index);
-        Tile t2 = tilePool2.getTile(index);
-
-        assertEquals(t1, t2);
+        IntStream.range(0, size)
+                .forEach(iii -> assertEquals(tilePool1.getTile(iii), tilePool2.getTile(iii)));
     }
 
     @Test
     public void testAllDifferentTilesInATilePool(){
-        try {
-            TilePool pool = new TilePool(1);
-            for (int i = 0; i < pool.getSize() - 1; ++i) {
-                for (int j = i + 1; j < pool.getSize(); ++j) {
-                    Tile t1 = pool.getTile(i);
-                    Tile t2 = pool.getTile(j);
-
-                    assertNotEquals(t1, t2);
-                }
-            }
-        }
-        catch(Exception e){
-            fail();
-        }
+        TilePool pool = new TilePool(1);
+        IntStream.range(0, pool.getSize()-1)
+                .forEach(iii ->
+                        IntStream.range(iii + 1, pool.getSize())
+                                .forEach(jjj -> assertNotEquals(pool.getTile(iii), pool.getTile(jjj)))
+                );
     }
 
     @Test
