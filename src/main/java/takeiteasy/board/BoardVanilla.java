@@ -111,8 +111,8 @@ public class BoardVanilla implements IBoard {
     @Override
     public Integer computeScore() {
         return Arrays.stream(RowOrientation.values()).flatMap(ro ->
-                IntStream.rangeClosed(-2,2).mapToObj(iii-> new Pair<>(iii,ro))).
-                mapToInt(pair->computeRowScore(pair.getKey(),pair.getValue())).sum();
+                IntStream.rangeClosed(-2,2).mapToObj(iii-> new Pair<>(iii,ro)))
+                .mapToInt(pair->computeRowScore(pair.getKey(),pair.getValue())).sum();
     }
 
     @Override
@@ -123,10 +123,10 @@ public class BoardVanilla implements IBoard {
                 try { return new Pair<>(hc, getTile(hc)); }
                 catch (OutOfBoardCoordinatesException ignored) {}
                 return null;
-            }).
-            filter(Objects::nonNull).
-            filter(hc_t->hc_t.getValue()!=null).
-            forEach(hc_t->boardData.put(
+            })
+            .filter(Objects::nonNull)
+            .filter(hc_t->hc_t.getValue()!=null)
+            .forEach(hc_t->boardData.put(
                     hc_t.getKey().toString(),
                     hc_t.getValue().getData())
              );
