@@ -27,7 +27,7 @@ public class FXApplication extends Application implements IViewUpdater{
     IOContext currentContext = null;
 
     @Override
-    public void start(Stage s) throws Exception {
+    public void start(Stage s){
 
         game = new Game();
 

@@ -25,18 +25,14 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
     Tooltip tt_textField_renamePlayer, tt_textField_newPlayer;
 
-    @FXML
-    ListView<String> playersListView;
+    @FXML ListView<String> playersListView;
 
-    @FXML
-    TextField textField_newPlayer, textField_renamePlayer, textField_seed;
+    @FXML TextField textField_newPlayer, textField_renamePlayer, textField_seed;
 
-    @FXML
-    Button btn_renameConfirm, btn_renameCancel, btn_addNewPlayer,
+    @FXML Button btn_renameConfirm, btn_renameCancel, btn_addNewPlayer,
             btn_renamePanelShow, btn_removePlayer, btn_startMatch, btn_backToMenu, btn_setSeed;
 
-    @FXML
-    Label label_seed;
+    @FXML Label label_seed;
 
     ObservableList<String> playerNamesObservable;
 
@@ -44,6 +40,31 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         return name.isEmpty() ||
                 name.length() > MAX_NAME_LENGTH ||
                 playerNamesObservable.stream().anyMatch(x -> x.contentEquals(name));
+    }
+
+    void setTooltipOnTextField(TextField textField, Tooltip tooltip, Button button){
+        textField.setTooltip(tooltip);
+
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    boolean nameIsInvalid = isNameInvalid(newValue);
+                    button.setDisable(nameIsInvalid);
+                    if(nameIsInvalid){
+                        tooltip.show(textField,
+                                textField.localToScene(0.0, 0.0).getX()
+                                        + textField.getScene().getX()
+                                        + textField.getScene().getWindow().getX(),
+                                textField.localToScene(0.0, 0.0).getY()
+                                        + textField.getScene().getY()
+                                        + textField.getScene().getWindow().getY()
+                                        - textField.getHeight());
+                        textField.setStyle("-fx-background-color: yellow; -fx-text-fill: red;");
+                    }
+                    else{
+                        textField.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+                        tooltip.hide();
+                    }
+                }
+        );
     }
 
     @Override
@@ -75,43 +96,11 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
 
         tt_textField_renamePlayer = new Tooltip();
         tt_textField_renamePlayer.setText(TOOLTIPTEXT_RENAMEFIELD);
-        textField_renamePlayer.setTooltip(tt_textField_renamePlayer);
-
-        textField_renamePlayer.textProperty().addListener((observable, oldValue, newValue) -> {
-                    boolean nameIsInvalid = isNameInvalid(newValue);
-                    btn_renameConfirm.setDisable(nameIsInvalid);
-                    if(nameIsInvalid){
-                        tt_textField_renamePlayer.show(textField_renamePlayer,textField_renamePlayer.localToScene(0.0, 0.0).getX()
-                                        + textField_renamePlayer.getScene().getX() + textField_renamePlayer.getScene().getWindow().getX(), textField_renamePlayer.localToScene(0.0, 0.0).getY()
-                                        + textField_renamePlayer.getScene().getY() + textField_renamePlayer.getScene().getWindow().getY()-textField_renamePlayer.getHeight());
-                        textField_renamePlayer.setStyle("-fx-background-color: yellow; -fx-text-fill: red;");
-                    }
-                    else{
-                        textField_renamePlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
-                        tt_textField_renamePlayer.hide();
-                    }
-                }
-        );
+        setTooltipOnTextField(textField_renamePlayer, tt_textField_renamePlayer, btn_renameConfirm);
 
         tt_textField_newPlayer = new Tooltip();
         tt_textField_newPlayer.setText(TOOLTIPTEXT_RENAMEFIELD);
-        textField_newPlayer.setTooltip(tt_textField_newPlayer);
-
-        textField_newPlayer.textProperty().addListener((observable, oldValue, newValue) -> {
-                    boolean nameIsInvalid = isNameInvalid(newValue);
-                    btn_addNewPlayer.setDisable(nameIsInvalid);
-                    if(nameIsInvalid){
-                        tt_textField_newPlayer.show(textField_newPlayer,textField_newPlayer.localToScene(0.0, 0.0).getX()
-                                + textField_newPlayer.getScene().getX() + textField_newPlayer.getScene().getWindow().getX(), textField_newPlayer.localToScene(0.0, 0.0).getY()
-                                + textField_newPlayer.getScene().getY() + textField_newPlayer.getScene().getWindow().getY()-textField_newPlayer.getHeight());
-                        textField_newPlayer.setStyle("-fx-background-color: yellow; -fx-text-fill: red;");
-                    }
-                    else{
-                        textField_newPlayer.setStyle("-fx-background-color: white; -fx-text-fill: black;");
-                        tt_textField_newPlayer.hide();
-                    }
-                }
-        );
+        setTooltipOnTextField(textField_newPlayer, tt_textField_newPlayer, btn_addNewPlayer);
 
         btn_removePlayer.disableProperty().bind(
                 Bindings.or(
