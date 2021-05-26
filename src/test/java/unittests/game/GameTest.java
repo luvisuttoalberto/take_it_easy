@@ -13,6 +13,7 @@ import unittests.utility.Pair;
 import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -189,9 +190,8 @@ public class GameTest {
         game.setMatchSeed(11);
         game.startLocalMatch();
 
-        for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-            game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate);
-        }
+        IntStream.range(0, tilesAndCoords.size() - 1)
+                .forEach(i -> game.playerPlacesTileAt(name, tilesAndCoords.get(i).coordinate));
         game.playerPlacesTileAt(name, tilesAndCoords.get(18).coordinate);
 
         JSONObject data = game.getData();
