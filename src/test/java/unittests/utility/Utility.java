@@ -1,12 +1,7 @@
 package unittests.utility;
 
 import takeiteasy.board.*;
-import takeiteasy.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.board.exceptions.CoordinatesOccupiedException;
-import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.gamematch.GameMatch;
-import takeiteasy.gamematch.exceptions.PlayerNameNotFoundException;
-import takeiteasy.player.exceptions.InvalidPlayerStateException;
 import takeiteasy.tilepool.Tile;
 import takeiteasy.tilepool.TilePool;
 import static takeiteasy.utility.Utility.*;
