@@ -16,6 +16,9 @@ public class MainMenuCtrl implements IViewController{
     @FXML
     AnchorPane creditsPane;
 
+    @FXML
+    AnchorPane howToPlayPane;
+
     @Override
     public void injectGame(IGame g){
         this.game=g;
@@ -43,10 +46,21 @@ public class MainMenuCtrl implements IViewController{
     }
 
     @FXML
+    void onShowHowToPlayRelease(){
+        howToPlayPane.setVisible(true);
+    }
+
+    @FXML
+    void onCloseHowToPlayRelease(){
+        howToPlayPane.setVisible(false);
+    }
+
+    @FXML
     void onExitGameRelease() {
         Platform.exit();
     }
 
     @Override
     public void refreshView(JSONObject gameData) {}
+
 }

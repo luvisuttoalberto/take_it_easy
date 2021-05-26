@@ -2,69 +2,90 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.shape.Rectangle?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="takeiteasy.GUI.Controller.MainMenuCtrl">
-   <AnchorPane>
-   <VBox layoutX="250.0" layoutY="86.0" prefHeight="220.0" prefWidth="100.0">
-      <Button id="start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
-              onAction="#onStartLocalMatchRelease" prefWidth="100.0" text="Start" textAlignment="CENTER">
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="takeiteasy.GUI.Controller.MainMenuCtrl">
+   <AnchorPane layoutX="125.0" layoutY="8.0" prefHeight="385.0" prefWidth="351.0">
+   <VBox alignment="CENTER" layoutX="110.0" layoutY="96.0" prefHeight="289.0" prefWidth="131.0">
+      <Button id="start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartLocalMatchRelease" prefHeight="50.0" prefWidth="130.0" text="Start" textAlignment="CENTER">
          <VBox.margin>
-            <Insets bottom="10.0" top="10.0"/>
+            <Insets bottom="10.0" top="10.0" />
          </VBox.margin>
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </Button>
-      <Button id="btn_showCredits" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
-              onAction="#onShowCreditsRelease" prefWidth="100.0" text="Credits" textAlignment="CENTER">
+         <Button id="btn_" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowHowToPlayRelease" prefHeight="50.0" prefWidth="130.0" text="How To Play" textAlignment="CENTER">
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <VBox.margin>
+               <Insets bottom="10.0" top="10.0" />
+            </VBox.margin>
+         </Button>
+      <Button id="btn_showCredits" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowCreditsRelease" prefHeight="50.0" prefWidth="130.0" text="Credits" textAlignment="CENTER">
          <VBox.margin>
-            <Insets bottom="10.0" top="10.0"/>
+            <Insets bottom="10.0" top="10.0" />
          </VBox.margin>
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </Button>
-      <Button id="exit" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onExitGameRelease"
-              prefWidth="100.0" text="Exit" textAlignment="CENTER">
+      <Button id="exit" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onExitGameRelease" prefHeight="50.0" prefWidth="130.0" text="Exit" textAlignment="CENTER">
          <VBox.margin>
-            <Insets bottom="10.0" top="10.0"/>
+            <Insets bottom="10.0" top="10.0" />
          </VBox.margin>
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
          <opaqueInsets>
-            <Insets/>
+            <Insets />
          </opaqueInsets>
       </Button>
    </VBox>
    </AnchorPane>
-   <AnchorPane fx:id="creditsPane" visible="false">
+   <AnchorPane fx:id="creditsPane" prefHeight="412.0" prefWidth="600.0" visible="false">
       <Rectangle fill="#ffffffff" height="400.0" width="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <Label alignment="CENTER" layoutX="225.0" layoutY="33.0" prefHeight="50.0" prefWidth="150.0" text="Take it EASY!">
          <font>
-            <Font size="19.0"/>
+            <Font size="19.0" />
          </font>
       </Label>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="200.0" layoutY="83.0" pickOnBounds="true"
-                 preserveRatio="true">
-         <Image url="@../images/group.jpg"/>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="200.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../images/group.jpg" />
       </ImageView>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="200.0" prefHeight="34.0" prefWidth="150.0"
-             text="Developed By:"/>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="234.0" prefHeight="20.0" prefWidth="150.0" text="Alberto"/>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="258.0" prefHeight="20.0" prefWidth="150.0" text="Azad"/>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="282.0" prefHeight="20.0" prefWidth="150.0" text="Michele"/>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="306.0" prefHeight="20.0" prefWidth="150.0" text="Nicolas"/>
-      <Button id="btn_closeCredits" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
-              onAction="#onCloseCreditsRelease" prefWidth="100.0" text="Back" textAlignment="CENTER"/>
+      <Label alignment="CENTER" layoutX="225.0" layoutY="195.0" prefHeight="34.0" prefWidth="150.0" text="Developed By:" />
+      <Label alignment="CENTER" layoutX="225.0" layoutY="229.0" prefHeight="20.0" prefWidth="150.0" text="Alberto" />
+      <Label alignment="CENTER" layoutX="225.0" layoutY="249.0" prefHeight="20.0" prefWidth="150.0" text="Azad" />
+      <Label alignment="CENTER" layoutX="225.0" layoutY="269.0" prefHeight="20.0" prefWidth="150.0" text="Michele" />
+      <Label alignment="CENTER" layoutX="225.0" layoutY="289.0" prefHeight="20.0" prefWidth="150.0" text="Nicolas" />
+      <Button id="btn_closeCredits" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="316.0" mnemonicParsing="false" onAction="#onCloseCreditsRelease" prefHeight="30.0" prefWidth="100.0" text="Back" textAlignment="CENTER" />
+      <Label alignment="CENTER" layoutX="174.0" layoutY="356.0" text="Original game created by Peter Burley">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </AnchorPane>
+ <AnchorPane fx:id="howToPlayPane" minHeight="0.0" minWidth="0.0" prefHeight="409.0" prefWidth="597.0">
+      <children>
+         <Label layoutX="202.0" layoutY="13.0" text="How To Play!">
+            <font>
+               <Font size="35.0" />
+            </font>
+         </Label>
+         <Button layoutX="437.0" layoutY="18.0" mnemonicParsing="false" onAction="#onCloseHowToPlayRelease" prefHeight="34.0" prefWidth="73.0" text="Back" />
+         <TextArea layoutX="29.0" layoutY="72.0" prefHeight="308.0" prefWidth="531.0" text="The game consists in placing hexagonal tiles on a board with 19 hexagonal slots.&#10;Each tile displays three values, one on the top (1,5 or 9), one on the bottom-left (2,6 or 7) and one on the bottom-right (3,4 and 8), and there are 27 possible tiles, corresponding to all the possible combinations of these values.&#10;Each player has its own board and, at each turn, all the players place the same randomly picked tile on their board.&#10;Any of the 27 possible tiles may only appear once in a game and cannot be repositioned once placed.&#10;When all the players have placed the current tile, a new one is randomly picked, and the process repeats until all the players have filled their board.&#10;Points are scored by aligning tiles presenting the same value in the spot corresponding to the line orientation (i.e. vertical, diagonal bottom-left, diagonal bottom-right): when all the tiles in a line present the same number, that line is worth the common number times the number of tiles comprising the line. &#10;If any two numbers along the line differ, the line is worth 0 points.&#10;The game ends when all the players have placed the last tile, and the player who scored most points across all the lines wins.&#10;The in game screen shows the current player's board: click on any empty position and then on &quot;PLACE TILE&quot; to make your move. &#10;Once the current tile is placed you cannot reposition it, so choose carefully!&#10;At any point you may look at any player's board by clicking on the &quot;View&quot; button next to their name in the list on the right.&#10;You may also remove a player from the game by clicking on the &quot;X&quot; near their name and then &quot;Confirm&quot; on the prompt that appears (although you cannot kick the last player in the match).&#10;You may also interrupt the current game by going back to the lobby or to the main menu using the buttons in the bottom right of the window (NOTE: a new random seed will be picked!)." wrapText="true">
+            <font>
+               <Font size="21.0" />
+            </font>
+         </TextArea>
+      </children>
    </AnchorPane>
 </AnchorPane>
