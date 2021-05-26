@@ -1,7 +1,7 @@
 package takeiteasy.utility;
 
-import takeiteasy.board.HexCoordinates;
-import takeiteasy.board.exceptions.BadHexCoordinatesException;
+import takeiteasy.core.board.HexCoordinates;
+import takeiteasy.core.board.exceptions.BadHexCoordinatesException;
 
 import java.util.stream.IntStream;
 

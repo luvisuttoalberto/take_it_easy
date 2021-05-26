@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
-import takeiteasy.game.IGame;
+import takeiteasy.core.game.IGame;
 
 public class MainMenuCtrl implements IViewController{
     IGame game;

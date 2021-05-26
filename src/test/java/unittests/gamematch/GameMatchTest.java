@@ -2,13 +2,13 @@ package unittests.gamematch;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import takeiteasy.JSONKeys;
+import takeiteasy.core.JSONKeys;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
-import takeiteasy.board.HexCoordinates;
-import takeiteasy.gamematch.*;
-import takeiteasy.gamematch.exceptions.*;
-import takeiteasy.tilepool.*;
+import takeiteasy.core.board.HexCoordinates;
+import takeiteasy.core.gamematch.*;
+import takeiteasy.core.gamematch.exceptions.*;
+import takeiteasy.core.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;

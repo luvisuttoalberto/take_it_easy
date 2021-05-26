@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import takeiteasy.tilepool.*;
+import takeiteasy.core.tilepool.*;
 
 import java.util.stream.IntStream;
 

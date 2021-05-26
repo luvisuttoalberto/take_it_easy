@@ -1,7 +1,7 @@
 package unittests.board;
-import takeiteasy.board.*;
+import takeiteasy.core.board.*;
 import org.junit.jupiter.api.Test;
-import takeiteasy.board.exceptions.BadHexCoordinatesException;
+import takeiteasy.core.board.exceptions.BadHexCoordinatesException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

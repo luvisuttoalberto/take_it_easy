@@ -3,8 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import takeiteasy.tilepool.Tile;
-import takeiteasy.JSONKeys;
+import takeiteasy.core.tilepool.Tile;
+import takeiteasy.core.JSONKeys;
 
 public class TileTest {
 

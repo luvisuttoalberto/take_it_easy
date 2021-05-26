@@ -7,9 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import takeiteasy.GUI.Controller.IViewController;
-import takeiteasy.JSONKeys;
-import takeiteasy.game.Game;
-import takeiteasy.game.IGame;
+import takeiteasy.core.JSONKeys;
+import takeiteasy.core.game.Game;
+import takeiteasy.core.game.IGame;
 
 import java.io.IOException;
 

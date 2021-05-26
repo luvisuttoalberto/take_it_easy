@@ -57,7 +57,7 @@ The codebase is organized in packages:
 - `unittests` contains all the tests pertaining the core game engine
 - `takeiteasy.utility` contains a single utility class that provides facilities to generate the standard set of hexagonal coordinates.  
 
-The JSON interface is detailed in the `takeiteasy.JSONKeys` class and acts as a reference for any GUI implementation that may be used to interface with the core engine.
+The JSON interface is detailed in the `takeiteasy.core.JSONKeys` class and acts as a reference for any GUI implementation that may be used to interface with the core engine.
 
 The application entrypoint is defined in the `takeiteasy.Main` class, which simply launches the `takeiteasy.GUI.FXApplication`.
 

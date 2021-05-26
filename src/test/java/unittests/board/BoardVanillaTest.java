@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
-import takeiteasy.board.*;
-import takeiteasy.board.exceptions.CoordinatesOccupiedException;
-import takeiteasy.board.exceptions.OutOfBoardCoordinatesException;
-import takeiteasy.tilepool.Tile;
+import takeiteasy.core.board.*;
+import takeiteasy.core.board.exceptions.CoordinatesOccupiedException;
+import takeiteasy.core.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.core.tilepool.Tile;
 
 import unittests.utility.Pair;
 

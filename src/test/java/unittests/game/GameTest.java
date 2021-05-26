@@ -2,12 +2,12 @@ package unittests.game;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import takeiteasy.JSONKeys;
+import takeiteasy.core.JSONKeys;
 import org.junit.jupiter.api.Test;
-import takeiteasy.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.board.HexCoordinates;
-import takeiteasy.game.Game;
-import takeiteasy.tilepool.Tile;
+import takeiteasy.core.board.exceptions.BadHexCoordinatesException;
+import takeiteasy.core.board.HexCoordinates;
+import takeiteasy.core.game.Game;
+import takeiteasy.core.tilepool.Tile;
 import unittests.utility.Pair;
 
 import static unittests.utility.Utility.getTilesAndCoordinatesBoard11;

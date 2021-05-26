@@ -1,9 +1,9 @@
 package unittests.utility;
 
-import takeiteasy.board.*;
-import takeiteasy.gamematch.GameMatch;
-import takeiteasy.tilepool.Tile;
-import takeiteasy.tilepool.TilePool;
+import takeiteasy.core.board.*;
+import takeiteasy.core.gamematch.GameMatch;
+import takeiteasy.core.tilepool.Tile;
+import takeiteasy.core.tilepool.TilePool;
 import static takeiteasy.utility.Utility.*;
 
 import java.util.ArrayList;

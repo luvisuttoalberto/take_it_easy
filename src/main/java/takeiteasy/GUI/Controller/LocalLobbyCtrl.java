@@ -10,8 +10,8 @@ import javafx.scene.control.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import takeiteasy.GUI.IViewUpdater;
-import takeiteasy.JSONKeys;
-import takeiteasy.game.IGame;
+import takeiteasy.core.JSONKeys;
+import takeiteasy.core.game.IGame;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -1,12 +1,12 @@
 package unittests.player;
 
 import org.json.JSONObject;
-import takeiteasy.JSONKeys;
+import takeiteasy.core.JSONKeys;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
-import takeiteasy.board.*;
-import takeiteasy.player.*;
-import takeiteasy.tilepool.*;
+import takeiteasy.core.board.*;
+import takeiteasy.core.player.*;
+import takeiteasy.core.tilepool.*;
 import unittests.utility.Pair;
 
 import java.util.ArrayList;
