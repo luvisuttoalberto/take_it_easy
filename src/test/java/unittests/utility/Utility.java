@@ -9,6 +9,7 @@ import static takeiteasy.utility.Utility.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -23,51 +24,46 @@ public final class Utility {
         return tiles;
     }
 
-    private static HexCoordinates[] generateCoordinateSequence54(){
+    static HexCoordinates[] generateCoordinateSequence(Integer score){
         HexCoordinates[] coords = generateCoordinateStandard();
-        Collections.swap(Arrays.asList(coords), 7,11);
-        Collections.swap(Arrays.asList(coords), 13,17);
-        return coords;
-    }
-
-    private static HexCoordinates[] generateCoordinateSequence27(){
-        HexCoordinates[] coords = generateCoordinateStandard();
-        Collections.swap(Arrays.asList(coords), 7,11);
+        if(score == 27 || score == 54){
+            Collections.swap(Arrays.asList(coords), 7,11);
+        }
+        if(score == 54){
+            Collections.swap(Arrays.asList(coords), 13,17);
+        }
         return coords;
     }
 
 
     public static ArrayList<Pair<Tile, HexCoordinates>> getTilesAndCoordinatesBoard11(Integer score){
         Tile[] tiles = generateTileListFromSeed(11);
-        HexCoordinates[] coords;
-        if (score == 27){
-            coords = generateCoordinateSequence27();
-        }
-        else {
-            coords = generateCoordinateSequence54();
-        }
-        ArrayList<Pair<Tile, HexCoordinates>> pairs = new ArrayList<>();
-        for (int i = 0; i < 19; ++i) {
-            Pair<Tile, HexCoordinates> pair = new Pair<>(tiles[i], coords[i]);
-            pairs.add(pair);
-        }
+        HexCoordinates[] coords = generateCoordinateSequence(score);
 
+        ArrayList<Pair<Tile, HexCoordinates>> pairs = new ArrayList<>();
+        IntStream.range(0, tiles.length)
+                .forEach(iii -> pairs.add(new Pair<>(tiles[iii], coords[iii])));
+        
         return pairs;
     }
 
     public static void SimulateCompleteGameMatch(GameMatch gm, String name, long tilePoolSeed) {
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
         try {
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-
             gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
 
-            for (int i = 0; i < tilesAndCoords.size() - 1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
+            IntStream.range(0, tilesAndCoords.size()-1)
+                    .mapToObj(iii -> tilesAndCoords.get(iii).coordinate)
+                    .forEach(coordinate -> {
+                        try {
+                            gm.positionCurrentTileOnPlayerBoard(name, coordinate);
+                            gm.dealNextTile();
+                        }
+                        catch (Exception ignored) {}
+                    });
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(tilesAndCoords.size() - 1).coordinate);
             gm.endMatch();
         }
         catch(Exception e){

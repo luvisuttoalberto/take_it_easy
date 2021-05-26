@@ -12,6 +12,7 @@ import takeiteasy.tilepool.*;
 import unittests.utility.*;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unittests.utility.Utility.SimulateCompleteGameMatch;
@@ -331,22 +332,30 @@ public class GameMatchTest {
         long tilePoolSeed = 11;
 
         ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(54);
-        try{
+
+        try {
             gm.addPlayer(name);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
-
-            for (Pair<Tile, HexCoordinates> tilesAndCoord : tilesAndCoords) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoord.coordinate);
-                if (tilesAndCoord == tilesAndCoords.get(tilesAndCoords.size()-1)){
-                    break;
-                }
-                gm.dealNextTile();
-            }
-            assertThrows(TilePoolDepletedException.class, gm::dealNextTile);
         }
         catch (Exception ignored){
         }
+
+        IntStream.range(0, tilesAndCoords.size()-1)
+                .mapToObj(iii -> tilesAndCoords.get(iii).coordinate)
+                .forEach(coordinate -> {
+                    try{
+                        gm.positionCurrentTileOnPlayerBoard(name, coordinate);
+                        gm.dealNextTile();
+                    }
+                    catch (Exception ignored) {}
+                });
+
+        try{
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(tilesAndCoords.size() - 1).coordinate);
+        }
+        catch (Exception ignored) {}
+        assertThrows(TilePoolDepletedException.class, gm::dealNextTile);
     }
 
     @Test
@@ -416,16 +425,25 @@ public class GameMatchTest {
             gm.addPlayer(otherName);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
-
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
         }
         catch (Exception ignored){
         }
+
+        IntStream.range(0, tilesAndCoords.size()-1)
+                .forEach(iii -> {
+                    try{
+                        gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(iii).coordinate);
+                        gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(iii).coordinate);
+                        gm.dealNextTile();
+                    }
+                    catch (Exception ignored){}
+                });
+        try{
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(tilesAndCoords.size()-1).coordinate);
+        }
+        catch (Exception ignored){
+        }
+
         assertThrows(PlayersNotReadyToEndMatchException.class, gm::endMatch);
     }
 
@@ -447,30 +465,36 @@ public class GameMatchTest {
         Integer finalScore = 54;
         Integer otherFinalScore = 27;
         long tilePoolSeed = 11;
-        try{
-            ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
-            ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
+        ArrayList<Pair<Tile, HexCoordinates>> tilesAndCoords = getTilesAndCoordinatesBoard11(finalScore);
+        ArrayList<Pair<Tile, HexCoordinates>> otherTilesAndCoords = getTilesAndCoordinatesBoard11(otherFinalScore);
 
+        try {
             gm.addPlayer(name);
             gm.addPlayer(otherName);
             gm.setTilePoolSeed(tilePoolSeed);
             gm.startMatch();
+        }
+        catch (Exception e) {fail();}
 
-            for (int i=0; i<tilesAndCoords.size()-1; ++i) {
-                gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(i).coordinate);
-                gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(i).coordinate);
-                gm.dealNextTile();
-            }
-            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(18).coordinate);
-            gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(18).coordinate);
+        IntStream.range(0, tilesAndCoords.size()-1)
+                .forEach(iii -> {
+                    try{
+                        gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(iii).coordinate);
+                        gm.positionCurrentTileOnPlayerBoard(otherName, otherTilesAndCoords.get(iii).coordinate);
+                        gm.dealNextTile();
+                    }
+                    catch (Exception e){fail();}
+                });
 
+        try{
+            gm.positionCurrentTileOnPlayerBoard(name, tilesAndCoords.get(tilesAndCoords.size()-1).coordinate);
+            gm.positionCurrentTileOnPlayerBoard(otherName, tilesAndCoords.get(otherTilesAndCoords.size()-1).coordinate);
             gm.endMatch();
-            JSONArray playersData = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS);
-            assertEquals(finalScore, playersData.getJSONObject(0).getInt(JSONKeys.PLAYER_SCORE));
-            assertEquals(otherFinalScore, playersData.getJSONObject(1).getInt(JSONKeys.PLAYER_SCORE));
         }
-        catch (Exception e){
-            fail();
-        }
+        catch (Exception e) {fail();}
+
+        JSONArray playersData = gm.getData().getJSONArray(JSONKeys.MATCH_PLAYERS);
+        assertEquals(finalScore, playersData.getJSONObject(0).getInt(JSONKeys.PLAYER_SCORE));
+        assertEquals(otherFinalScore, playersData.getJSONObject(1).getInt(JSONKeys.PLAYER_SCORE));
     }
 }
