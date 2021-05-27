@@ -12,8 +12,6 @@ public class MainMenuCtrl implements IViewController{
     IGame game;
     IViewUpdater vu;
 
-    //Todo: add a title to the main menu and modify credits
-    //Todo: instructions?
     @FXML
     AnchorPane creditsPane;
 
