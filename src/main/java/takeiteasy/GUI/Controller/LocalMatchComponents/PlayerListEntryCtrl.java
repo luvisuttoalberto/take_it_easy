@@ -46,7 +46,6 @@ public class PlayerListEntryCtrl extends AnchorPane {
         setRightAnchor(layout_kickDialog, 0.0);
         setBottomAnchor(layout_kickDialog, 0.0);
 
-        //TODO: kick btns fill all anchorpane
         layout_kickDialog.getChildren().addAll(btn_kick_confirm,btn_kick_cancel);
         HBox.setHgrow(btn_kick_confirm, Priority.ALWAYS);
         HBox.setHgrow(btn_kick_cancel, Priority.ALWAYS);
@@ -75,7 +74,6 @@ public class PlayerListEntryCtrl extends AnchorPane {
         btn_kick_cancel.setOnMouseReleased(e->pane_kickDialog.setVisible(false));
     }
 
-    //TODO: graphic: change background or text color based on status
     public void setValues(String statusText){
         text_status.setText(statusText);
     }
