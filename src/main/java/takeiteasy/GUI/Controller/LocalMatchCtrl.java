@@ -275,7 +275,7 @@ public class LocalMatchCtrl extends GridPane implements IViewController, Initial
     void refreshCurrentTilePane(JSONObject gameData){
         JSONObject currentTileData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONObject(JSONKeys.MATCH_CURRENT_TILE);
 
-        currentTileCtrl.setPlacedGraphics(
+        currentTileCtrl.setFocusedGraphics(
                 currentTileData.getInt(JSONKeys.TILE_TOP),
                 currentTileData.getInt(JSONKeys.TILE_LEFT),
                 currentTileData.getInt(JSONKeys.TILE_RIGHT)

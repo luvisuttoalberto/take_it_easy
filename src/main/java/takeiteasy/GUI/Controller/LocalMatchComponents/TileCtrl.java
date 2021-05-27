@@ -11,6 +11,10 @@ import javafx.scene.text.Text;
 
 public class TileCtrl extends AnchorPane {
 
+    final Color COLOR_EMPTY = Color.WHITE;
+    final Color COLOR_PLACED = Color.YELLOW;
+    final Color COLOR_FOCUS = Color.GREENYELLOW;
+
     public Polygon graphic_hitBox;
     Polygon graphic_bg;
     Text text_top, text_left, text_right;
@@ -27,17 +31,17 @@ public class TileCtrl extends AnchorPane {
     }
 
     public void setPlacedGraphics(Integer top, Integer left, Integer right){
-        graphic_bg.setFill(Color.GREENYELLOW);
+        graphic_bg.setFill(COLOR_PLACED);
         setValues(top, left, right);
     }
 
     public void setFocusedGraphics(Integer top, Integer left, Integer right) {
-        graphic_bg.setFill(Color.YELLOW);
+        graphic_bg.setFill(COLOR_FOCUS);
         setValues(top, left, right);
     }
 
     public void resetGraphics(){
-        graphic_bg.setFill(Color.WHITE);
+        graphic_bg.setFill(COLOR_EMPTY);
         text_top.setText("");
         text_left.setText("");
         text_right.setText("");
@@ -60,7 +64,6 @@ public class TileCtrl extends AnchorPane {
                 hunit,  0.0
                 );
 
-        graphic_bg.setFill(Color.WHITE);
         graphic_bg.setStroke(Color.BLACK);
 
         // hitbox is 1px inset wrt bg

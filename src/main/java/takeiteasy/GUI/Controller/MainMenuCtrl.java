@@ -50,7 +50,7 @@ public class MainMenuCtrl implements IViewController{
     }
 
     @FXML
-    void onCloseHowToPlayRelease(){
+    void onReleaseCloseHowToPlay(){
         howToPlayPane.setVisible(false);
     }
 

@@ -38,7 +38,7 @@
            text="Set"/>
    <TextField fx:id="textField_seed" layoutX="358.0" layoutY="17.0"/>
    <Label layoutX="310.0" layoutY="21.0" text="Seed"/>
-   <Label fx:id="label_seed" layoutX="77.0" layoutY="22.0" text="Not Set"/>
+   <Label fx:id="label_seed" layoutX="77.0" layoutY="22.0" text="Random"/>
    <Label layoutX="25.0" layoutY="21.0" text="Seed:">
       <font>
          <Font name="System Bold" size="14.0"/>

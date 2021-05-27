@@ -58,67 +58,53 @@
       </Text>
    </AnchorPane>
    <AnchorPane fx:id="creditsPane" prefHeight="412.0" prefWidth="600.0" visible="false">
-      <Rectangle fill="#ffffffff" height="400.0" width="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <Label alignment="CENTER" layoutX="225.0" layoutY="33.0" prefHeight="50.0" prefWidth="150.0" text="Take it EASY!">
-         <font>
-            <Font size="19.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="200.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@../images/group.jpg" />
-      </ImageView>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="195.0" prefHeight="34.0" prefWidth="150.0" text="Developed By:" />
-      <Label alignment="CENTER" layoutX="225.0" layoutY="229.0" prefHeight="20.0" prefWidth="150.0" text="Alberto" />
-      <Label alignment="CENTER" layoutX="225.0" layoutY="249.0" prefHeight="20.0" prefWidth="150.0" text="Azad" />
-      <Label alignment="CENTER" layoutX="225.0" layoutY="269.0" prefHeight="20.0" prefWidth="150.0" text="Michele" />
-      <Label alignment="CENTER" layoutX="225.0" layoutY="289.0" prefHeight="20.0" prefWidth="150.0" text="Nicolas" />
-      <Button id="btn_closeCredits" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="316.0" mnemonicParsing="false" onAction="#onCloseCreditsRelease" prefHeight="30.0" prefWidth="100.0" text="Back" textAlignment="CENTER" />
-      <Label alignment="CENTER" layoutX="174.0" layoutY="356.0" text="Original game created by Peter Burley">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Label>
+      <Rectangle fill="#f4f4f4ff" height="400.0" width="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <VBox alignment="TOP_CENTER" prefHeight="410.0" prefWidth="600.0" spacing="10.0">
+         <Label alignment="CENTER" prefHeight="50.0" prefWidth="150.0" text="Take it EASY!">
+            <font><Font size="19.0" /></font>
+         </Label>
+         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../images/group.jpg" />
+         </ImageView>
+         <Label alignment="CENTER" prefWidth="150.0" text="Developed By:" />
+         <Label alignment="CENTER" prefWidth="150.0" text="Alberto Luvisutto" />
+         <Label alignment="CENTER" prefWidth="150.0" text="Nicolas Plasencia" />
+         <Label alignment="CENTER" prefWidth="150.0" text="Michele Rispoli" />
+         <Label alignment="CENTER" prefWidth="150.0" text="Azad Sadr" />
+         <Label alignment="CENTER" text="Based on the original `Take It Easy` game created by Peter Burley">
+            <font><Font size="16.0" /></font>
+         </Label>
+         <Button id="btn_closeCredits" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onCloseCreditsRelease" prefHeight="30.0" prefWidth="100.0" text="Back" textAlignment="CENTER" />
+      </VBox>
    </AnchorPane>
    <ScrollPane fx:id="howToPlayPane" prefHeight="412.0" prefWidth="600.0" visible="false">
-      <content>
-         <VBox alignment="TOP_CENTER" prefHeight="410.0" prefWidth="582.0" spacing="10.0">
-            <children>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How To Play !" textAlignment="CENTER">
-                  <font>
-                     <Font size="30.0" />
-                  </font>
-               </Text>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The game consists in placing hexagonal tiles on a board with 19 &#10;hexagonal slots. Each tile displays three values, one on the top &#10;(1, 5 or 9), one on the bottom-left (2,6 or 7) and one on the &#10;bottom-right (3,4 and 8), and there are 27 possible tiles, &#10;corresponding to all the possible combinations of these values.&#10;The game ends when all the players have placed the last tile, &#10;and the player who scored most points across all the lines wins.">
-                  <font>
-                     <Font size="20.0" />
-                  </font>
-               </Text>
-               <ImageView fitHeight="270.0" fitWidth="530.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@../images/local_match.png" />
-                  </image>
-               </ImageView>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The in game screen shows the current player's board: click on &#10;any empty position and then on &quot;PLACE TILE&quot; to make your move. &#10;Once the current tile is placed you cannot reposition it, so choose &#10;carefully!">
-                  <font>
-                     <Font size="20.0" />
-                  </font>
-               </Text>
-               <ImageView fitHeight="270.0" fitWidth="530.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@../images/board_score.png" />
-                  </image>
-               </ImageView>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Points are scored by aligning tiles presenting the same &#10;value in the spot corresponding to the line orientation (i.e. &#10;vertical, diagonal bottom-left, diagonal bottom-right): when &#10;all the tiles in a line present the same number, that line &#10;is worth the common number times the number of tiles &#10;comprising the line. If any two numbers along the line &#10;differ, the line is worth 0 points.">
-                  <font>
-                     <Font size="20.0" />
-                  </font>
-               </Text>
-               <Button mnemonicParsing="false" onAction="#onCloseHowToPlayRelease" prefHeight="34.0" prefWidth="73.0" text="Back" />
-            </children>
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
-         </VBox>
-      </content>
+      <VBox alignment="TOP_CENTER" prefHeight="410.0" prefWidth="582.0" spacing="10.0">
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How To Play !" textAlignment="CENTER">
+            <font><Font size="30.0"/></font>
+         </Text>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0"
+               text="The game consists in placing hexagonal tiles on a board with 19 &#10;hexagonal slots. Each tile displays three values, one on the top &#10;(1, 5 or 9), one on the bottom-left (2,6 or 7) and one on the &#10;bottom-right (3,4 and 8), and there are 27 possible tiles, &#10;corresponding to all the possible combinations of these values.&#10;The game ends when all the players have placed the last tile, &#10;and the player who scored most points across all the lines wins.">
+            <font><Font size="15.0"/></font>
+         </Text>
+         <ImageView fitHeight="410.0" fitWidth="530.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../images/local_match.png"/>
+         </ImageView>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0"
+               text="The in game screen shows the current player's board: click on &#10;any empty position and then on &quot;PLACE TILE&quot; to make your move. &#10;Once the current tile is placed you cannot reposition it, so choose &#10;carefully!">
+            <font><Font size="15.0"/></font>
+         </Text>
+         <ImageView fitHeight="410.0" fitWidth="530.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../images/board_score.png"/>
+         </ImageView>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0"
+               text="Points are scored by aligning tiles presenting the same &#10;value in the spot corresponding to the line orientation (i.e. &#10;vertical, diagonal bottom-left, diagonal bottom-right): when &#10;all the tiles in a line present the same number, that line &#10;is worth the common number times the number of tiles &#10;comprising the line. If any two numbers along the line &#10;differ, the line is worth 0 points.">
+            <font><Font size="15.0"/></font>
+         </Text>
+         <Button mnemonicParsing="false" onAction="#onReleaseCloseHowToPlay" prefHeight="34.0" prefWidth="73.0"
+                 text="Back"/>
+         <opaqueInsets>
+            <Insets/>
+         </opaqueInsets>
+      </VBox>
    </ScrollPane>
 </AnchorPane>
