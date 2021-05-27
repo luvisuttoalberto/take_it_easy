@@ -2,9 +2,7 @@ package takeiteasy.core.gamematch;
 
 import org.json.JSONObject;
 import takeiteasy.core.board.*;
-import takeiteasy.core.board.exceptions.BadHexCoordinatesException;
-import takeiteasy.core.board.exceptions.CoordinatesOccupiedException;
-import takeiteasy.core.board.exceptions.OutOfBoardCoordinatesException;
+import takeiteasy.core.board.exceptions.*;
 import takeiteasy.core.gamematch.exceptions.*;
 import takeiteasy.core.player.exceptions.InvalidPlayerStateException;
 
