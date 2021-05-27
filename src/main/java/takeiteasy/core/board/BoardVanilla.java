@@ -71,65 +71,65 @@ public class BoardVanilla implements IBoard {
         }
     }
 
-    Integer computeRowScore(Integer rowIndex,RowOrientation rowOrientation){
-
-        // Get coordinates of first tile in the row
-        Integer x0 = rowIndex,
-                y0 = 2 - Math.max(0,x0),
-                z0 = -2 - Math.min(x0,0) ;
-        Integer rowLength = 5-Math.abs(rowIndex);
-
-        Integer score = 0;
-        try {
-
-            // retrieve row number from first tile
-            Tile tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y0, z0), rowOrientation);
-            Integer rowNumber = this.getTileNumberAtOrientation(tile, rowOrientation);
-
-            // Scan tiles in row and check they all have the same number at given orientation
-            for (int i = 0; i < rowLength; ++i) {
-
-                Integer y = y0 - i;
-                Integer z = z0 + i;
-                tile = this.getTileAtCounterRotatedCoordinates(new HexCoordinates(x0, y, z), rowOrientation);
-                Integer cellValue = this.getTileNumberAtOrientation(tile,rowOrientation);
-
-                if (!cellValue.equals(rowNumber)) {
-                    return 0;
-                }
-            }
-            // compute score
-            score = rowNumber * rowLength;
+    Integer retrieveCellValue(Integer rowIndex, Integer lineIndexOfTile, RowOrientation rowOrientation){
+        Integer cellValue = 0;
+        try{
+            HexCoordinates coordinates = new HexCoordinates(
+                    rowIndex,
+                    2 - Math.max(0,rowIndex) - lineIndexOfTile,
+                    -2 - Math.min(rowIndex,0) + lineIndexOfTile
+            );
+            Tile tile = getTileAtCounterRotatedCoordinates(coordinates, rowOrientation);
+            cellValue = getTileNumberAtOrientation(tile, rowOrientation);
         }
-        catch(Exception ignored){
+        catch (Exception ignored){
         }
-
-        return score;
+        return cellValue;
     }
-    //--------
+
+    Integer computeRowLength(Integer rowIndex){
+        return 5-Math.abs(rowIndex);
+    }
+
+    Boolean isRowValid(Integer rowNumber, Integer rowIndex, RowOrientation rowOrientation){
+        return IntStream.range(0, computeRowLength(rowIndex))
+                .map(i -> retrieveCellValue(rowIndex, i, rowOrientation))
+                .allMatch(cellValue -> cellValue == rowNumber);
+    }
+
+    Integer computeRowScore(Integer rowIndex, RowOrientation rowOrientation){
+        // retrieve row number from first tile
+        Integer rowNumber = retrieveCellValue(rowIndex, 0, rowOrientation);
+
+        if(isRowValid(rowNumber, rowIndex, rowOrientation)){
+            return rowNumber * computeRowLength(rowIndex);
+        }
+        else{
+            return 0;
+        }
+    }
 
     @Override
     public Integer computeScore() {
-        return Arrays.stream(RowOrientation.values()).flatMap(ro ->
-                IntStream.rangeClosed(-2,2).mapToObj(iii-> new Pair<>(iii,ro)))
-                .mapToInt(pair->computeRowScore(pair.getKey(),pair.getValue())).sum();
+        return Arrays.stream(RowOrientation.values())
+                .flatMap(ro -> IntStream.rangeClosed(-2,2).mapToObj(iii-> new Pair<>(iii,ro)))
+                .mapToInt(pair -> computeRowScore(pair.getKey(),pair.getValue()))
+                .sum();
     }
 
     @Override
     public JSONObject getData() {
         JSONObject boardData = new JSONObject();
 
-        Arrays.stream(generateCoordinateStandard()).map(hc -> {
-                try { return new Pair<>(hc, getTile(hc)); }
-                catch (OutOfBoardCoordinatesException ignored) {}
-                return null;
-            })
-            .filter(Objects::nonNull)
-            .filter(hc_t->hc_t.getValue()!=null)
-            .forEach(hc_t->boardData.put(
-                    hc_t.getKey().toString(),
-                    hc_t.getValue().getData())
-             );
+        Arrays.stream(generateCoordinateStandard())
+                .map(hc -> {
+                    try { return new Pair<>(hc, getTile(hc)); }
+                    catch (OutOfBoardCoordinatesException ignored) {}
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .filter(hc_t -> hc_t.getValue()!=null)
+                .forEach(hc_t -> boardData.put(hc_t.getKey().toString(), hc_t.getValue().getData()));
 
         return boardData;
     }
