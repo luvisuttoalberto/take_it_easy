@@ -13,8 +13,11 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="takeiteasy.GUI.Controller.MainMenuCtrl">
-   <AnchorPane layoutX="125.0" layoutY="8.0" prefHeight="385.0" prefWidth="351.0">
-   <VBox alignment="CENTER" layoutX="110.0" layoutY="96.0" prefHeight="289.0" prefWidth="131.0">
+   <AnchorPane prefHeight="400.0" prefWidth="600.0">
+   <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" >
+      <ImageView pickOnBounds="true" preserveRatio="true">
+         <Image url="@../images/title.png" />
+      </ImageView>
       <Button id="start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartLocalMatchRelease" prefHeight="50.0" prefWidth="130.0" text="Start" textAlignment="CENTER">
          <VBox.margin>
             <Insets bottom="10.0" top="10.0" />
@@ -23,7 +26,7 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </Button>
-         <Button id="btn_" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowHowToPlayRelease" prefHeight="50.0" prefWidth="130.0" text="How To Play" textAlignment="CENTER">
+         <Button id="btn_showHowToPlay" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowHowToPlayRelease" prefHeight="50.0" prefWidth="130.0" text="How To Play" textAlignment="CENTER">
             <padding>
                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
@@ -51,26 +54,26 @@
          </opaqueInsets>
       </Button>
    </VBox>
-      <Text layoutX="96.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Take It Easy!">
-         <font>
-            <Font size="30.0" />
-         </font>
-      </Text>
+<!--      <Text layoutX="96.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Take It Easy!">-->
+<!--         <font>-->
+<!--            <Font size="30.0" />-->
+<!--         </font>-->
+<!--      </Text>-->
    </AnchorPane>
-   <AnchorPane fx:id="creditsPane" prefHeight="412.0" prefWidth="600.0" visible="false">
+   <AnchorPane fx:id="creditsPane" prefHeight="400.0" prefWidth="600.0" visible="false">
       <Rectangle fill="#f4f4f4ff" height="400.0" width="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <VBox alignment="TOP_CENTER" prefHeight="410.0" prefWidth="600.0" spacing="10.0">
-         <Label alignment="CENTER" prefHeight="50.0" prefWidth="150.0" text="Take it EASY!">
+         <Label alignment="CENTER" prefHeight="50.0" prefWidth="150.0" text="Take it Easy!">
             <font><Font size="19.0" /></font>
          </Label>
-         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../images/group.jpg" />
-         </ImageView>
          <Label alignment="CENTER" prefWidth="150.0" text="Developed By:" />
-         <Label alignment="CENTER" prefWidth="150.0" text="Alberto Luvisutto" />
-         <Label alignment="CENTER" prefWidth="150.0" text="Nicolas Plasencia" />
-         <Label alignment="CENTER" prefWidth="150.0" text="Michele Rispoli" />
-         <Label alignment="CENTER" prefWidth="150.0" text="Azad Sadr" />
+         <ImageView fitHeight="250.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../images/credits_pic.png" />
+         </ImageView>
+<!--         <Label alignment="CENTER" prefWidth="150.0" text="Alberto Luvisutto" />-->
+<!--         <Label alignment="CENTER" prefWidth="150.0" text="Nicolas Plasencia" />-->
+<!--         <Label alignment="CENTER" prefWidth="150.0" text="Michele Rispoli" />-->
+<!--         <Label alignment="CENTER" prefWidth="150.0" text="Azad Sadr" />-->
          <Label alignment="CENTER" text="Based on the original `Take It Easy` game created by Peter Burley">
             <font><Font size="16.0" /></font>
          </Label>

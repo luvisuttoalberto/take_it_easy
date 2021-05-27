@@ -106,9 +106,9 @@ Here's a brief overview of the main packages:
 - `GameMatch`  
   Actual implementation of the match logic. It holds a `Vector<>` of players and the `TilePool` and it is also implements a state-machine. The states are as follows:
   - `SETUP`  
-    Accepts commands to add, rename and remove players and to set the game seed. The `backToSetup()` method transitions to `PLAY`
+    Accepts commands to add, rename and remove players and to set the game seed. The `startMatch()` method transitions to `PLAY`
   - `PLAY`
-    - `positionCurrentTileOnPlayerBoard(String, HexCoordinates)`: Unlike its `Game` counterpart, only manages the placement of current tile into a player's board.
+    - `positionCurrentTileOnPlayerBoard(String, HexCoordinates)`: Unlike its `Game` counterpart, only manages the placement of current tile into a player's board
     - `dealNextTile()`: Deals the next tile in the pool when all the players are done placing the current
     - `backToSetup()`: transitions back to the `SETUP` state and resets all players and the `currentTileIndex` in the `tilePool`
     - `endMatch()`: transitions to `FINISH` when all the players are done placing the last tile, and triggers the player's transition to their end state

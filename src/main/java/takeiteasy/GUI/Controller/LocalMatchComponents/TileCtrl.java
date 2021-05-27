@@ -7,13 +7,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class TileCtrl extends AnchorPane {
 
     final Color COLOR_EMPTY = Color.WHITE;
-    final Color COLOR_PLACED = Color.YELLOW;
-    final Color COLOR_FOCUS = Color.GREENYELLOW;
+    final Color COLOR_PLACED = Color.color(1.,.757,.357);
+    final Color COLOR_FOCUS = Color.YELLOW;
 
     public Polygon graphic_hitBox;
     Polygon graphic_bg;
@@ -81,6 +83,10 @@ public class TileCtrl extends AnchorPane {
         text_top = new Text();
         text_left = new Text();
         text_right = new Text();
+
+        text_top.setTextAlignment(TextAlignment.CENTER);
+        text_left.setTextAlignment(TextAlignment.CENTER);
+        text_right.setTextAlignment(TextAlignment.CENTER);
 
         resetGraphics();
 
