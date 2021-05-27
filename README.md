@@ -7,6 +7,9 @@ This is the exam project submission for the *Software Development Methods AY 202
 It consists in an implementation of the original board game *"Take it Easy"* by *Peter Burley* for sole educational purposes, no copyright infringement is intended.  
 The authors of this project are **Alberto Luvisutto**, **Nicolas Plasencia**, **Michele Rispoli** and **Azad Sadr**.
 
+## Launching the game
+Download the repository, then navigate to the folder and execute `gradlew.bat runTie` (or `gradlew runTie` on Linux) to launch the game.
+
 ## How to play
 The game consists in placing hexagonal tiles on a board with 19 hexagonal slots.  
 Each tile displays three values, one on the *top* (1,5 or 9), one on the *bottom-left* (2,6 or 7) and one on the *bottom-right* (3,4 and 8), and there are 27 possible tiles, corresponding to all the possible combinations of these values.  
@@ -24,8 +27,8 @@ when all the tiles in a line present the same number, that line is worth the com
 
 The game ends when all the players have placed the last tile, and **the player who scored most points across all the lines wins**.
 
-### Starting a game
-To start a new game navigate to the local lobby from the main menu.  
+### Starting a match
+To start a new match navigate to the local lobby from the main menu.  
 ![local_lobby](readme_img/local_lobby.png)  
 In this screen you can set up the match by *adding* any number of players. You may *rename* or *remove* players, and you may also customize the **game seed** to challenge a friend on the same tile set or replay a game to improve your score. Notice that, if not explicitly set, a new random seed is picked at each new match.  
 Once you're done setting up the match, click on "Start Match" to start playing 
