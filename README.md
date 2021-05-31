@@ -21,7 +21,7 @@ When all the players have placed the current tile, a new one is randomly picked,
 when all the tiles in a line present the same number, that line is worth the common number times the number of tiles comprising the line. If any two numbers along the line differ, the line is worth 0 points.  
 
 >*As an example, consider the following board:*  
->![Points_example](readme_img/board_scores.png)  
+>![Points_example](https://raw.githubusercontent.com/luvisuttoalberto/take_it_easy/main/readme_img/board_scores.PNG)  
 >*The three tiles on the right form a vertical line of 5s (highlighted in yellow) that is worth 5\*3=15 points.*  
 >*On the contrary, the central bottom-right diagonal line will be worth no points because there are two tiles in it presenting different values in the bottom-right spot (underlined in red); this also means that you can stop worrying about what you put in the remaining bottom-right spots along that line (the red Xs).*  
 
@@ -29,12 +29,12 @@ The game ends when all the players have placed the last tile, and **the player w
 
 ### Starting a match
 To start a new match navigate to the local lobby from the main menu.  
-![local_lobby](readme_img/local_lobby.png)  
+![local_lobby](https://raw.githubusercontent.com/luvisuttoalberto/take_it_easy/main/readme_img/local_lobby.PNG)  
 In this screen you can set up the match by *adding* any number of players. You may *rename* or *remove* players, and you may also customize the **game seed** to challenge a friend on the same tile set or replay a game to improve your score. Notice that, if not explicitly set, a new random seed is picked at each new match.  
 Once you're done setting up the match, click on "Start Match" to start playing 
 
 ### In-game controls
-![local_lobby](readme_img/local_match.png)  
+![local_lobby](https://raw.githubusercontent.com/luvisuttoalberto/take_it_easy/main/readme_img/local_match.PNG)  
 The in game screen shows the current player's board: click on any empty position and then on "PLACE TILE" to make your move. Once the current tile is placed you cannot reposition it, so choose carefully!  
 At any point you may look at any player's board by clicking on the "View" button next to their name in the list on the right.  
 You may also remove a player from the game by clicking on the "X" near their name and then "Confirm" on the prompt that appears (although you cannot kick the last player in the match).  
