@@ -6,7 +6,6 @@ import takeiteasy.core.board.exceptions.*;
 import takeiteasy.core.tilepool.Tile;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 import static takeiteasy.utility.Utility.generateCoordinateStandard;
@@ -32,21 +31,17 @@ public class BoardVanilla implements IBoard {
         }
 
         Integer[] storageIdx = this.getStorageIndicesFromCoordinates(coordinates);
-        if(this.tileStorage[storageIdx[0]][storageIdx[1]] != null){
+        if(tileStorage[storageIdx[0]][storageIdx[1]] != null){
             throw new CoordinatesOccupiedException();
         }
 
-        this.tileStorage[storageIdx[0]][storageIdx[1]] = tile;
+        tileStorage[storageIdx[0]][storageIdx[1]] = tile;
 
     }
 
-    @Override
-    public Tile getTile(HexCoordinates coordinates) throws OutOfBoardCoordinatesException {
-        if (!this.areCoordinatesInRange(coordinates)) {
-            throw new OutOfBoardCoordinatesException();
-        }
-        Integer[] storageIdx = this.getStorageIndicesFromCoordinates(coordinates);
-        return this.tileStorage[storageIdx[0]][storageIdx[1]];
+    Tile getTile(HexCoordinates coordinates){
+        Integer[] storageIdx = getStorageIndicesFromCoordinates(coordinates);
+        return tileStorage[storageIdx[0]][storageIdx[1]];
     }
 
     enum RowOrientation{
@@ -63,7 +58,7 @@ public class BoardVanilla implements IBoard {
         }
     }
 
-    Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) throws OutOfBoardCoordinatesException {
+    Tile getTileAtCounterRotatedCoordinates(HexCoordinates coordinates, RowOrientation counterRotation) {
         switch (counterRotation) {
             case LEFT  : return getTile(coordinates.rotateRight());
             case RIGHT : return getTile(coordinates.rotateLeft());
@@ -71,7 +66,7 @@ public class BoardVanilla implements IBoard {
         }
     }
 
-    Integer retrieveCellValue(Integer rowIndex, Integer lineIndexOfTile, RowOrientation rowOrientation){
+    Integer retrieveCellValueAtOrientation(Integer rowIndex, Integer lineIndexOfTile, RowOrientation rowOrientation){
         Integer cellValue = 0;
         try{
             HexCoordinates coordinates = new HexCoordinates(
@@ -93,13 +88,13 @@ public class BoardVanilla implements IBoard {
 
     Boolean isRowValid(Integer rowNumber, Integer rowIndex, RowOrientation rowOrientation){
         return IntStream.range(0, computeRowLength(rowIndex))
-                .map(i -> retrieveCellValue(rowIndex, i, rowOrientation))
+                .map(i -> retrieveCellValueAtOrientation(rowIndex, i, rowOrientation))
                 .allMatch(cellValue -> cellValue == rowNumber);
     }
 
     Integer computeRowScore(Integer rowIndex, RowOrientation rowOrientation){
         // retrieve row number from first tile
-        Integer rowNumber = retrieveCellValue(rowIndex, 0, rowOrientation);
+        Integer rowNumber = retrieveCellValueAtOrientation(rowIndex, 0, rowOrientation);
 
         if(isRowValid(rowNumber, rowIndex, rowOrientation)){
             return rowNumber * computeRowLength(rowIndex);
@@ -122,12 +117,7 @@ public class BoardVanilla implements IBoard {
         JSONObject boardData = new JSONObject();
 
         Arrays.stream(generateCoordinateStandard())
-                .map(hc -> {
-                    try { return new Pair<>(hc, getTile(hc)); }
-                    catch (OutOfBoardCoordinatesException ignored) {}
-                    return null;
-                })
-                .filter(Objects::nonNull)
+                .map(hc -> new Pair<>(hc, getTile(hc)))
                 .filter(hc_t -> hc_t.getValue()!=null)
                 .forEach(hc_t -> boardData.put(hc_t.getKey().toString(), hc_t.getValue().getData()));
 

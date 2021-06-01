@@ -3,9 +3,9 @@ package unittests.board;
 import org.json.JSONObject;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import takeiteasy.core.JSONKeys;
 import takeiteasy.core.board.*;
 import takeiteasy.core.board.exceptions.CoordinatesOccupiedException;
 import takeiteasy.core.board.exceptions.OutOfBoardCoordinatesException;
@@ -20,35 +20,20 @@ import static unittests.utility.Utility.*;
 public class BoardVanillaTest {
 
     @Test
-    public void getTileOutOfBoardCoordinates() {
+    public void placeValidTileAndGetItBack(){
         BoardVanilla board = new BoardVanilla();
-        try{
-            HexCoordinates badcoords = new HexCoordinates(100, 100, -200);
-            assertThrows(OutOfBoardCoordinatesException.class, ()-> board.getTile(badcoords));
-        }
-        catch(Exception ignored){
-        }
-    }
-
-    @Test
-    public void getTileNoTileAtValidCoordinates(){
-        BoardVanilla board = new BoardVanilla();
-        try{
-            HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            assertDoesNotThrow(()-> board.getTile(coords));
-        }
-        catch (Exception ignored){
-        }
-    }
-
-    @Test
-    public void placeTileValidTileAndGetItBack(){
-        BoardVanilla board = new BoardVanilla();
-        Tile tile = new Tile(1, 2, 3);
+        Tile expectedTile = new Tile(1, 2, 3);
         try {
             HexCoordinates coords = new HexCoordinates(0, 0, 0);
-            board.placeTile(tile, coords);
-            assertEquals(tile, board.getTile(coords));
+            board.placeTile(expectedTile, coords);
+
+            JSONObject tileData = board.getData().getJSONObject(coords.toString());
+            Tile placedTile = new Tile(
+                    tileData.getInt(JSONKeys.TILE_TOP),
+                    tileData.getInt(JSONKeys.TILE_LEFT),
+                    tileData.getInt(JSONKeys.TILE_RIGHT)
+                    );
+            assertEquals(expectedTile, placedTile);
         }
         catch(Exception e){
             fail();

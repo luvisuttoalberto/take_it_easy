@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 public class GameMatch implements IGameMatch{
 
     Vector<IPlayer> players;
-    TilePool tilePool;
+    ITilePool tilePool;
     State state;
     Integer currentTileIndex;
 
@@ -133,7 +133,7 @@ public class GameMatch implements IGameMatch{
     }
 
     @Override
-    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException {
+    public void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException {
         if(!isThereAPlayerNamed(playerName)){
             throw new PlayerNameNotFoundException(playerName);
         }

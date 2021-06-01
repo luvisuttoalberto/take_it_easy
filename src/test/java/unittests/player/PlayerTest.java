@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import static unittests.utility.Utility.*;
 
 public class PlayerTest {

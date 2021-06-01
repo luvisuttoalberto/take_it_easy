@@ -21,7 +21,7 @@ public interface IGameMatch {
     void setTilePoolSeed(long seed) throws InvalidMatchStateException;
     void startMatch() throws InvalidMatchStateException, NotEnoughPlayersException;
 
-    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException;
+    void positionCurrentTileOnPlayerBoard(String playerName, HexCoordinates coordinates) throws PlayerNameNotFoundException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException;
 
     void dealNextTile() throws InvalidMatchStateException, PlayersNotReadyForNextTileException, TilePoolDepletedException;
 

@@ -85,9 +85,8 @@ public class Game implements IGame{
             gameMatch.positionCurrentTileOnPlayerBoard(name, coordinates);
             gameMatch.dealNextTile();
         }
-        catch(  PlayerNameNotFoundException | BadHexCoordinatesException | OutOfBoardCoordinatesException |
-                InvalidPlayerStateException | CoordinatesOccupiedException | InvalidMatchStateException |
-                PlayersNotReadyForNextTileException ignored){
+        catch(  PlayerNameNotFoundException | OutOfBoardCoordinatesException | InvalidPlayerStateException |
+                 CoordinatesOccupiedException | InvalidMatchStateException | PlayersNotReadyForNextTileException ignored){
         }
         catch(TilePoolDepletedException e){
             endMatch();

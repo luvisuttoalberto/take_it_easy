@@ -1,7 +1,6 @@
 package takeiteasy.core.player;
 import org.json.JSONObject;
 import takeiteasy.core.board.*;
-import takeiteasy.core.board.exceptions.BadHexCoordinatesException;
 import takeiteasy.core.board.exceptions.CoordinatesOccupiedException;
 import takeiteasy.core.board.exceptions.OutOfBoardCoordinatesException;
 import takeiteasy.core.player.exceptions.InvalidPlayerStateException;
@@ -15,7 +14,7 @@ public interface IPlayer {
     void reset();
     void startMatch() throws InvalidPlayerStateException;
 
-    void placeTile(Tile tile, HexCoordinates coordinates) throws BadHexCoordinatesException, OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException;
+    void placeTile(Tile tile, HexCoordinates coordinates) throws OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException;
 
     void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException;
 
