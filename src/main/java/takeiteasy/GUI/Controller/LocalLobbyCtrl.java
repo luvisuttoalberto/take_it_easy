@@ -128,7 +128,7 @@ public class LocalLobbyCtrl implements IViewController, Initializable {
         this.vu = vu;
     }
 
-    public void refreshPlayersList(JSONObject gameData) {
+    void refreshPlayersList(JSONObject gameData) {
         playerNamesObservable.clear();
         JSONArray playersData = gameData.getJSONObject(JSONKeys.GAME_MATCH).getJSONArray(JSONKeys.MATCH_PLAYERS);
 
