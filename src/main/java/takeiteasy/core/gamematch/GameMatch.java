@@ -155,7 +155,7 @@ public class GameMatch implements IGameMatch{
 
         ++currentTileIndex;
         players.forEach(p -> {
-            try {p.transitionFromWaitingPlayersToPlacing();}
+            try {p.nextRound();}
             catch (InvalidPlayerStateException ignored) {}
         });
     }

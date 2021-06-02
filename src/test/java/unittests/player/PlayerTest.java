@@ -65,7 +65,7 @@ public class PlayerTest {
         }
         catch (Exception ignored) {
         }
-        assertDoesNotThrow(player::transitionFromWaitingPlayersToPlacing);
+        assertDoesNotThrow(player::nextRound);
         assertEquals(IPlayer.State.PLACING, player.getState());
     }
 
@@ -80,7 +80,7 @@ public class PlayerTest {
                 .forEach(tileHexCoordinatesPair -> {
                     try{
                         player.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
-                        player.transitionFromWaitingPlayersToPlacing();
+                        player.nextRound();
                     }
                     catch (Exception ignored){}
                 });
@@ -110,7 +110,7 @@ public class PlayerTest {
                         player.placeTile(tileHexCoordinatesPair.tile, tileHexCoordinatesPair.coordinate);
                         boardData.put(tileHexCoordinatesPair.coordinate.toString(), tileHexCoordinatesPair.tile.getData());
                         assertEquals("WAIT_OTHER", player.getData().get(JSONKeys.PLAYER_STATE));
-                        player.transitionFromWaitingPlayersToPlacing();
+                        player.nextRound();
                     } catch (Exception e) {fail();}
                 });
         try{player.placeTile(list.get(list.size()-1).tile, list.get(list.size() - 1).coordinate);}

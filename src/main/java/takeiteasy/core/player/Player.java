@@ -60,7 +60,7 @@ public class Player implements IPlayer{
     }
 
     @Override
-    public void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException {
+    public void nextRound() throws InvalidPlayerStateException {
         if (playerState == State.WAIT_OTHER) {
             playerState = State.PLACING;
         }

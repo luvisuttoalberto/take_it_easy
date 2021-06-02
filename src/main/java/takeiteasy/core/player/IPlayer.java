@@ -16,7 +16,7 @@ public interface IPlayer {
 
     void placeTile(Tile tile, HexCoordinates coordinates) throws OutOfBoardCoordinatesException, CoordinatesOccupiedException, InvalidPlayerStateException;
 
-    void transitionFromWaitingPlayersToPlacing() throws InvalidPlayerStateException;
+    void nextRound() throws InvalidPlayerStateException;
 
     void endMatch() throws InvalidPlayerStateException;
 
