@@ -128,7 +128,7 @@ Here's a brief overview of the main packages:
     - `PLACING`
       This is the only state in which tiles can be placed on the player's board through `placeTile(Tile, HexCoordinates)`, which also causes transition to `WAIT_OTHER` on success.
     - `WAIT_OTHER`  
-      Waits for `transitionFromWaitingPlayersToPlacing()` to transition back to `PLACING` or for `endMatch()` to go to `WAIT_MATCH`
+      Waits for `nextRound()` to transition back to `PLACING` or for `endMatch()` to go to `WAIT_MATCH`
 
 #### `takeiteasy.core.tilepool`
   - `Tile`  
